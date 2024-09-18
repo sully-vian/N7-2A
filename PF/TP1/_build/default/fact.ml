@@ -1,5 +1,5 @@
 
-(*  
+(*
    fact : int -> int
    calcule la factorielle
    Parametre n : int, le nombre dont on veut la factorielle

@@ -1,5 +1,5 @@
-(* open Graphics *)
-(* open Affichage *)
+open Graphics
+open Affichage
 
 (* Exercice 2 *)
 (*
@@ -10,7 +10,6 @@
     Resultat : float, le coefficient directeur de la droite passant par
     (x1, y1) et (x2, y2)
 *)
-
 let coeff_directeur (x1,y1) (x2,y2) =
     if (x2 = x1) then
         failwith "x2=x1, droite verticale ou points confondus"
@@ -48,7 +47,6 @@ let f5 (x,y) = x
 (* i : l'indice de l'élèment dans le triplet *)
 (* renvoie le ième élément t *)
 (* précondition : 1 <= i <= 3 *)
-
 let ieme t i =
     match t,i with
     | (x,_,_), 1 -> x
@@ -73,7 +71,6 @@ Paramètre n : un entier représentant la nième valeur à calculer
 Précondition : n >=0
 Résultat : un entier la nième valeur de la suite de Padovan
 *)
-
 let rec padovan n =
     match n with
     | 1 | 0 -> 0
@@ -123,7 +120,6 @@ Paramètre n : un entier naturel dont on doit dire s'il est premier ou pas
 Précondition : n >= 0
 Résultat : l'information de si n est premier ou pas
 *)
-
 let estPremier n =
     let rec aux k =
         if (k*k > n) then
@@ -157,7 +153,7 @@ let%test _ = not (estPremier 1)
 
 
 (*  Création de l'écran d'affichage *)
-(* let _ = open_graph " 800x600" *)
+let _ = open_graph " 800x600"
 
 (* Exercice 8 *)
 (*
@@ -169,10 +165,17 @@ let%test _ = not (estPremier 1)
     Resultat : unit, affichage de la courbe du dragon sur l'écran
     Précondition : n positif ou nul
 *)
+let rec dragon (xa,ya) (xb,yb) n =
+    if (n != 0) then (
+        draw_segments [|(xa, xb, ya, yb)|];
+        let nextX = (xa+xb) / 2 + (ya-yb) / 2 in
+        let nextY = (ya+yb) / 2 + (xa-xb) / 2 in
+        let nextPoint = (nextX, nextY) in
+        dragon (xb, yb) nextPoint (n-1)
+    )
 
-let dragon (xa,ya) (xb,yb) n = failwith "TO DO"
 
-(* let%test_unit _ = dragon (200,350) (600,350) 20; *)
+let%test_unit _ = dragon (200,350) (600,350) 20;
 
 (*  Fermeture de l'écran d'affichage *)
 (* close_graph() *)
