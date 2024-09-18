@@ -14,3 +14,4 @@ let rec fact n =
 let%test _ = fact 1 = 1
 let%test _ = fact 2 = 2
 let%test _ = fact 5 = 120
+(* let%test _ = fact 3 = 2 *)
