@@ -13,7 +13,7 @@ let majuscule = ['A'-'Z']
 let chiffre = ['0'-'9']
 let alphabet = minuscule | majuscule
 let alphanum = alphabet | chiffre | '_'
-let commentaireBloc = (* A COMPLETER *) "/*" _* "*/" 
+let commentaireBloc = "/*" [\s\S]*? "*/" (* TODO *)
 let commentaireLigne = "//" [^'\n']* '\n'
 
 (* Analyseur lexical : expression reguliere { action CaML } *)
@@ -69,13 +69,13 @@ rule lexer = parse
   | "true"		{ (BOOLEEN true) }
   | "false"		{ (BOOLEEN false) }
   | "null"		{ VIDE }
-(* Nombres entiers : A COMPLETER *)
+(* Nombres entiers : TODO *)
   | ('0' | (['1' - '9'] chiffre*)) as texte   { (ENTIER (int_of_string texte)) }
-(* Nombres flottants : A COMPLETER *)
+(* Nombres flottants : TODO *)
   | (chiffre+ "." chiffre+) as texte     { (FLOTTANT (float_of_string texte)) }
-(* Caracteres : A COMPLETER *)
+(* Caracteres : TODO *)
   | "'" _ "'" as texte                   { CARACTERE texte.[1] }
-(* Chaines de caracteres : A COMPLETER *)
+(* Chaines de caracteres : TODO *)
   | '"' _* '"' as texte                  { CHAINE texte }
 (* Identificateurs *)
   | majuscule alphanum* as texte              { TYPEIDENT texte }

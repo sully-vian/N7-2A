@@ -1,9 +1,9 @@
-# dune build
+# dune build mainJava.exe
 # OCAMLPARAM: unset
 # Shared cache: disabled
 # Workspace root: /home/vhy9665/Desktop/2a/Auto/TPAnaLex
 # Auto-detected concurrency: 20
-$ /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -config > /tmp/dune_c8344f_output
+$ /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -config > /tmp/dune_4ff788_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
@@ -111,18 +111,5 @@ $ /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -config > /tmp/dune_c8344f_out
 #      }
 #  }
 $ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamllex -q -o lexerJava.ml lexerJava.mll)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamldep.opt -modules -impl mainJava.ml) > _build/default/.mainJava.eobjs/dune__exe__MainJava.impl.d
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamldep.opt -modules -intf tokenJava.mli) > _build/default/.mainJava.eobjs/dune__exe__TokenJava.intf.d
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamldep.opt -modules -impl lexerJava.ml) > _build/default/.mainJava.eobjs/dune__exe__LexerJava.impl.d
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamldep.opt -modules -impl tokenJava.ml) > _build/default/.mainJava.eobjs/dune__exe__TokenJava.impl.d
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -bin-annot -I .mainJava.eobjs/byte -no-alias-deps -opaque -o .mainJava.eobjs/byte/dune__exe.cmo -c -impl .mainJava.eobjs/dune__exe.ml-gen)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I .mainJava.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .mainJava.eobjs/byte/dune__exe__TokenJava.cmi -c -intf tokenJava.mli)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -49 -nopervasives -nostdlib -g -I .mainJava.eobjs/byte -I .mainJava.eobjs/native -intf-suffix .ml-gen -no-alias-deps -opaque -o .mainJava.eobjs/native/dune__exe.cmx -c -impl .mainJava.eobjs/dune__exe.ml-gen)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I .mainJava.eobjs/byte -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .mainJava.eobjs/byte/dune__exe__TokenJava.cmo -c -impl tokenJava.ml)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I .mainJava.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .mainJava.eobjs/byte/dune__exe__LexerJava.cmo -c -impl lexerJava.ml)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I .mainJava.eobjs/byte -I .mainJava.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .mainJava.eobjs/native/dune__exe__TokenJava.cmx -c -impl tokenJava.ml)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -bin-annot -I .mainJava.eobjs/byte -no-alias-deps -opaque -open Dune__exe -o .mainJava.eobjs/byte/dune__exe__MainJava.cmo -c -impl mainJava.ml)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I .mainJava.eobjs/byte -I .mainJava.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .mainJava.eobjs/native/dune__exe__LexerJava.cmx -c -impl lexerJava.ml)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o mainJava.bc .mainJava.eobjs/byte/dune__exe.cmo .mainJava.eobjs/byte/dune__exe__TokenJava.cmo .mainJava.eobjs/byte/dune__exe__LexerJava.cmo .mainJava.eobjs/byte/dune__exe__MainJava.cmo)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -I .mainJava.eobjs/byte -I .mainJava.eobjs/native -intf-suffix .ml -no-alias-deps -opaque -open Dune__exe -o .mainJava.eobjs/native/dune__exe__MainJava.cmx -c -impl mainJava.ml)
-$ (cd _build/default && /applications/opam-4.11.0/4.11.0/bin/ocamlopt.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -g -o mainJava.exe .mainJava.eobjs/native/dune__exe.cmx .mainJava.eobjs/native/dune__exe__TokenJava.cmx .mainJava.eobjs/native/dune__exe__LexerJava.cmx .mainJava.eobjs/native/dune__exe__MainJava.cmx)
+> File "lexerJava.mll", line 16, character 29: illegal character \\.
+[3]
