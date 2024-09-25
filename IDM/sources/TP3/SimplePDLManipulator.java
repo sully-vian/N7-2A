@@ -23,33 +23,33 @@ public class SimplePDLManipulator {
 		// Chargement du package SimplePDL afin de l'enregistrer dans le registre d'Eclipse.
 		SimplepdlPackage packageInstance = SimplepdlPackage.eINSTANCE;
 		
-		// Enregistrer l'extension ".xmi" comme devant Ãªtre ouverte Ã 
+		// Enregistrer l'extension ".xmi" comme devant être ouverte à
 		// l'aide d'un objet "XMIResourceFactoryImpl"
 		Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 		Map<String, Object> m = reg.getExtensionToFactoryMap();
 		m.put("xmi", new XMIResourceFactoryImpl());
 		
-		// CrÃ©er un objet resourceSetImpl qui contiendra une ressource EMF (notre modÃ¨le)
+		// Créer un objet resourceSetImpl qui contiendra une ressource EMF (notre modèle)
 		ResourceSet resSet = new ResourceSetImpl();
 
-		// Charger la ressource (notre modÃ¨le)
+		// Charger la ressource (notre modèle)
 		URI modelURI = URI.createURI("models/SimplePDLCreator_Created_Process.xmi");
 		Resource resource = resSet.getResource(modelURI, true);
 		
-		// RÃ©cupÃ©rer le premier Ã©lÃ©ment du modÃ¨le (Ã©lÃ©ment racine)
+		// Récupérer le premier élément du modèle (élément racine)
 		Process process = (Process) resource.getContents().get(0);
 		
 		/**
 		 * Manipulation de notre instance
 		 */
-		// AccÃ©der aux informations du processus chargÃ©
+		// Accéder aux informations du processus chargé
 	    System.out.println("Processus : " + process.getName());
-	    // Naviguer dans les rÃ©fÃ©rences
+	    // Naviguer dans les références
 	    Integer nbPE = process.getProcessElements().size();
 	    System.out.println("Nombre de ProcessElement dans " + process.getName() + " : " + nbPE);
 
-		// Afficher les sous-activitÃ©s
-		System.out.println("Les sous-activitÃ©s sont :");
+		// Afficher les sous-activités
+		System.out.println("Les sous-activités sont :");
 		for (Object o : process.getProcessElements()) {
 			if (o instanceof WorkDefinition) {
 				WorkDefinition wd = (WorkDefinition) o;
