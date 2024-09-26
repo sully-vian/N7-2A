@@ -16,26 +16,32 @@ let alphanum = alphabet | chiffre | '_'
 let commentaireBloc = "/*" ([^'*'] | '*'[^'/'])* "*/" (* Soit [pas étoile], soit [étoile puis pas slash] *)
 let commentaireLigne = "//" [^'\n']* '\n'
 
-(* entiers binaires *)
+(* entiers binaires *) (*
 let binaryDigit = '0' | '1' (* chiffre de base *)
 let binaryDigitOrUnderscore = binaryDigit|'_' (* chiffre ou _ *)
 let binaryDigitsAndUnderscores = binaryDigitOrUnderscore+ (* chiffres + _ *)
 let binaryDigits = binaryDigit | binaryDigit binaryDigitsAndUnderscores? binaryDigit (* chiffres accolés *)
 let binaryNumeral = '0' ('b'|'B') binaryDigits (* nombre complet: 0b ou 0B suivi de chiffres binaires *)
+*)
+let binaryNumeral = '0' ('b'|'B') (('0'|'1') | ('0'|'1') ('0'|'1'|'_')* ('0'|'1'))
 
-(* entiers octaux *)
+(* entiers octaux *) (*
 let octalDigit = ['0'-'7'] (* chiffre de base *)
 let octalDigitOrUnderscore = octalDigit|'_' (* chiffre ou _ *)
 let octalDigitsAndUnderscores = octalDigitOrUnderscore+ (* chiffres + _ *)
 let octalDigits = octalDigit | octalDigit octalDigitsAndUnderscores? octalDigit (* chiffres accolés *)
 let octalNumeral = '0' octalDigits (* nombre complet: 0 suivi de chiffres octaux *)
+*)
+let octalNumeral = '0' ['0'-'7'] | ['0'-'7'] (['0'-'7']|'_')* ['0'-'7']
 
-(* entiers hexadécimaux *)
+(* entiers hexadécimaux *) (*
 let hexDigit = ['0'-'9' 'a'-'f' 'A'-'F'] (* chiffre de base *)
 let hexDigitOrUnderscore = hexDigit|'_' (* chiffre ou _ *)
 let hexDigitsAndUnderscores = hexDigitOrUnderscore+ (* chiffres + _ *)
 let hexDigits = hexDigit | hexDigit hexDigitsAndUnderscores? hexDigit (* chiffres accolés *)
 let hexNumeral = '0' ('x'|'X') hexDigits (* nombre complet: 0x ou 0X suivi de chiffres hexadécimaux *)
+*)
+let hexNumeral = '0' ('x'|'X') (['0'-'9' 'a'-'f' 'A'-'F'] | ['0'-'9' 'a'-'f' 'A'-'F'] (['0'-'9' 'a'-'f' 'A'-'F']|'_')* ['0'-'9' 'a'-'f' 'A'-'F'])
 
 (* entiers décimaux *)
 let underscores = '_'+ (* séparateurs _ *)
