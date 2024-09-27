@@ -5,3 +5,6 @@ module Lexer = Tp2__Lexer
 
 (** @canonical Tp2.Parser *)
 module Parser = Tp2__Parser
+
+(** @canonical Tp2.Rendu_tp2 *)
+module Rendu_tp2 = Tp2__Rendu_tp2

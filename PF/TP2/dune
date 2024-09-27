@@ -1,10 +1,13 @@
 (ocamllex lexer)
 
 (menhir
- (modules parser))
+    (modules parser))
 
 (library
- (name tp2)
- (inline_tests)
- (preprocess
-  (pps ppx_inline_test)))
+    (name tp2)
+    (inline_tests)
+    ; (modules tp2 rendu_tp2)
+    (preprocess
+        (pps ppx_inline_test)
+    )
+)

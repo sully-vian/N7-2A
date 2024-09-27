@@ -2,8 +2,7 @@
 
 (*  Tri par insertion **)
 
-(*CONTRAT
-Fonction qui ajoute un élément dans une liste triée, selon un ordre donné
+(* Fonction qui ajoute un élément dans une liste triée, selon un ordre donné
 Type : ('a->'a->bool)->'a->'a list -> 'a list
 Paramètre : ordre  ('a->'a->bool), un ordre sur les éléments de la liste
 Paramètre : elt, l'élement à ajouter
@@ -23,17 +22,14 @@ let rec insert ordre elt l =
 (* TESTS *)
 let%test _ = insert (fun x y -> x<y) 3 []=[3]
 let%test _ = insert (fun x y -> x<y) 3 [2;4;5]=[2;3;4;5]
-let%test _ = insert (fun x y -> x > y) 6 [3;2;1]=[6;3;2;1]
+let%test _ = insert (fun x y -> x>y) 6 [3;2;1]=[6;3;2;1]
 
-
-
-(*CONTRAT
-Fonction qui trie une liste, selon un ordre donné
-Type : ('a->'a->bool)->'a list -> 'a list
-Paramètre : ordre  ('a->'a->bool), un ordre sur les éléments de la liste
-Paramètre : l, la liste à trier
-Résultat : une liste triée avec les éléments de l
-*)
+(* Fonction qui trie une liste, selon un ordre donné
+ * Type : ('a->'a->bool)->'a list -> 'a list
+ * Paramètre : ordre  ('a->'a->bool), un ordre sur les éléments de la liste
+ * Paramètre : l, la liste à trier
+ * Résultat : une liste triée avec les éléments de l
+ *)
 
 let rec tri_insertion ordre l =
     match l with
@@ -43,16 +39,28 @@ let rec tri_insertion ordre l =
 (* TESTS *)
 let%test _ = tri_insertion (fun x y -> x<y) [] =[]
 let%test _ = tri_insertion (fun x y -> x<y) [4;2;4;3;1] =[1;2;3;4;4]
-let%test _ = tri_insertion (fun x y -> x > y) [4;7;2;4;1;2;2;7]=[7;7;4;4;2;2;2;1]
+let%test _ = tri_insertion (fun x y -> x>y) [4;7;2;4;1;2;2;7]=[7;7;4;4;2;2;2;1]
 
+(* Fonction qui trie une liste, selon un ordre donné en usant de List.fold_right
+ * Type : ('a->'a->bool)->'a list -> 'a list
+ * Paramètre : ordre  ('a->'a->bool), un ordre sur les éléments de la liste
+ * Paramètre : l, la liste à trier
+ * Résultat : une liste triée avec les éléments de l
+ *)
+
+let tri_insertion_fold ordre l = List.fold_right (insert ordre) l []
+
+(* TESTS *)
+let%test _ = tri_insertion_fold (fun x y -> x<y) [] =[]
+let%test _ = tri_insertion_fold (fun x y -> x<y) [4;2;4;3;1] =[1;2;3;4;4]
+let%test _ = tri_insertion_fold (fun x y -> x>y) [4;7;2;4;1;2;2;7]=[7;7;4;4;2;2;2;1]
 
 (*  Tri fusion **)
 
-(* CONTRAT
-Fonction qui décompose une liste en deux listes de tailles égales à plus ou moins un élément
-Paramètre : l, la liste à couper en deux
-Retour : deux listes
-*)
+(* Fonction qui décompose une liste en deux listes de tailles égales à plus ou moins un élément
+ * Paramètre : l, la liste à couper en deux
+ * Retour : deux listes
+ *)
 
 let rec scinde l =
     match l with
@@ -97,8 +105,7 @@ let%test _ = fusionne (fun x y -> x<y) [1] [2] = [1;2]
 let%test _ = fusionne (fun x y -> x>y) [1] [2] = [2;1]
 
 
-(* CONTRAT
-Fonction qui trie une liste, selon un ordre donné
+(* Fonction qui trie une liste, selon un ordre donné
 Type : ('a->'a->bool)->'a list -> 'a list
 Paramètre : ordre  ('a->'a->bool), un ordre sur les éléments de la liste
 Paramètre : l, la liste à trier
@@ -117,7 +124,7 @@ let%test _ = tri_fusion (fun x y -> x<y) [] =[]
 let%test _ = tri_fusion (fun x y -> x<y) [4;2;4;3;1] =[1;2;3;4;4]
 let%test _ = tri_fusion (fun x y -> x > y) [4;7;2;4;1;2;2;7]=[7;7;4;4;2;2;2;1]
 
-(*
+
 (*  Parsing du fichier *)
 open Lexing
 
@@ -149,4 +156,3 @@ let listStatHomme =
 
 
 (*  Les contrats et les tests des fonctions suivantes sont à écrire *)
-*)
