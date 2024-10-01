@@ -183,6 +183,28 @@ let%test _ = ordre_no4 (<) (1,"toto",2016,3) (2,"tata",2016,5) = true
 let%test _ = ordre_no4 (<) (2,"tata",2016,-1) (1,"toto",2016,5) = true
 let%test _ = ordre_no4 (>) (1,"toto",2016,2) (2,"tata",2016,3) = false
 
+(* Fonction qui renvoie la fonction opposée de l'ordre
+ * Type : ('a->'a->bool)->'a->'a->bool
+ * Paramètre : ordre ('a->'a->bool), un ordre sur les éléments de la liste
+ * Résultat : l'ordre contraire
+ *)
+ let neg_ordre ordre = fun x y -> not (ordre x y)
+
+(* Fonction qui teste si une liste est triée selon un ordre donné (inégalités larges)
+ * Pour vérifier les inégalités larges, on n'utilise pas "=" car on peut comparer une certaine valeur d'un tuple par exemple
+ * Paramètre : ordre : ('a->'a->bool), un ordre sur les éléments de la liste
+ * Paramètre : l : ('a list), la liste à tester
+ *)
+let rec est_triee ordre l =
+    match l with
+    | [] | [_] -> true
+    | h1::h2::t -> (ordre h1 h2 || neg_ordre ordre h2 h1) && (est_triee ordre (h2::t))
+
+(* TESTS *)
+let%test _ =  est_triee (<) [1;2;3;4;5] = true
+let%test _ =  est_triee (<) [1;2;3;4;5;3] = false
+let%test _ =  est_triee (>) [5;4;3;2;1] = true
+
 (* Fonction qui décompose une liste en deux listes de tailles égales à plus ou moins un élément (version récursive terminale)
  * Paramètre : l, la liste à couper en deux
  * Retour : deux listes
@@ -231,13 +253,6 @@ let%test _ = fusionne2 (<) [] [1] = List.rev [1]
 let%test _ = fusionne2 (<) [1] [2] = List.rev [1;2]
 let%test _ = fusionne2 (>) [1] [2] = List.rev [2;1]
 
-(* Fonction qui renvoie la fonction opposée de l'ordre
- * Type : ('a->'a->bool)->'a->'a->bool
- * Paramètre : ordre ('a->'a->bool), un ordre sur les éléments de la liste
- * Résultat : l'ordre contraire
- *)
-let neg_ordre ordre = fun x y -> not (ordre x y)
-
 (* Fonction qui trie une liste, selon un ordre donné (version récursive terminale)
  * Type : ('a->'a->bool)->'a list -> 'a list
  * Paramètre : ordre  ('a->'a->bool), un ordre sur les éléments de la liste
@@ -275,35 +290,9 @@ let%test _ = tri_fusion2 (<) ['c';'a';'b';'d';'e'] = ['a';'b';'c';'d';'e']
 let%test _ = tri_fusion2 (>) ['c';'a';'b'] = ['c';'b';'a']
 let%test _ = tri_fusion2 (>) ['c';'a';'b'] = ['c';'b';'a']
 
-(* let listStatTrieeNatif = List.sort (fun x y -> if (no4 x > no4 y) then 1 else -1) listStat
+let listStatTrieeNatif = List.sort (fun x y -> if (no4 x > no4 y) then -1 else 1) listStat
 (* let listStatTriee = tri_fusion (fun x y -> (no4 x) > (no4 y)) listStat *)
-let listStatTriee2 = tri_fusion2 (fun x y -> (no4 x) > (no4 y)) listStat *)
+let listStatTriee2 = tri_fusion2 (fun x y -> (no4 x) > (no4 y)) listStat
 
-(* let%test _ = print_stat (List.hd listStatTrieeNatif) = ()
-let%test _ = print_stat (List.hd (List.rev listStatTriee2)) = () *)
-let rec n_firsts l n =
-    match l with
-    | [] -> []
-    | h::t -> if n=0 then
-        []
-    else
-        h::(n_firsts t (n-1))
-
-let listStatSmall = n_firsts listStat 10
-let listStatSmallTriee = tri_fusion (ordre_no4 (>)) listStatSmall
-let listStatSmallTriee2 = tri_fusion2 (ordre_no4 (>)) listStatSmall
-let listStatSmallTrieeNatif = List.sort (fun x y -> if (no4 x > no4 y) then 1 else -1) listStatSmall
-
-(* Fonction qui teste si une liste est triée selon un ordre donné
- *)
-let rec est_triee ordre l =
-    match l with
-    | [] | [_] -> true
-    | h1::h2::t -> (ordre h1 h2) && (est_triee ordre (h2::t))
-
-(* TESTS *)
-let%test _ =  est_triee (<) [1;2;3;4;5] = true
-let%test _ =  est_triee (<) [1;2;3;4;5;3] = false
-let%test _ =  est_triee (>) [5;4;3;2;1] = true
-
-let%test _ = est_triee (<) [0;1;2;3] = true
+let%test _ = est_triee (ordre_no4 (>)) listStatTrieeNatif
+let%test _ = est_triee (ordre_no4 (>)) listStatTriee2
