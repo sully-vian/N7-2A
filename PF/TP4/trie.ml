@@ -27,7 +27,8 @@ let nouveau fd fr = Trie(Noeud(false,[]), fd, fr)
 (*                - un trie                                                   *)
 (*   résultat   : le résultat booléen du test                                 *)
 (******************************************************************************)
-let appartient mot trie = failwith "TO DO appartient"
+let appartient mot (Trie(arbre, decompose, _)) =
+  appartient_arbre (decompose mot) arbre
 
 (******************************************************************************)
 (*   fonction d'ajout d'un élément dans un trie                               *)
@@ -52,7 +53,8 @@ let trie_sujet =
 (*                - un trie                                                   *)
 (*   résultat   : le trie avec le mot retiré                                  *)
 (******************************************************************************)
-let retrait mot trie = failwith "TO DO retrait"
+let retrait mot (Trie(arbre, decompose, _)) =
+  retrait_arbre (decompose mot) arbre
 
 (******************************************************************************)
 (*   fonction interne au Module qui génère la liste de tous les mots          *)
