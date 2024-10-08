@@ -64,6 +64,8 @@ let%test _ = combinaisons 12 [] = []
  * Pamaètre e : ('a) l'élément à insérer
  * Paramètre l : ('a list) la liste initiale dans laquelle insérer e
  * Résultat : la liste des listes avec toutes les insertions possible de e dans l
+* Post : soit l' = insertions e l,
+ *        => (|l'| = |l|+1) /\ (e' appartient à l' => |e'| = |l|+1)
  *)
 
 let rec insertion e l =
@@ -111,7 +113,7 @@ let%test _ = List.mem ['b';'a'] l2
 
 (*** Partition d'un entier ***)
 
-(* partition int -> int list
+(* partitions: int -> int list
  * Fonction qui calcule toutes les partitions possibles d'un entier n
  * Paramètre n : un entier dont on veut calculer les partitions
  * Préconditions : n >0
