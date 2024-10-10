@@ -1,0 +1,86 @@
+[comment encoding = UTF-8 /]
+[module toTina('http://petrinet')]
+
+
+[template public petriNetToTina(aPetriNet : PetriNet)]
+[comment @main/]
+[file (aPetriNet.nom + '.net', false, 'UTF-8')]
+net [aPetriNet.nom /]
+[let pls : OrderedSet(Place) = aPetriNet.getPlaces()]
+	[if (pls->size() > 0)]
+		[for (pl : Place | pls)
+			][pl.totina()/]
+		[/for]
+	[/if]
+[/let]
+[let trs : OrderedSet(Transition) = aPetriNet.getTransitions()]
+	[if (trs->size() > 0)]
+		[for (tr : Transition | trs)
+			][tr.totina(aPetriNet)/]
+		[/for]
+	[/if]
+[/let]
+[/file]
+[/template]
+
+
+[query public getPlaces(pn : PetriNet) : OrderedSet(Place) =
+	pn.noeuds->select( n | n.oclIsTypeOf(Place) )
+		->collect( n | n.oclAsType(Place) )
+		->asOrderedSet()
+/]
+
+[query public getTransitions(pn : PetriNet) : OrderedSet(Transition) =
+	pn.noeuds->select( n | n.oclIsTypeOf(Transition) )
+		->collect( n | n.oclAsType(Transition) )
+		->asOrderedSet()
+/]
+
+[query public getPlace2Transition(tr : Transition, pn : PetriNet) : OrderedSet(Place2Transition) =
+	pn.arcs->select( arc | arc.oclIsTypeOf(Place2Transition) )
+		->collect( arc | arc.oclAsType(Place2Transition) )
+		->select( arc | arc.cible = tr)
+		->asOrderedSet()
+/]
+
+[query public getTransition2Place(tr : Transition, pn : PetriNet) : OrderedSet(Transition2Place) =
+	pn.arcs->select( arc | arc.oclIsTypeOf(Transition2Place) )
+		->collect( arc | arc.oclAsType(Transition2Place) )
+		->select( arc | arc.source = tr)
+		->asOrderedSet()
+/]
+
+[template public totina(pl : Place) post (trim())]
+pl [pl.nom/] ([pl.nbJetons/])
+[/template]
+
+[template public totina(tr : Transition, pn : PetriNet) post (trim())]
+tr [tr.nom
+/][let p2ts : OrderedSet(Place2Transition) = tr.getPlace2Transition(pn)]
+	[for (p2t : Place2Transition | p2ts) before (' ') separator (' ') after (' ')
+		][p2t.totina()
+/][/for]
+[/let]->[let t2ps : OrderedSet(Transition2Place) = tr.getTransition2Place(pn)]
+	[for (t2p : Transition2Place | t2ps) before (' ') separator (' ')
+		][t2p.totina()
+/][/for]
+[/let]
+[/template]
+
+
+[template public totina(p2t : Place2Transition) post (trim())]
+[p2t.source.nom/]
+[if ((p2t.poids > 1) and (p2t.type=ArcType::read_arc))]
+	?[p2t.poids/]
+[/if]
+[if (p2t.type=ArcType::read_arc)]
+	*[p2t.poids/]
+[/if]
+[/template]
+
+[template public totina(t2p : Transition2Place) post (trim())]
+[t2p.cible.nom/]
+[if (t2p.poids > 1)]
+	*[t2p.poids/]
+[/if]
+[/template]
