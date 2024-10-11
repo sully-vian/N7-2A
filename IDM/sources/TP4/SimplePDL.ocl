@@ -20,8 +20,7 @@ def: process(): Process =
 context WorkSequence
 inv successorAndPredecessorInSameProcess('Activities not in the same process : '
 		+ self.predecessor.name + ' in ' + self.predecessor.process().name+ ' and '
-		+ self.successor.name + ' in ' + self.successor.process().name
-):
+		+ self.successor.name + ' in ' + self.successor.process().name):
 	self.process() = self.successor.process()
 	and self.process() = self.predecessor.process()
 

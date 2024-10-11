@@ -53,8 +53,8 @@ let trie_sujet =
 (*                - un trie                                                   *)
 (*   résultat   : le trie avec le mot retiré                                  *)
 (******************************************************************************)
-let retrait mot (Trie(arbre, decompose, _)) =
-  retrait_arbre (decompose mot) arbre
+let retrait mot (Trie(arbre, decompose, recompose)) =
+  Trie(retrait_arbre (decompose mot) arbre, decompose, recompose)
 
 (******************************************************************************)
 (*   fonction interne au Module qui génère la liste de tous les mots          *)

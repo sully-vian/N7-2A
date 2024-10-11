@@ -125,4 +125,11 @@ let rec retrait_arbre lc (Noeud(b, lb)) =
 (*   paramètres : un arbre n-aire                                             *)
 (*   résultat   : la liste des éléments présents dans l'arbre                 *)
 (******************************************************************************)
-let rec lister_contenu (Noeud(b, lb)) = failwith "TODO: lister_contenu"
+let rec lister_contenu (Noeud(b, lb)) =
+   (* on décompose chaque branche de lb en paire caractère * arbre -> 1er map *)
+   (* on ajoute c devant chacun des mots de arbre c -> 2e map *)
+   let liste = List.flatten (List.map (fun (c, arbre_c) -> List.map (fun l -> c::l) (lister_contenu arbre_c)) lb)
+   in if b then
+      []::liste
+   else
+      liste

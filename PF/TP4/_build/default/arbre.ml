@@ -104,7 +104,13 @@ let%test _ = arbre_sujet3 = arbre_sujet
 (******************************************************************************)
 let rec retrait_arbre lc (Noeud(b, lb)) =
   match lc with
+  (* On a épuiser la liste, on est à la fin du mot qu'on veut supprimer donc on
+     l'enlève en fixant le booléen à false *)
   | [] -> Noeud(false, lb)
+  (* sinon, on cherche l'arbre_c de la branche correspondant au premier
+     caractère de la liste.
+     Si on ne le trouve pas, c'est terminado (enlever un mot absent ne change
+     rien). *)
   | c::qlc ->
     let arbre_c =
       let l = recherche c lb in
@@ -112,3 +118,18 @@ let rec retrait_arbre lc (Noeud(b, lb)) =
       | None -> Noeud(b,lb)
       | Some a -> a
     in Noeud(b, maj c (retrait_arbre qlc arbre_c) lb)
+
+(******************************************************************************)
+(*   fonction de listage des éléments dans un arbre                           *)
+(*   signature  : lister_contenu : 'a arbre -> 'a list list                   *)
+(*   paramètres : un arbre n-aire                                             *)
+(*   résultat   : la liste des éléments présents dans l'arbre                 *)
+(******************************************************************************)
+let rec lister_contenu (Noeud(b, lb)) =
+   (* on décompose chaque branche de lb en paire caractère * arbre -> 1er map *)
+   (* on ajoute c devant chacun des mots de arbre c -> 2e map *)
+   let liste = List.flatten (List.map (fun (c, arbre_c) -> List.map (fun l -> c::l) (lister_contenu arbre_c)) lb)
+   in if b then
+      []::liste
+   else
+      liste
