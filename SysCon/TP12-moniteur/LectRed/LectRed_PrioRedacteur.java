@@ -10,28 +10,30 @@ import Synchro.Assert;
  * stratégie d'ordonnancement: priorité aux lecteurs,
  * implantation: avec un moniteur.
  */
-public class LectRed_PrioLecteur implements LectRed {
+public class LectRed_PrioRedacteur implements LectRed {
 
     private Lock moniteur = new ReentrantLock();
     private Condition accesLecture; // file acces lecture
     private Condition accesEcriture; // file acces écriture
     private int nbLecteurs; // nb lecteurs lisant
     private int nbEcrivains; // nb écrivains écrivant
+    private int nbEcrivainsEnAttente;
 
-    public LectRed_PrioLecteur() {
+    public LectRed_PrioRedacteur() {
         accesLecture = moniteur.newCondition();
         accesEcriture = moniteur.newCondition();
         nbLecteurs = 0;
         nbEcrivains = 0;
+        nbEcrivainsEnAttente = 0;
     }
 
     public void demanderLecture() throws InterruptedException {
         moniteur.lock();
-        if (!(nbEcrivains == 0)) {
-            accesLecture.await();
+        while ((nbEcrivains > 0) || (nbEcrivainsEnAttente > 0)) {
+            accesLecture.await(); // bloquant mais on utilise while pour retester la condition en sortant
         }
         nbLecteurs++;
-        accesLecture.signal();
+        accesLecture.signal(); // réveil en chaîne
         moniteur.unlock();
     }
 
@@ -46,8 +48,10 @@ public class LectRed_PrioLecteur implements LectRed {
 
     public void demanderEcriture() throws InterruptedException {
         moniteur.lock();
-        if ((nbEcrivains > 0) || (nbLecteurs > 0)) {
+        while ((nbLecteurs > 0) || (nbEcrivains > 0)) {
+            nbEcrivainsEnAttente++;
             accesEcriture.await();
+            nbEcrivainsEnAttente--;
         }
         nbEcrivains++;
         moniteur.unlock();
@@ -56,11 +60,15 @@ public class LectRed_PrioLecteur implements LectRed {
     public void terminerEcriture() throws InterruptedException {
         moniteur.lock();
         nbEcrivains--;
-        accesLecture.signal();
+        if (nbEcrivainsEnAttente > 0) {
+            accesEcriture.signal(); // les écrvaisn passent en premier
+        } else {
+            accesLecture.signal();
+        }
         moniteur.unlock();
     }
 
     public String nomStrategie() {
-        return "Stratégie: Priorité Lecteurs.";
+        return "Stratégie: Priorité Rédacteurs.";
     }
 }
