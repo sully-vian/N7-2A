@@ -6,7 +6,7 @@ open Chaines
     triplet arbre,
             fonction de décomposition mot -> liste de caractères,
             fonction de recomposition liste de caractères -> mot *)
-type ('a,'b) trie = Trie of ('b arbre) * ('a -> 'b list) * ('b list -> 'a)
+type ('a, 'b) trie = Trie of 'b arbre * ('a -> 'b list) * ('b list -> 'a)
 
 (******************************************************************************)
 (*   fonction de création d'un nouveau trie                                   *)
@@ -18,7 +18,7 @@ type ('a,'b) trie = Trie of ('b arbre) * ('a -> 'b list) * ('b list -> 'a)
 (*                     liste de caractères -> mot                             *)
 (*   résultat     : un nouveau trie "vide"                                    *)
 (******************************************************************************)
-let nouveau fd fr = Trie(Noeud(false,[]), fd, fr)
+let nouveau fd fr = Trie (Noeud (false, []), fd, fr)
 
 (******************************************************************************)
 (*   fonction d'appartenance d'un élément à un trie                           *)
@@ -27,7 +27,7 @@ let nouveau fd fr = Trie(Noeud(false,[]), fd, fr)
 (*                - un trie                                                   *)
 (*   résultat   : le résultat booléen du test                                 *)
 (******************************************************************************)
-let appartient mot (Trie(arbre, decompose, _)) =
+let appartient mot (Trie (arbre, decompose, _)) =
   appartient_arbre (decompose mot) arbre
 
 (******************************************************************************)
@@ -37,13 +37,25 @@ let appartient mot (Trie(arbre, decompose, _)) =
 (*                - un trie                                                   *)
 (*   résultat   : le trie avec le mot ajouté                                  *)
 (******************************************************************************)
-let ajout mot (Trie(arbre, decompose, recompose)) =
-  Trie (ajout_arbre (decompose mot) arbre,decompose,recompose)
+let ajout mot (Trie (arbre, decompose, recompose)) =
+  Trie (ajout_arbre (decompose mot) arbre, decompose, recompose)
 
 (*  Pour les tests *)
 let trie_sujet =
   List.fold_right ajout
-    ["bas"; "bât"; "de"; "la"; "lai"; "laid"; "lait"; "lard"; "le"; "les"; "long"]
+    [
+      "bas";
+      "bât";
+      "de";
+      "la";
+      "lai";
+      "laid";
+      "lait";
+      "lard";
+      "le";
+      "les";
+      "long";
+    ]
     (nouveau decompose_chaine recompose_chaine)
 
 (******************************************************************************)
@@ -53,8 +65,8 @@ let trie_sujet =
 (*                - un trie                                                   *)
 (*   résultat   : le trie avec le mot retiré                                  *)
 (******************************************************************************)
-let retrait mot (Trie(arbre, decompose, recompose)) =
-  Trie(retrait_arbre (decompose mot) arbre, decompose, recompose)
+let retrait mot (Trie (arbre, decompose, recompose)) =
+  Trie (retrait_arbre (decompose mot) arbre, decompose, recompose)
 
 (******************************************************************************)
 (*   fonction interne au Module qui génère la liste de tous les mots          *)
@@ -63,7 +75,7 @@ let retrait mot (Trie(arbre, decompose, recompose)) =
 (*   paramètre(s) : le trie                                                   *)
 (*   résultat     : la liste des mots                                         *)
 (******************************************************************************)
-let trie_dico (Trie(arbre, _, recompose)) =
+let trie_dico (Trie (arbre, _, recompose)) =
   let contenu = parcours arbre in
   List.map recompose contenu
 
@@ -78,5 +90,19 @@ let affiche p trie =
   let rec aux l =
     match l with
     | [] -> ()
-    | h::t -> p h; print_newline (); aux t
-  in aux (trie_dico trie)
+    | h :: t ->
+        let () = p h in
+        aux t
+  in
+  aux (trie_dico trie)
+
+(******************************************************************************)
+(*   fonction de retrait d'un élément d'un trie avec suppression des branches *)
+(*   inutiles ensuite                                                         *)
+(*   signature  : retrait_normalise : 'a -> ('a, 'b) trie -> ('a, 'b) trie    *)
+(*   paramètres : - un mot                                                    *)
+(*                - un trie                                                   *)
+(*   résultat   : le trie avec le mot retiré                                  *)
+(******************************************************************************)
+let retrait_normalise mot (Trie (arbre, decompose, recompose)) =
+  Trie (normaliser (retrait_arbre (decompose mot) arbre), decompose, recompose)

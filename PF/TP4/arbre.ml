@@ -186,12 +186,15 @@ let rec parcours (Noeud (b, lb)) =
 
 (******************************************************************************)
 (*   fonction qui élimine les branches inutiles dans un arbre                 *)
-(*   signature  : parcours : 'a arbre -> 'a arbre                             *)
+(*   signature  : normaliser : 'a arbre -> 'a arbre                           *)
+(*  *)
 (*   paramètres : un arbre n-aire                                             *)
 (*   résultat   : le même arbre, normalisé                                    *)
 (******************************************************************************)
 let rec normaliser (Noeud (b, lb)) =
+  (* normaliser chaque arbre fils et reconstruire *)
   let lwithvide = List.map (fun (c, t) -> (c, normaliser t)) lb in
+  (* on élimine les branches inutiles (celles qui sont vides après normalisation) *)
   let lwithoutvide =
     List.fold_right
       (fun t tq -> match t with _, Noeud (false, []) -> tq | _ -> t :: tq)

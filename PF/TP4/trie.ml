@@ -96,4 +96,13 @@ let affiche p trie =
   in
   aux (trie_dico trie)
 
-let retrait_normalise mot (Trie (arbre, decompose, recompose)) = ()
+(******************************************************************************)
+(*   fonction de retrait d'un élément d'un trie avec suppression des branches *)
+(*   inutiles ensuite                                                         *)
+(*   signature  : retrait_normalise : 'a -> ('a, 'b) trie -> ('a, 'b) trie    *)
+(*   paramètres : - un mot                                                    *)
+(*                - un trie                                                   *)
+(*   résultat   : le trie avec le mot retiré                                  *)
+(******************************************************************************)
+let retrait_normalise mot (Trie (arbre, decompose, recompose)) =
+  Trie (normaliser (retrait_arbre (decompose mot) arbre), decompose, recompose)
