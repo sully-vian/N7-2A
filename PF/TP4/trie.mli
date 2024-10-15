@@ -1,9 +1,9 @@
 (*                           Module de trie                                   *)
 
 (* type trie
-le mot est de type 'a, les "caractères" le composant de type 'b
+   le mot est de type 'a, les "caractères" le composant de type 'b
 *)
-type ('a,'b) trie
+type ('a, 'b) trie
 
 (******************************************************************************)
 (*   fonction de création d'un nouveau trie                                   *)
@@ -54,4 +54,4 @@ val retrait : 'a -> ('a, 'b) trie -> ('a, 'b) trie
 val affiche : ('a -> unit) -> ('a, 'b) trie -> unit
 
 (*  Pour les tests *)
-val trie_sujet : (string,char) trie
+val trie_sujet : (string, char) trie

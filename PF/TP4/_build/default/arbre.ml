@@ -104,7 +104,7 @@ let%test _ = arbre_sujet3 = arbre_sujet
 (******************************************************************************)
 let rec retrait_arbre lc (Noeud(b, lb)) =
   match lc with
-  (* On a épuiser la liste, on est à la fin du mot qu'on veut supprimer donc on
+  (* On a épuisé la liste, on est à la fin du mot qu'on veut supprimer donc on
      l'enlève en fixant le booléen à false *)
   | [] -> Noeud(false, lb)
   (* sinon, on cherche l'arbre_c de la branche correspondant au premier
@@ -121,15 +121,23 @@ let rec retrait_arbre lc (Noeud(b, lb)) =
 
 (******************************************************************************)
 (*   fonction de listage des éléments dans un arbre                           *)
-(*   signature  : lister_contenu : 'a arbre -> 'a list list                   *)
+(*   signature  : parcours : 'a arbre -> 'a list list                   *)
 (*   paramètres : un arbre n-aire                                             *)
 (*   résultat   : la liste des éléments présents dans l'arbre                 *)
 (******************************************************************************)
-let rec lister_contenu (Noeud(b, lb)) =
+let rec parcours (Noeud(b, lb)) =
    (* on décompose chaque branche de lb en paire caractère * arbre -> 1er map *)
    (* on ajoute c devant chacun des mots de arbre c -> 2e map *)
-   let liste = List.flatten (List.map (fun (c, arbre_c) -> List.map (fun l -> c::l) (lister_contenu arbre_c)) lb)
+   let liste = List.flatten (List.map (fun (c, arbre_c) -> List.map (fun l -> c::l) (parcours arbre_c)) lb)
    in if b then
       []::liste
    else
       liste
+
+(******************************************************************************)
+(*   fonction qui élimine les branches inutiles                               *)
+(*   signature  : normaliser : 'a arbre -> 'a arbre                           *)
+(*   paramètres : un arbre n-aire                                             *)
+(*   résultat   : le même arbre sans les branches inutiles                    *)
+(******************************************************************************)
+let rec normaliser (Noeud(b, lb)) = failwith "TODO"

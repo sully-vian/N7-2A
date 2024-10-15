@@ -63,7 +63,9 @@ let retrait mot (Trie(arbre, decompose, recompose)) =
 (*   paramètre(s) : le trie                                                   *)
 (*   résultat     : la liste des mots                                         *)
 (******************************************************************************)
-let trie_dico trie = failwith "trie_dico"
+let trie_dico (Trie(arbre, _, recompose)) =
+  let contenu = parcours arbre in
+  List.map recompose contenu
 
 (******************************************************************************)
 (* procédure d'affichage d'un trie                                            *)
@@ -72,4 +74,9 @@ let trie_dico trie = failwith "trie_dico"
 (*                - un trie                                                   *)
 (*   résultat   : aucun                                                       *)
 (******************************************************************************)
-let affiche p trie = failwith "TO DO affiche"
+let affiche p trie =
+  let rec aux l =
+    match l with
+    | [] -> ()
+    | h::t -> p h; print_newline (); aux t
+  in aux (trie_dico trie)
