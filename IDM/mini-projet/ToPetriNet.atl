@@ -1,0 +1,28 @@
+-- @path SimplePDL=/fr.n7.simplePDL2/SimplePDL.ecore
+-- @path PetriNet=/fr.n7.taskMaster/Petrinet.ecore
+
+module toPetriNet;
+create OUT : PetriNet from IN : SimplePDL;
+
+rule Process2PetriNet {
+	from process : SimplePDL!Process
+	to petriNet : PetriNet!PetriNet(name <- process.name)}
+
+rule ProcessElement2Places {
+  from pe : SimplePDL!ProcessElement
+  to
+    pl_start : PetriNet!Place( name <- pe.name + '_start'),
+    pl_in_progress : PetriNet!Place( name <- pe.name + '_in_progress'),
+    pl_started : PetriNet!Place(, name <- pe.name + '_started'),
+    pl_finish : PetriNet!Place( name <- pe.name + '_finish'),
+
+    tr_starting : PetriNet!Transition(name <- pe.name + '_starting'),
+    tr_ending : PetriNet!Transition(name <- pe.name + '_ending'),
+
+    arc1 : PetriNet!Place2Transition(source <- pl_start, cible <- tr_starting),
+    arc2 : PetriNet!Transition2Place(source <- tr_starting, cible <- pl_in_progress),
+    arc3 : PetriNet!Place2Transition(source <- pl_in_progress, cible <- tr_ending),
+    arc4 : PetriNet!Transition2Place(source <- ptr_ending, cible <- pl_finished),
+    arc5 : PetriNet!Place2Transition(source <- tr_starting, cible <- pl_started),
+}
+
