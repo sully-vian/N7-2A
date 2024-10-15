@@ -61,7 +61,7 @@ public class LectRed_PrioRedacteur implements LectRed {
         moniteur.lock();
         nbEcrivains--;
         if (nbEcrivainsEnAttente > 0) {
-            accesEcriture.signal(); // les écrvaisn passent en premier
+            accesEcriture.signal(); // les écrivains passent en premier
         } else {
             accesLecture.signal();
         }

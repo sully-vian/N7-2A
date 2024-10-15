@@ -27,11 +27,11 @@ public class LectRed_PrioLecteur implements LectRed {
 
     public void demanderLecture() throws InterruptedException {
         moniteur.lock();
-        if (!(nbEcrivains == 0)) {
+        while (nbEcrivains > 0) {
             accesLecture.await();
         }
         nbLecteurs++;
-        accesLecture.signal();
+        accesLecture.signal(); // réveil en chaîne
         moniteur.unlock();
     }
 
@@ -46,7 +46,7 @@ public class LectRed_PrioLecteur implements LectRed {
 
     public void demanderEcriture() throws InterruptedException {
         moniteur.lock();
-        if ((nbEcrivains > 0) || (nbLecteurs > 0)) {
+        while ((nbEcrivains > 0) || (nbLecteurs > 0)) {
             accesEcriture.await();
         }
         nbEcrivains++;
@@ -59,6 +59,7 @@ public class LectRed_PrioLecteur implements LectRed {
         accesLecture.signal();
         moniteur.unlock();
     }
+
 
     public String nomStrategie() {
         return "Stratégie: Priorité Lecteurs.";
