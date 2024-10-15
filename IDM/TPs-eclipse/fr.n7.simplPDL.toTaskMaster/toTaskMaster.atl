@@ -1,0 +1,10 @@
+-- @path SimplePDL=/fr.n7.simplePDL2/SimplePDL.ecore
+-- @path TaskMaster=/fr.n7.taskMaster/TaskMaster.ecore
+
+module toTaskMaster;
+create OUT : TaskMaster from IN : SimplePDL;
+
+rule Process2EventBundle {
+	from process : SimplePDL!Process
+	to bundle : TaskMaster!EventBundle(name <- process.name)}
+
