@@ -10,9 +10,12 @@ public class PhiloMon implements StrategiePhilo {
     // État d'un philosophe : pense, mange, demande ?
     private EtatPhilosophe[] etat;
 
+    private int nbPhilosophes;
+
     /****************************************************************/
 
-    public PhiloMon (int nbPhilosophes) {
+    public PhiloMon(int nbPhilosophes) {
+        this.nbPhilosophes = nbPhilosophes;
         this.etat = new EtatPhilosophe[nbPhilosophes];
         for (int i = 0; i < nbPhilosophes; i++) {
             etat[i] = EtatPhilosophe.Pense;
@@ -20,20 +23,23 @@ public class PhiloMon implements StrategiePhilo {
         /* XXXX */
     }
 
-    public void demanderFourchettes (int no) throws InterruptedException
-    {
+    public void demanderFourchettes(int no) throws InterruptedException {
         etat[no] = EtatPhilosophe.Demande;
-        /* XXXX */
-        etat[no] = EtatPhilosophe.Mange;
+
+        while ((etat[Main.PhiloGauche(no)] == EtatPhilosophe.Mange) ||
+                (etat[Main.PhiloDroite(no)] == EtatPhilosophe.Mange)) {
+            // attendre
+        }
+
+        etat[no] = EtatPhilosophe.Mange; // manger quand fourchettes libérées
         // j'ai les fourchette G et D
-        IHMPhilo.poser (Main.FourchetteGauche(no), EtatFourchette.AssietteDroite);
-        IHMPhilo.poser (Main.FourchetteDroite(no), EtatFourchette.AssietteGauche);
+        IHMPhilo.poser(Main.FourchetteGauche(no), EtatFourchette.AssietteDroite);
+        IHMPhilo.poser(Main.FourchetteDroite(no), EtatFourchette.AssietteGauche);
     }
 
-    public void libererFourchettes (int no)
-    {
-        IHMPhilo.poser (Main.FourchetteGauche(no), EtatFourchette.Table);
-        IHMPhilo.poser (Main.FourchetteDroite(no), EtatFourchette.Table);
+    public void libererFourchettes(int no) {
+        IHMPhilo.poser(Main.FourchetteGauche(no), EtatFourchette.Table);
+        IHMPhilo.poser(Main.FourchetteDroite(no), EtatFourchette.Table);
         etat[no] = EtatPhilosophe.Pense;
         /* XXXX */
     }
@@ -43,4 +49,3 @@ public class PhiloMon implements StrategiePhilo {
     }
 
 }
-

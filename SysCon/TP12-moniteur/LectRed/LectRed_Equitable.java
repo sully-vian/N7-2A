@@ -29,6 +29,7 @@ public class LectRed_Equitable implements LectRed {
 
     public void demanderLecture() throws InterruptedException {
         moniteur.lock();
+        // si on met le while,on a attente réciproque pour une demande de chaque type qui se regardent
         if ((nbEcrivains > 0) || (nbEcrivainsEnAttente > 0)) {
             nbLecteursEnAttente++;
             accesLecture.await();
