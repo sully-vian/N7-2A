@@ -1,5 +1,3 @@
-// Time-stamp: <11 oct 2024 08:19 Philippe Queinnec>
-
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -7,10 +5,10 @@ import Synchro.Assert;
 
 /**
  * Lecteurs/rédacteurs
- * stratégie d'ordonnancement: priorité aux lecteurs,
+ * stratégie d'ordonnancement: équitable (absence de famine),
  * implantation: avec un moniteur.
  */
-public class LectRed_PrioLecteur implements LectRed {
+public class LectRed_Equitable implements LectRed {
 
     private Lock moniteur = new ReentrantLock();
     private Condition accesLecture; // file acces lecture
@@ -18,18 +16,20 @@ public class LectRed_PrioLecteur implements LectRed {
     private int nbLecteurs; // nb lecteurs lisant
     private int nbEcrivains; // nb écrivains écrivant
     private int nbLecteursEnAttente;
+    private int nbEcrivainsEnAttente;
 
-    public LectRed_PrioLecteur() {
+    public LectRed_Equitable() {
         accesLecture = moniteur.newCondition();
         accesEcriture = moniteur.newCondition();
         nbLecteurs = 0;
         nbEcrivains = 0;
         nbLecteursEnAttente = 0;
+        nbEcrivainsEnAttente = 0;
     }
 
     public void demanderLecture() throws InterruptedException {
         moniteur.lock();
-        while (nbEcrivains > 0) {
+        if ((nbEcrivains > 0) || (nbEcrivainsEnAttente > 0)) {
             nbLecteursEnAttente++;
             accesLecture.await();
             nbLecteursEnAttente--;
@@ -50,8 +50,10 @@ public class LectRed_PrioLecteur implements LectRed {
 
     public void demanderEcriture() throws InterruptedException {
         moniteur.lock();
-        while ((nbEcrivains > 0) || (nbLecteurs > 0)) {
+        if ((nbLecteurs > 0) || (nbEcrivains > 0)) {
+            nbEcrivainsEnAttente++;
             accesEcriture.await();
+            nbEcrivainsEnAttente--;
         }
         nbEcrivains++;
         moniteur.unlock();
@@ -69,6 +71,6 @@ public class LectRed_PrioLecteur implements LectRed {
     }
 
     public String nomStrategie() {
-        return "Stratégie: Priorité Lecteurs.";
+        return "Stratégie: Équitable";
     }
 }
