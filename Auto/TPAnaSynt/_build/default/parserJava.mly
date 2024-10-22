@@ -105,43 +105,19 @@ variables : /* Lambda, mot vide */
 
 variable : typeStruct IDENT PTVIRG { (print_endline "variable : typeStruct IDENT PTVIRG") }
 
-/* DONE : Completer pour decrire une liste d'instructions eventuellement vide */
-instructions : /* Lambda, mot vide */ {(print_endline "instructions : /* Lambda, mot vide */")}
-			 |instruction instructions { (print_endline "instructions : instruction") }
+/* TODO : Completer pour decrire une liste d'instructions eventuellement vide */
+instructions : instruction { (print_endline "instructions : instruction") }
 
-/* DONE : Completer pour ajouter les autres formes d'instructions */
-instruction : expression PTVIRG { (print_endline "instruction : expression PTVIRG") }
-			| SI PAROUV expression PARFER bloc { (print_endline "instruction : SI PAROUV expression PARFER bloc") }
-			| SI PAROUV expression PARFER bloc SINON bloc { (print_endline "instruction : SI PAROUV expression PARFER bloc SINON bloc") }
-			| TANTQUE PAROUV expression PARFER bloc { (print_endline "instruction : TANTQUE PAROUV expression PARFER bloc") }
-            | RETOUR expression PTVIRG { (print_endline "instruction : RETURN expression PTVIRG") }
+/* TODO : Completer pour ajouter les autres formes d'instructions */
+               instruction : expression PTVIRG { (print_endline "instruction : expression PTVIRG") }
+                             | RETOUR expression PTVIRG  { (print_endline "instruction : RETURN expression PTVIRG") }
 
 /* TODO : Completer pour ajouter les autres formes d'expressions */
 expression : ENTIER { (print_endline "expression : ENTIER") }
 	   | expression OPPLUS expression {(print_endline "expression : expression OPPLUS expression")}
-	   | expression OPMOINS expression {(print_endline "expression : expression OPMOINS expression")}
-	   | expression OPMULT expression {(print_endline "expression : expression OPPMULT expression")}
-	   | expression OPDIV expression {(print_endline "expression : expression OPDIV expression")}
-
-	   // on prend la prorité de OPNON
-	   | OPPLUS expression %prec OPNON {(print_endline "expression : OPPLUS expression")}
-	   | OPMOINS expression %prec OPNON {(print_endline "expression : OPMOINS expression")}
-
-	   | expression OPINF expression {(print_endline "expression : expression OPINF expression")}
-	   | expression OPSUP expression {(print_endline "expression : expression OPSUP expression")}
-	   | expression OPINFEG expression {(print_endline "expression : expression OPINFEG expression")}
-	   | expression OPSUPEG expression {(print_endline "expression : expression OPSUPEG expression")}
-	   | expression OPEG expression {(print_endline "expression : expression OPEG expression")}
-	   | expression OPNONEG expression {(print_endline "expression : expression OPNONEG expression")}
-
-binaire : ASSIGN | OPPT | OPPLUS | OPMOINS | OPMULT | OPDIV | OPMOD | OPOU | OPET | OPEG | OPNONEG | OPINF | OPSUP | OPINFEG | OPSUPEG
-
-unaire : PAROUV TYPEIDENT PARFER
-       | OPPLUS
-	   | OPMOINS
-	   | OPNON
-
-suffixe : PAROUV expression PARFER
-		| CROOUV expression CROFER
+	   
+	   | expression OPMULT expression {}
+	   
+	   | OPPLUS expression %prec OPNON {}
 
 %%
