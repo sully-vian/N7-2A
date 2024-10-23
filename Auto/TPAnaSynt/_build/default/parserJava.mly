@@ -4,7 +4,7 @@
 (* Ouverture de modules exploites dans les actions *)
 (* Declarations de types, de constantes, de fonctions, d'exceptions exploites dans les actions *)
 
-(* let nbrVariables = ref 0;; *)
+let nbrVariables = ref 0;;
 
 let nbrFonctions = ref 0;;
 
@@ -95,29 +95,81 @@ bloc : ACCOUV /* $1 */ variables /* $2 */ instructions /* $3 */ ACCFER /* $4 */
 variables : /* Lambda, mot vide */
 	  {
 		(print_endline "variables : /* Lambda, mot vide */");
-		0
+		(nbrVariables := !nbrVariables + 0)
 		}
           | variable /* $1 */ variables /* $2 */
 	  {
 		(print_endline "variables : variable variables");
-		($2 + 1)
+		(nbrVariables := !nbrVariables + 1)
 		}
 
 variable : typeStruct IDENT PTVIRG { (print_endline "variable : typeStruct IDENT PTVIRG") }
 
-/* TODO : Completer pour decrire une liste d'instructions eventuellement vide */
-instructions : instruction { (print_endline "instructions : instruction") }
+/* DONE : Completer pour decrire une liste d'instructions eventuellement vide */
+instructions : /* Lambda, mot vide */ {(print_endline "instructions : /* Lambda, mot vide */")}
+			 |instruction instructions { (print_endline "instructions : instruction") }
 
-/* TODO : Completer pour ajouter les autres formes d'instructions */
-               instruction : expression PTVIRG { (print_endline "instruction : expression PTVIRG") }
-                             | RETOUR expression PTVIRG  { (print_endline "instruction : RETURN expression PTVIRG") }
+/* DONE : Completer pour ajouter les autres formes d'instructions */
+instruction : expression PTVIRG { (print_endline "instruction : expression PTVIRG") }
+			| SI PAROUV expression PARFER bloc { (print_endline "instruction : SI PAROUV expression PARFER bloc") }
+			| SI PAROUV expression PARFER bloc SINON bloc { (print_endline "instruction : SI PAROUV expression PARFER bloc SINON bloc") }
+			| TANTQUE PAROUV expression PARFER bloc { (print_endline "instruction : TANTQUE PAROUV expression PARFER bloc") }
+            | RETOUR expression PTVIRG { (print_endline "instruction : RETURN expression PTVIRG") }
 
-/* TODO : Completer pour ajouter les autres formes d'expressions */
-expression : ENTIER { (print_endline "expression : ENTIER") }
-	   | expression OPPLUS expression {(print_endline "expression : expression OPPLUS expression")}
-	   
-	   | expression OPMULT expression {}
-	   
-	   | OPPLUS expression %prec OPNON {}
+/* DONE : Completer pour ajouter les autres formes d'expressions */
+expr : ENTIER {(print_endline "expr : ENTIER")}
+	 | FLOTTANT {(print_endline "expr : FLOTTANT")}
+	 | CHAR {(print_endline "expr : CHAR")}
+	 | BOOLEEN {(print_endline "expr : BOOLEEN")}
+	 | VIDE {(print_endline "expr : VIDE")}
+	 | NOUVEAU IDENT exprourien {}
+	 | exprouident suffixetoile {}
+
+expression : unairetoile expr binairetoile {}
+		   | unairetoile expr binairetoile expression {}
+
+unaire : PAROUV typeBase PARFER {}
+       | OPPLUS %prec OPNON {}
+	   | OPMOINS %prec OPNON {}
+	   | OPNON {}
+
+unairetoile : /* Lambda, mot vide */ {}
+            | unaire unairetoile {}
+
+binairetoile : /* Lambda, mot vide */ {}
+            | binaire binairetoile {}
+
+binaire : ASSIGN {(print_endline "binaire : ASSIGN")}
+		| OPPT {(print_endline "binaire : OPPT")}
+		| OPPLUS {(print_endline "binaire : OPPLUS")}
+		| OPMOINS {(print_endline "binaire : OPMOINS")}
+		| OPMULT {(print_endline "binaire : OPMULT")}
+		| OPDIV {(print_endline "binaire : OPDIV")}
+		| OPMOD {(print_endline "binaire : OPMOD")}
+		| OPOU {(print_endline "binaire : OPOU")}
+		| OPET {(print_endline "binaire : OPET")}
+		| OPEG {(print_endline "binaire : OPEG")}
+		| OPNONEG {(print_endline "binaire : OPNONEG")}
+		| OPINF {(print_endline "binaire : OPINF")}
+		| OPSUP {(print_endline "binaire : OPSUP")}
+		| OPINFEG {(print_endline "binaire : OPINFEG")}
+		| OPSUPEG {(print_endline "binaire : OPSUPEG")}
+
+
+suffixe : PAROUV PARFER {}
+		| PAROUV exprvirg PARFER {}
+		| CROOUV expression CROFER {}
+
+suffixetoile : /* Lambda, mot vide */ {}
+             | suffixe suffixetoile {}
+
+exprvirg : expression {}
+		 | expression VIRG exprvirg {}
+
+exprourien : PAROUV PARFER {}
+		   | CROOUV expression CROFER {}
+
+exprouident : IDENT {}
+			| PAROUV expression PARFER {}
 
 %%

@@ -81,7 +81,7 @@ type token =
 (* Ouverture de modules exploites dans les actions *)
 (* Declarations de types, de constantes, de fonctions, d'exceptions exploites dans les actions *)
 
-(* let nbrVariables = ref 0;; *)
+let nbrVariables = ref 0;;
 
 let nbrFonctions = ref 0;;
 
@@ -91,7 +91,7 @@ let nbrFonctions = ref 0;;
 let menhir_begin_marker =
   0
 
-and (xv_variables, xv_variable, xv_typeStruct, xv_typeBase, xv_suiteParsFormels, xv_programme, xv_parsFormels, xv_instructions, xv_instruction, xv_fonction, xv_fichier, xv_expression, xv_entete, xv_declTab, xv_bloc) =
+and (xv_variables, xv_variable, xv_unairetoile, xv_unaire, xv_typeStruct, xv_typeBase, xv_suiteParsFormels, xv_suffixetoile, xv_suffixe, xv_programme, xv_parsFormels, xv_instructions, xv_instruction, xv_fonction, xv_fichier, xv_exprvirg, xv_exprourien, xv_exprouident, xv_expression, xv_expr, xv_entete, xv_declTab, xv_bloc, xv_binairetoile, xv_binaire) =
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ((
 # 100 "parserJava.mly"
                     _2
@@ -109,7 +109,7 @@ and (xv_variables, xv_variable, xv_typeStruct, xv_typeBase, xv_suiteParsFormels,
 # 101 "parserJava.mly"
    (
 		(print_endline "variables : variable variables");
-		(_2 + 1)
+		(nbrVariables := !nbrVariables + 1)
 		)
 # 115 "parserJava__mock.ml.mock"
      : 'tv_variables) : (
@@ -122,7 +122,7 @@ and (xv_variables, xv_variable, xv_typeStruct, xv_typeBase, xv_suiteParsFormels,
 # 96 "parserJava.mly"
    (
 		(print_endline "variables : /* Lambda, mot vide */");
-		0
+		(nbrVariables := !nbrVariables + 0)
 		)
 # 128 "parserJava__mock.ml.mock"
      : 'tv_variables) : (
@@ -153,401 +153,801 @@ and (xv_variables, xv_variable, xv_typeStruct, xv_typeBase, xv_suiteParsFormels,
 # 154 "parserJava__mock.ml.mock"
      : 'tv_variable) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 137 "parserJava.mly"
+                    _2
+# 159 "parserJava__mock.ml.mock"
+   : 'tv_unairetoile) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 137 "parserJava.mly"
+             _1
+# 163 "parserJava__mock.ml.mock"
+   : 'tv_unaire) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 137 "parserJava.mly"
+                                 ()
+# 168 "parserJava__mock.ml.mock"
+     : 'tv_unairetoile) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ->
+    (
+# 136 "parserJava.mly"
+                                     ()
+# 174 "parserJava__mock.ml.mock"
+     : 'tv_unairetoile) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 134 "parserJava.mly"
+     _1
+# 179 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 134 "parserJava.mly"
+            ()
+# 184 "parserJava__mock.ml.mock"
+     : 'tv_unaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 133 "parserJava.mly"
+     _1
+# 189 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 133 "parserJava.mly"
+                          ()
+# 194 "parserJava__mock.ml.mock"
+     : 'tv_unaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 132 "parserJava.mly"
+        _1
+# 199 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 132 "parserJava.mly"
+                            ()
+# 204 "parserJava__mock.ml.mock"
+     : 'tv_unaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 131 "parserJava.mly"
+                        _3
+# 209 "parserJava__mock.ml.mock"
+   : unit) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 131 "parserJava.mly"
+               _2
+# 213 "parserJava__mock.ml.mock"
+   : 'tv_typeBase) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 131 "parserJava.mly"
+        _1
+# 217 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 131 "parserJava.mly"
+                                ()
+# 222 "parserJava__mock.ml.mock"
+     : 'tv_unaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 64 "parserJava.mly"
                      _2
-# 159 "parserJava__mock.ml.mock"
+# 227 "parserJava__mock.ml.mock"
    : 'tv_declTab) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 64 "parserJava.mly"
             _1
-# 163 "parserJava__mock.ml.mock"
+# 231 "parserJava__mock.ml.mock"
    : 'tv_typeBase) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 64 "parserJava.mly"
                               ( (print_endline "typeStruct : typeBase declTab") )
-# 168 "parserJava__mock.ml.mock"
+# 236 "parserJava__mock.ml.mock"
      : 'tv_typeStruct) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 71 "parserJava.mly"
           _1
-# 173 "parserJava__mock.ml.mock"
-   : (
-# 16 "parserJava.mly"
-       (string)
-# 177 "parserJava__mock.ml.mock"
-  )) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
-    (
-# 71 "parserJava.mly"
-                     ( (print_endline "typeBase : TYPEIDENT") )
-# 182 "parserJava__mock.ml.mock"
-     : 'tv_typeBase) in
-  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 70 "parserJava.mly"
-          _1
-# 187 "parserJava__mock.ml.mock"
-   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
-    (
-# 70 "parserJava.mly"
-                  ( (print_endline "typeBase : STRING") )
-# 192 "parserJava__mock.ml.mock"
-     : 'tv_typeBase) in
-  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 69 "parserJava.mly"
-          _1
-# 197 "parserJava__mock.ml.mock"
-   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
-    (
-# 69 "parserJava.mly"
-                ( (print_endline "typeBase : CHAR") )
-# 202 "parserJava__mock.ml.mock"
-     : 'tv_typeBase) in
-  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 68 "parserJava.mly"
-          _1
-# 207 "parserJava__mock.ml.mock"
-   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
-    (
-# 68 "parserJava.mly"
-                ( (print_endline "typeBase : BOOL") )
-# 212 "parserJava__mock.ml.mock"
-     : 'tv_typeBase) in
-  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 67 "parserJava.mly"
-          _1
-# 217 "parserJava__mock.ml.mock"
-   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
-    (
-# 67 "parserJava.mly"
-                 ( (print_endline "typeBase : FLOAT") )
-# 222 "parserJava__mock.ml.mock"
-     : 'tv_typeBase) in
-  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 66 "parserJava.mly"
-          _1
-# 227 "parserJava__mock.ml.mock"
-   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
-    (
-# 66 "parserJava.mly"
-               ( (print_endline "typeBase : INT") )
-# 232 "parserJava__mock.ml.mock"
-     : 'tv_typeBase) in
-  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 85 "parserJava.mly"
-                                        _4
-# 237 "parserJava__mock.ml.mock"
-   : 'tv_suiteParsFormels) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
-# 85 "parserJava.mly"
-                                  _3
 # 241 "parserJava__mock.ml.mock"
    : (
 # 16 "parserJava.mly"
        (string)
 # 245 "parserJava__mock.ml.mock"
+  )) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 71 "parserJava.mly"
+                     ( (print_endline "typeBase : TYPEIDENT") )
+# 250 "parserJava__mock.ml.mock"
+     : 'tv_typeBase) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 70 "parserJava.mly"
+          _1
+# 255 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 70 "parserJava.mly"
+                  ( (print_endline "typeBase : STRING") )
+# 260 "parserJava__mock.ml.mock"
+     : 'tv_typeBase) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 69 "parserJava.mly"
+          _1
+# 265 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 69 "parserJava.mly"
+                ( (print_endline "typeBase : CHAR") )
+# 270 "parserJava__mock.ml.mock"
+     : 'tv_typeBase) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 68 "parserJava.mly"
+          _1
+# 275 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 68 "parserJava.mly"
+                ( (print_endline "typeBase : BOOL") )
+# 280 "parserJava__mock.ml.mock"
+     : 'tv_typeBase) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 67 "parserJava.mly"
+          _1
+# 285 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 67 "parserJava.mly"
+                 ( (print_endline "typeBase : FLOAT") )
+# 290 "parserJava__mock.ml.mock"
+     : 'tv_typeBase) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 66 "parserJava.mly"
+          _1
+# 295 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 66 "parserJava.mly"
+               ( (print_endline "typeBase : INT") )
+# 300 "parserJava__mock.ml.mock"
+     : 'tv_typeBase) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 85 "parserJava.mly"
+                                        _4
+# 305 "parserJava__mock.ml.mock"
+   : 'tv_suiteParsFormels) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
+# 85 "parserJava.mly"
+                                  _3
+# 309 "parserJava__mock.ml.mock"
+   : (
+# 16 "parserJava.mly"
+       (string)
+# 313 "parserJava__mock.ml.mock"
   )) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
 # 85 "parserJava.mly"
                        _2
-# 249 "parserJava__mock.ml.mock"
+# 317 "parserJava__mock.ml.mock"
    : 'tv_typeStruct) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 85 "parserJava.mly"
                   _1
-# 253 "parserJava__mock.ml.mock"
+# 321 "parserJava__mock.ml.mock"
    : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 85 "parserJava.mly"
                                                           ( (print_endline "suiteParsFormels : VIRG typeStruct IDENT suiteParsFormels") )
-# 258 "parserJava__mock.ml.mock"
+# 326 "parserJava__mock.ml.mock"
      : 'tv_suiteParsFormels) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ->
     (
 # 84 "parserJava.mly"
                                           ( (print_endline "suiteParsFormels : /* Lambda, mot vide */") )
-# 264 "parserJava__mock.ml.mock"
+# 332 "parserJava__mock.ml.mock"
      : 'tv_suiteParsFormels) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 164 "parserJava.mly"
+                      _2
+# 337 "parserJava__mock.ml.mock"
+   : 'tv_suffixetoile) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 164 "parserJava.mly"
+              _1
+# 341 "parserJava__mock.ml.mock"
+   : 'tv_suffixe) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 164 "parserJava.mly"
+                                    ()
+# 346 "parserJava__mock.ml.mock"
+     : 'tv_suffixetoile) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ->
+    (
+# 163 "parserJava.mly"
+                                      ()
+# 352 "parserJava__mock.ml.mock"
+     : 'tv_suffixetoile) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 161 "parserJava.mly"
+                     _3
+# 357 "parserJava__mock.ml.mock"
+   : unit) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 161 "parserJava.mly"
+          _2
+# 361 "parserJava__mock.ml.mock"
+   : 'tv_expression) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 161 "parserJava.mly"
+   _1
+# 365 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 161 "parserJava.mly"
+                             ()
+# 370 "parserJava__mock.ml.mock"
+     : 'tv_suffixe) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 160 "parserJava.mly"
+                   _3
+# 375 "parserJava__mock.ml.mock"
+   : unit) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 160 "parserJava.mly"
+          _2
+# 379 "parserJava__mock.ml.mock"
+   : 'tv_exprvirg) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 160 "parserJava.mly"
+   _1
+# 383 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 160 "parserJava.mly"
+                           ()
+# 388 "parserJava__mock.ml.mock"
+     : 'tv_suffixe) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 159 "parserJava.mly"
+                _2
+# 393 "parserJava__mock.ml.mock"
+   : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 159 "parserJava.mly"
+         _1
+# 397 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 159 "parserJava.mly"
+                        ()
+# 402 "parserJava__mock.ml.mock"
+     : 'tv_suffixe) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 62 "parserJava.mly"
                     _2
-# 269 "parserJava__mock.ml.mock"
+# 407 "parserJava__mock.ml.mock"
    : 'tv_programme) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 62 "parserJava.mly"
            _1
-# 273 "parserJava__mock.ml.mock"
+# 411 "parserJava__mock.ml.mock"
    : 'tv_fonction) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 62 "parserJava.mly"
                                ( (nbrFonctions := !nbrFonctions + 1);(print_endline "programme : fonction programme") )
-# 278 "parserJava__mock.ml.mock"
+# 416 "parserJava__mock.ml.mock"
      : 'tv_programme) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ->
     (
 # 61 "parserJava.mly"
                                    ( (nbrFonctions := 0); (print_endline "programme : /* Lambda, mot vide */") )
-# 284 "parserJava__mock.ml.mock"
+# 422 "parserJava__mock.ml.mock"
      : 'tv_programme) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 82 "parserJava.mly"
                               _3
-# 289 "parserJava__mock.ml.mock"
+# 427 "parserJava__mock.ml.mock"
    : 'tv_suiteParsFormels) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
 # 82 "parserJava.mly"
                         _2
-# 293 "parserJava__mock.ml.mock"
+# 431 "parserJava__mock.ml.mock"
    : (
 # 16 "parserJava.mly"
        (string)
-# 297 "parserJava__mock.ml.mock"
+# 435 "parserJava__mock.ml.mock"
   )) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 82 "parserJava.mly"
              _1
-# 301 "parserJava__mock.ml.mock"
+# 439 "parserJava__mock.ml.mock"
    : 'tv_typeStruct) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 82 "parserJava.mly"
                                                 ( (print_endline "parsFormels : typeStruct IDENT suiteParsFormels") )
-# 306 "parserJava__mock.ml.mock"
+# 444 "parserJava__mock.ml.mock"
      : 'tv_parsFormels) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ->
     (
 # 81 "parserJava.mly"
                                      ( (print_endline "parsFormels : /* Lambda, mot vide */") )
-# 312 "parserJava__mock.ml.mock"
+# 450 "parserJava__mock.ml.mock"
      : 'tv_parsFormels) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 109 "parserJava.mly"
-              _1
-# 317 "parserJava__mock.ml.mock"
+# 110 "parserJava.mly"
+                _2
+# 455 "parserJava__mock.ml.mock"
+   : 'tv_instructions) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 110 "parserJava.mly"
+     _1
+# 459 "parserJava__mock.ml.mock"
    : 'tv_instruction) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
+# 110 "parserJava.mly"
+                              ( (print_endline "instructions : instruction") )
+# 464 "parserJava__mock.ml.mock"
+     : 'tv_instructions) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ->
+    (
 # 109 "parserJava.mly"
-                           ( (print_endline "instructions : instruction") )
-# 322 "parserJava__mock.ml.mock"
+                                      ((print_endline "instructions : /* Lambda, mot vide */"))
+# 470 "parserJava__mock.ml.mock"
      : 'tv_instructions) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 113 "parserJava.mly"
-                                                _3
-# 327 "parserJava__mock.ml.mock"
+# 117 "parserJava.mly"
+                               _3
+# 475 "parserJava__mock.ml.mock"
    : unit) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
-# 113 "parserJava.mly"
-                                     _2
-# 331 "parserJava__mock.ml.mock"
+# 117 "parserJava.mly"
+                    _2
+# 479 "parserJava__mock.ml.mock"
    : 'tv_expression) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
-# 113 "parserJava.mly"
-                              _1
-# 335 "parserJava__mock.ml.mock"
+# 117 "parserJava.mly"
+             _1
+# 483 "parserJava__mock.ml.mock"
    : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
-# 113 "parserJava.mly"
-                                                         ( (print_endline "instruction : RETURN expression PTVIRG") )
-# 340 "parserJava__mock.ml.mock"
+# 117 "parserJava.mly"
+                                       ( (print_endline "instruction : RETURN expression PTVIRG") )
+# 488 "parserJava__mock.ml.mock"
      : 'tv_instruction) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 112 "parserJava.mly"
-                                       _2
-# 345 "parserJava__mock.ml.mock"
+# 116 "parserJava.mly"
+                                     _5
+# 493 "parserJava__mock.ml.mock"
+   : 'tv_bloc) (_startpos__5_ : Lexing.position) (_endpos__5_ : Lexing.position) (_startofs__5_ : int) (_endofs__5_ : int) (_loc__5_ : Lexing.position * Lexing.position) (
+# 116 "parserJava.mly"
+                              _4
+# 497 "parserJava__mock.ml.mock"
+   : unit) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
+# 116 "parserJava.mly"
+                   _3
+# 501 "parserJava__mock.ml.mock"
+   : 'tv_expression) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 116 "parserJava.mly"
+            _2
+# 505 "parserJava__mock.ml.mock"
    : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
-# 112 "parserJava.mly"
-                            _1
-# 349 "parserJava__mock.ml.mock"
+# 116 "parserJava.mly"
+    _1
+# 509 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 116 "parserJava.mly"
+                                           ( (print_endline "instruction : TANTQUE PAROUV expression PARFER bloc") )
+# 514 "parserJava__mock.ml.mock"
+     : 'tv_instruction) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 115 "parserJava.mly"
+                                           _7
+# 519 "parserJava__mock.ml.mock"
+   : 'tv_bloc) (_startpos__7_ : Lexing.position) (_endpos__7_ : Lexing.position) (_startofs__7_ : int) (_endofs__7_ : int) (_loc__7_ : Lexing.position * Lexing.position) (
+# 115 "parserJava.mly"
+                                     _6
+# 523 "parserJava__mock.ml.mock"
+   : unit) (_startpos__6_ : Lexing.position) (_endpos__6_ : Lexing.position) (_startofs__6_ : int) (_endofs__6_ : int) (_loc__6_ : Lexing.position * Lexing.position) (
+# 115 "parserJava.mly"
+                                _5
+# 527 "parserJava__mock.ml.mock"
+   : 'tv_bloc) (_startpos__5_ : Lexing.position) (_endpos__5_ : Lexing.position) (_startofs__5_ : int) (_endofs__5_ : int) (_loc__5_ : Lexing.position * Lexing.position) (
+# 115 "parserJava.mly"
+                         _4
+# 531 "parserJava__mock.ml.mock"
+   : unit) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
+# 115 "parserJava.mly"
+              _3
+# 535 "parserJava__mock.ml.mock"
+   : 'tv_expression) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 115 "parserJava.mly"
+       _2
+# 539 "parserJava__mock.ml.mock"
+   : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 115 "parserJava.mly"
+    _1
+# 543 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 115 "parserJava.mly"
+                                                 ( (print_endline "instruction : SI PAROUV expression PARFER bloc SINON bloc") )
+# 548 "parserJava__mock.ml.mock"
+     : 'tv_instruction) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 114 "parserJava.mly"
+                                _5
+# 553 "parserJava__mock.ml.mock"
+   : 'tv_bloc) (_startpos__5_ : Lexing.position) (_endpos__5_ : Lexing.position) (_startofs__5_ : int) (_endofs__5_ : int) (_loc__5_ : Lexing.position * Lexing.position) (
+# 114 "parserJava.mly"
+                         _4
+# 557 "parserJava__mock.ml.mock"
+   : unit) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
+# 114 "parserJava.mly"
+              _3
+# 561 "parserJava__mock.ml.mock"
+   : 'tv_expression) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 114 "parserJava.mly"
+       _2
+# 565 "parserJava__mock.ml.mock"
+   : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 114 "parserJava.mly"
+    _1
+# 569 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 114 "parserJava.mly"
+                                      ( (print_endline "instruction : SI PAROUV expression PARFER bloc") )
+# 574 "parserJava__mock.ml.mock"
+     : 'tv_instruction) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 113 "parserJava.mly"
+                        _2
+# 579 "parserJava__mock.ml.mock"
+   : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 113 "parserJava.mly"
+             _1
+# 583 "parserJava__mock.ml.mock"
    : 'tv_expression) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
-# 112 "parserJava.mly"
-                                               ( (print_endline "instruction : expression PTVIRG") )
-# 354 "parserJava__mock.ml.mock"
+# 113 "parserJava.mly"
+                                ( (print_endline "instruction : expression PTVIRG") )
+# 588 "parserJava__mock.ml.mock"
      : 'tv_instruction) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 76 "parserJava.mly"
                  _2
-# 359 "parserJava__mock.ml.mock"
+# 593 "parserJava__mock.ml.mock"
    : 'tv_bloc) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 76 "parserJava.mly"
           _1
-# 363 "parserJava__mock.ml.mock"
+# 597 "parserJava__mock.ml.mock"
    : 'tv_entete) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 76 "parserJava.mly"
                         ( (print_endline "fonction : entete bloc") )
-# 368 "parserJava__mock.ml.mock"
+# 602 "parserJava__mock.ml.mock"
      : 'tv_fonction) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 59 "parserJava.mly"
                    _2
-# 373 "parserJava__mock.ml.mock"
+# 607 "parserJava__mock.ml.mock"
    : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 59 "parserJava.mly"
          _1
-# 377 "parserJava__mock.ml.mock"
+# 611 "parserJava__mock.ml.mock"
    : 'tv_programme) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     ((
 # 59 "parserJava.mly"
                         ( (print_endline "fichier : programme FIN");(print_string "Nombre de fonctions : ");(print_int !nbrFonctions);(print_newline()) )
-# 382 "parserJava__mock.ml.mock"
+# 616 "parserJava__mock.ml.mock"
      : 'tv_fichier) : (
 # 51 "parserJava.mly"
       (unit)
-# 386 "parserJava__mock.ml.mock"
+# 620 "parserJava__mock.ml.mock"
     )) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 121 "parserJava.mly"
-            _2
-# 391 "parserJava__mock.ml.mock"
+# 167 "parserJava.mly"
+                    _3
+# 625 "parserJava__mock.ml.mock"
+   : 'tv_exprvirg) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 167 "parserJava.mly"
+               _2
+# 629 "parserJava__mock.ml.mock"
+   : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 167 "parserJava.mly"
+    _1
+# 633 "parserJava__mock.ml.mock"
+   : 'tv_expression) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 167 "parserJava.mly"
+                              ()
+# 638 "parserJava__mock.ml.mock"
+     : 'tv_exprvirg) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 166 "parserJava.mly"
+          _1
+# 643 "parserJava__mock.ml.mock"
+   : 'tv_expression) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 166 "parserJava.mly"
+                      ()
+# 648 "parserJava__mock.ml.mock"
+     : 'tv_exprvirg) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 170 "parserJava.mly"
+                        _3
+# 653 "parserJava__mock.ml.mock"
+   : unit) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 170 "parserJava.mly"
+             _2
+# 657 "parserJava__mock.ml.mock"
    : 'tv_expression) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
-# 121 "parserJava.mly"
-     _1
-# 395 "parserJava__mock.ml.mock"
+# 170 "parserJava.mly"
+      _1
+# 661 "parserJava__mock.ml.mock"
    : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
-# 121 "parserJava.mly"
-                                    ()
-# 400 "parserJava__mock.ml.mock"
-     : 'tv_expression) in
+# 170 "parserJava.mly"
+                                ()
+# 666 "parserJava__mock.ml.mock"
+     : 'tv_exprourien) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 119 "parserJava.mly"
-                       _3
-# 405 "parserJava__mock.ml.mock"
-   : 'tv_expression) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
-# 119 "parserJava.mly"
-                _2
-# 409 "parserJava__mock.ml.mock"
+# 169 "parserJava.mly"
+                   _2
+# 671 "parserJava__mock.ml.mock"
    : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
-# 119 "parserJava.mly"
-     _1
-# 413 "parserJava__mock.ml.mock"
-   : 'tv_expression) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
-    (
-# 119 "parserJava.mly"
-                                   ()
-# 418 "parserJava__mock.ml.mock"
-     : 'tv_expression) in
-  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 117 "parserJava.mly"
-                       _3
-# 423 "parserJava__mock.ml.mock"
-   : 'tv_expression) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
-# 117 "parserJava.mly"
-                _2
-# 427 "parserJava__mock.ml.mock"
-   : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
-# 117 "parserJava.mly"
-     _1
-# 431 "parserJava__mock.ml.mock"
-   : 'tv_expression) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
-    (
-# 117 "parserJava.mly"
-                                   ((print_endline "expression : expression OPPLUS expression"))
-# 436 "parserJava__mock.ml.mock"
-     : 'tv_expression) in
-  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 116 "parserJava.mly"
+# 169 "parserJava.mly"
             _1
-# 441 "parserJava__mock.ml.mock"
-   : (
-# 22 "parserJava.mly"
-       (int)
-# 445 "parserJava__mock.ml.mock"
-  )) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+# 675 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
-# 116 "parserJava.mly"
-                    ( (print_endline "expression : ENTIER") )
-# 450 "parserJava__mock.ml.mock"
-     : 'tv_expression) in
+# 169 "parserJava.mly"
+                           ()
+# 680 "parserJava__mock.ml.mock"
+     : 'tv_exprourien) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
-# 79 "parserJava.mly"
-                                      _5
-# 455 "parserJava__mock.ml.mock"
-   : unit) (_startpos__5_ : Lexing.position) (_endpos__5_ : Lexing.position) (_startofs__5_ : int) (_endofs__5_ : int) (_loc__5_ : Lexing.position * Lexing.position) (
-# 79 "parserJava.mly"
-                          _4
-# 459 "parserJava__mock.ml.mock"
-   : 'tv_parsFormels) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
-# 79 "parserJava.mly"
-                   _3
-# 463 "parserJava__mock.ml.mock"
+# 173 "parserJava.mly"
+                      _3
+# 685 "parserJava__mock.ml.mock"
    : unit) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
-# 79 "parserJava.mly"
-             _2
-# 467 "parserJava__mock.ml.mock"
+# 173 "parserJava.mly"
+           _2
+# 689 "parserJava__mock.ml.mock"
+   : 'tv_expression) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 173 "parserJava.mly"
+    _1
+# 693 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 173 "parserJava.mly"
+                              ()
+# 698 "parserJava__mock.ml.mock"
+     : 'tv_exprouident) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 172 "parserJava.mly"
+             _1
+# 703 "parserJava__mock.ml.mock"
    : (
 # 16 "parserJava.mly"
        (string)
-# 471 "parserJava__mock.ml.mock"
+# 707 "parserJava__mock.ml.mock"
+  )) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 172 "parserJava.mly"
+                    ()
+# 712 "parserJava__mock.ml.mock"
+     : 'tv_exprouident) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 129 "parserJava.mly"
+                                    _4
+# 717 "parserJava__mock.ml.mock"
+   : 'tv_expression) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
+# 129 "parserJava.mly"
+                       _3
+# 721 "parserJava__mock.ml.mock"
+   : 'tv_binairetoile) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 129 "parserJava.mly"
+                  _2
+# 725 "parserJava__mock.ml.mock"
+   : 'tv_expr) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 129 "parserJava.mly"
+      _1
+# 729 "parserJava__mock.ml.mock"
+   : 'tv_unairetoile) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 129 "parserJava.mly"
+                                                ()
+# 734 "parserJava__mock.ml.mock"
+     : 'tv_expression) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 128 "parserJava.mly"
+                             _3
+# 739 "parserJava__mock.ml.mock"
+   : 'tv_binairetoile) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 128 "parserJava.mly"
+                        _2
+# 743 "parserJava__mock.ml.mock"
+   : 'tv_expr) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 128 "parserJava.mly"
+            _1
+# 747 "parserJava__mock.ml.mock"
+   : 'tv_unairetoile) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 128 "parserJava.mly"
+                                           ()
+# 752 "parserJava__mock.ml.mock"
+     : 'tv_expression) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 126 "parserJava.mly"
+               _2
+# 757 "parserJava__mock.ml.mock"
+   : 'tv_suffixetoile) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 126 "parserJava.mly"
+   _1
+# 761 "parserJava__mock.ml.mock"
+   : 'tv_exprouident) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 126 "parserJava.mly"
+                             ()
+# 766 "parserJava__mock.ml.mock"
+     : 'tv_expr) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 125 "parserJava.mly"
+                 _3
+# 771 "parserJava__mock.ml.mock"
+   : 'tv_exprourien) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 125 "parserJava.mly"
+           _2
+# 775 "parserJava__mock.ml.mock"
+   : (
+# 16 "parserJava.mly"
+       (string)
+# 779 "parserJava__mock.ml.mock"
+  )) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 125 "parserJava.mly"
+   _1
+# 783 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 125 "parserJava.mly"
+                             ()
+# 788 "parserJava__mock.ml.mock"
+     : 'tv_expr) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 124 "parserJava.mly"
+   _1
+# 793 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 124 "parserJava.mly"
+         ((print_endline "expr : VIDE"))
+# 798 "parserJava__mock.ml.mock"
+     : 'tv_expr) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 123 "parserJava.mly"
+   _1
+# 803 "parserJava__mock.ml.mock"
+   : (
+# 24 "parserJava.mly"
+       (bool)
+# 807 "parserJava__mock.ml.mock"
+  )) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 123 "parserJava.mly"
+            ((print_endline "expr : BOOLEEN"))
+# 812 "parserJava__mock.ml.mock"
+     : 'tv_expr) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 122 "parserJava.mly"
+   _1
+# 817 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 122 "parserJava.mly"
+         ((print_endline "expr : CHAR"))
+# 822 "parserJava__mock.ml.mock"
+     : 'tv_expr) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 121 "parserJava.mly"
+   _1
+# 827 "parserJava__mock.ml.mock"
+   : (
+# 23 "parserJava.mly"
+       (float)
+# 831 "parserJava__mock.ml.mock"
+  )) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 121 "parserJava.mly"
+             ((print_endline "expr : FLOTTANT"))
+# 836 "parserJava__mock.ml.mock"
+     : 'tv_expr) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 120 "parserJava.mly"
+      _1
+# 841 "parserJava__mock.ml.mock"
+   : (
+# 22 "parserJava.mly"
+       (int)
+# 845 "parserJava__mock.ml.mock"
+  )) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 120 "parserJava.mly"
+              ((print_endline "expr : ENTIER"))
+# 850 "parserJava__mock.ml.mock"
+     : 'tv_expr) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 79 "parserJava.mly"
+                                      _5
+# 855 "parserJava__mock.ml.mock"
+   : unit) (_startpos__5_ : Lexing.position) (_endpos__5_ : Lexing.position) (_startofs__5_ : int) (_endofs__5_ : int) (_loc__5_ : Lexing.position * Lexing.position) (
+# 79 "parserJava.mly"
+                          _4
+# 859 "parserJava__mock.ml.mock"
+   : 'tv_parsFormels) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
+# 79 "parserJava.mly"
+                   _3
+# 863 "parserJava__mock.ml.mock"
+   : unit) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
+# 79 "parserJava.mly"
+             _2
+# 867 "parserJava__mock.ml.mock"
+   : (
+# 16 "parserJava.mly"
+       (string)
+# 871 "parserJava__mock.ml.mock"
   )) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 79 "parserJava.mly"
         _1
-# 475 "parserJava__mock.ml.mock"
+# 875 "parserJava__mock.ml.mock"
    : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 79 "parserJava.mly"
                                               ( (print_endline "entete : VOID IDENT PAROUV parsFormels PARFER") )
-# 480 "parserJava__mock.ml.mock"
+# 880 "parserJava__mock.ml.mock"
      : 'tv_entete) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 78 "parserJava.mly"
                                             _5
-# 485 "parserJava__mock.ml.mock"
+# 885 "parserJava__mock.ml.mock"
    : unit) (_startpos__5_ : Lexing.position) (_endpos__5_ : Lexing.position) (_startofs__5_ : int) (_endofs__5_ : int) (_loc__5_ : Lexing.position * Lexing.position) (
 # 78 "parserJava.mly"
                                 _4
-# 489 "parserJava__mock.ml.mock"
+# 889 "parserJava__mock.ml.mock"
    : 'tv_parsFormels) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
 # 78 "parserJava.mly"
                          _3
-# 493 "parserJava__mock.ml.mock"
+# 893 "parserJava__mock.ml.mock"
    : unit) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) (
 # 78 "parserJava.mly"
                    _2
-# 497 "parserJava__mock.ml.mock"
+# 897 "parserJava__mock.ml.mock"
    : (
 # 16 "parserJava.mly"
        (string)
-# 501 "parserJava__mock.ml.mock"
+# 901 "parserJava__mock.ml.mock"
   )) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 78 "parserJava.mly"
         _1
-# 505 "parserJava__mock.ml.mock"
+# 905 "parserJava__mock.ml.mock"
    : 'tv_typeStruct) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 78 "parserJava.mly"
                                                     ( (print_endline "entete : typeStruct IDENT PAROUV parsFormels PARFER") )
-# 510 "parserJava__mock.ml.mock"
+# 910 "parserJava__mock.ml.mock"
      : 'tv_entete) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 74 "parserJava.mly"
                 _2
-# 515 "parserJava__mock.ml.mock"
+# 915 "parserJava__mock.ml.mock"
    : unit) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 74 "parserJava.mly"
          _1
-# 519 "parserJava__mock.ml.mock"
+# 919 "parserJava__mock.ml.mock"
    : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 74 "parserJava.mly"
                         ( (print_endline "declTab : CROOUV CROFER") )
-# 524 "parserJava__mock.ml.mock"
+# 924 "parserJava__mock.ml.mock"
      : 'tv_declTab) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ->
     (
 # 73 "parserJava.mly"
                                  ( (print_endline "declTab : /* Lambda, mot vide */") )
-# 530 "parserJava__mock.ml.mock"
+# 930 "parserJava__mock.ml.mock"
      : 'tv_declTab) in
   let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
 # 87 "parserJava.mly"
                                                       _4
-# 535 "parserJava__mock.ml.mock"
+# 935 "parserJava__mock.ml.mock"
    : unit) (_startpos__4_ : Lexing.position) (_endpos__4_ : Lexing.position) (_startofs__4_ : int) (_endofs__4_ : int) (_loc__4_ : Lexing.position * Lexing.position) (
 # 87 "parserJava.mly"
                                 _3
-# 539 "parserJava__mock.ml.mock"
+# 939 "parserJava__mock.ml.mock"
    : 'tv_instructions) (_startpos__3_ : Lexing.position) (_endpos__3_ : Lexing.position) (_startofs__3_ : int) (_endofs__3_ : int) (_loc__3_ : Lexing.position * Lexing.position) ((
 # 87 "parserJava.mly"
              _2
-# 543 "parserJava__mock.ml.mock"
+# 943 "parserJava__mock.ml.mock"
    : 'tv_variables) : (
 # 52 "parserJava.mly"
       (int)
-# 547 "parserJava__mock.ml.mock"
+# 947 "parserJava__mock.ml.mock"
   )) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
 # 87 "parserJava.mly"
       _1
-# 551 "parserJava__mock.ml.mock"
+# 951 "parserJava__mock.ml.mock"
    : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
     (
 # 88 "parserJava.mly"
@@ -557,14 +957,184 @@ and (xv_variables, xv_variable, xv_typeStruct, xv_typeBase, xv_suiteParsFormels,
 	(print_int _2);
 	(print_newline ())
 	)
-# 561 "parserJava__mock.ml.mock"
+# 961 "parserJava__mock.ml.mock"
      : 'tv_bloc) in
-  ((let rec diverge() = diverge() in diverge()) : 'tv_variables * 'tv_variable * 'tv_typeStruct * 'tv_typeBase * 'tv_suiteParsFormels * 'tv_programme * 'tv_parsFormels * 'tv_instructions * 'tv_instruction * 'tv_fonction * 'tv_fichier * 'tv_expression * 'tv_entete * 'tv_declTab * 'tv_bloc)
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 140 "parserJava.mly"
+                     _2
+# 966 "parserJava__mock.ml.mock"
+   : 'tv_binairetoile) (_startpos__2_ : Lexing.position) (_endpos__2_ : Lexing.position) (_startofs__2_ : int) (_endofs__2_ : int) (_loc__2_ : Lexing.position * Lexing.position) (
+# 140 "parserJava.mly"
+             _1
+# 970 "parserJava__mock.ml.mock"
+   : 'tv_binaire) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 140 "parserJava.mly"
+                                   ()
+# 975 "parserJava__mock.ml.mock"
+     : 'tv_binairetoile) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) ->
+    (
+# 139 "parserJava.mly"
+                                      ()
+# 981 "parserJava__mock.ml.mock"
+     : 'tv_binairetoile) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 156 "parserJava.mly"
+   _1
+# 986 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 156 "parserJava.mly"
+            ((print_endline "binaire : OPSUPEG"))
+# 991 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 155 "parserJava.mly"
+   _1
+# 996 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 155 "parserJava.mly"
+            ((print_endline "binaire : OPINFEG"))
+# 1001 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 154 "parserJava.mly"
+   _1
+# 1006 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 154 "parserJava.mly"
+          ((print_endline "binaire : OPSUP"))
+# 1011 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 153 "parserJava.mly"
+   _1
+# 1016 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 153 "parserJava.mly"
+          ((print_endline "binaire : OPINF"))
+# 1021 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 152 "parserJava.mly"
+   _1
+# 1026 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 152 "parserJava.mly"
+            ((print_endline "binaire : OPNONEG"))
+# 1031 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 151 "parserJava.mly"
+   _1
+# 1036 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 151 "parserJava.mly"
+         ((print_endline "binaire : OPEG"))
+# 1041 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 150 "parserJava.mly"
+   _1
+# 1046 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 150 "parserJava.mly"
+         ((print_endline "binaire : OPET"))
+# 1051 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 149 "parserJava.mly"
+   _1
+# 1056 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 149 "parserJava.mly"
+         ((print_endline "binaire : OPOU"))
+# 1061 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 148 "parserJava.mly"
+   _1
+# 1066 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 148 "parserJava.mly"
+          ((print_endline "binaire : OPMOD"))
+# 1071 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 147 "parserJava.mly"
+   _1
+# 1076 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 147 "parserJava.mly"
+          ((print_endline "binaire : OPDIV"))
+# 1081 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 146 "parserJava.mly"
+   _1
+# 1086 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 146 "parserJava.mly"
+           ((print_endline "binaire : OPMULT"))
+# 1091 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 145 "parserJava.mly"
+   _1
+# 1096 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 145 "parserJava.mly"
+            ((print_endline "binaire : OPMOINS"))
+# 1101 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 144 "parserJava.mly"
+   _1
+# 1106 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 144 "parserJava.mly"
+           ((print_endline "binaire : OPPLUS"))
+# 1111 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 143 "parserJava.mly"
+   _1
+# 1116 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 143 "parserJava.mly"
+         ((print_endline "binaire : OPPT"))
+# 1121 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  let _ = fun (_startpos : Lexing.position) (_endpos : Lexing.position) (_endpos__0_ : Lexing.position) (_symbolstartpos : Lexing.position) (_startofs : int) (_endofs : int) (_endofs__0_ : int) (_symbolstartofs : int) (_sloc : Lexing.position * Lexing.position) (_loc : Lexing.position * Lexing.position) (
+# 142 "parserJava.mly"
+         _1
+# 1126 "parserJava__mock.ml.mock"
+   : unit) (_startpos__1_ : Lexing.position) (_endpos__1_ : Lexing.position) (_startofs__1_ : int) (_endofs__1_ : int) (_loc__1_ : Lexing.position * Lexing.position) ->
+    (
+# 142 "parserJava.mly"
+                 ((print_endline "binaire : ASSIGN"))
+# 1131 "parserJava__mock.ml.mock"
+     : 'tv_binaire) in
+  ((let rec diverge() = diverge() in diverge()) : 'tv_variables * 'tv_variable * 'tv_unairetoile * 'tv_unaire * 'tv_typeStruct * 'tv_typeBase * 'tv_suiteParsFormels * 'tv_suffixetoile * 'tv_suffixe * 'tv_programme * 'tv_parsFormels * 'tv_instructions * 'tv_instruction * 'tv_fonction * 'tv_fichier * 'tv_exprvirg * 'tv_exprourien * 'tv_exprouident * 'tv_expression * 'tv_expr * 'tv_entete * 'tv_declTab * 'tv_bloc * 'tv_binairetoile * 'tv_binaire)
 
 and menhir_end_marker =
   0
 
-# 123 "parserJava.mly"
+# 175 "parserJava.mly"
   
 
-# 571 "parserJava__mock.ml.mock"
+# 1141 "parserJava__mock.ml.mock"

@@ -4,7 +4,7 @@
 (* Ouverture de modules exploites dans les actions *)
 (* Declarations de types, de constantes, de fonctions, d'exceptions exploites dans les actions *)
 
-(* let nbrVariables = ref 0;; *)
+let nbrVariables = ref 0;;
 
 let nbrFonctions = ref 0;;
 
@@ -116,32 +116,60 @@ instruction : expression PTVIRG { (print_endline "instruction : expression PTVIR
 			| TANTQUE PAROUV expression PARFER bloc { (print_endline "instruction : TANTQUE PAROUV expression PARFER bloc") }
             | RETOUR expression PTVIRG { (print_endline "instruction : RETURN expression PTVIRG") }
 
-/* TODO : Completer pour ajouter les autres formes d'expressions */
-expression : ENTIER { (print_endline "expression : ENTIER") }
-	   | expression OPPLUS expression {(print_endline "expression : expression OPPLUS expression")}
-	   | expression OPMOINS expression {(print_endline "expression : expression OPMOINS expression")}
-	   | expression OPMULT expression {(print_endline "expression : expression OPPMULT expression")}
-	   | expression OPDIV expression {(print_endline "expression : expression OPDIV expression")}
+/* DONE : Completer pour ajouter les autres formes d'expressions */
+expr : ENTIER {(print_endline "expr : ENTIER")}
+	 | FLOTTANT {(print_endline "expr : FLOTTANT")}
+	 | CHAR {(print_endline "expr : CHAR")}
+	 | BOOLEEN {(print_endline "expr : BOOLEEN")}
+	 | VIDE {(print_endline "expr : VIDE")}
+	 | NOUVEAU IDENT exprourien {}
+	 | exprouident suffixetoile {}
 
-	   // on prend la prorité de OPNON
-	   | OPPLUS expression %prec OPNON {(print_endline "expression : OPPLUS expression")}
-	   | OPMOINS expression %prec OPNON {(print_endline "expression : OPMOINS expression")}
+expression : unairetoile expr binairetoile {}
+		   | unairetoile expr binairetoile expression {}
 
-	   | expression OPINF expression {(print_endline "expression : expression OPINF expression")}
-	   | expression OPSUP expression {(print_endline "expression : expression OPSUP expression")}
-	   | expression OPINFEG expression {(print_endline "expression : expression OPINFEG expression")}
-	   | expression OPSUPEG expression {(print_endline "expression : expression OPSUPEG expression")}
-	   | expression OPEG expression {(print_endline "expression : expression OPEG expression")}
-	   | expression OPNONEG expression {(print_endline "expression : expression OPNONEG expression")}
+unaire : PAROUV typeBase PARFER {}
+       | OPPLUS %prec OPNON {}
+	   | OPMOINS %prec OPNON {}
+	   | OPNON {}
 
-binaire : ASSIGN | OPPT | OPPLUS | OPMOINS | OPMULT | OPDIV | OPMOD | OPOU | OPET | OPEG | OPNONEG | OPINF | OPSUP | OPINFEG | OPSUPEG
+unairetoile : /* Lambda, mot vide */ {}
+            | unaire unairetoile {}
 
-unaire : PAROUV TYPEIDENT PARFER
-       | OPPLUS
-	   | OPMOINS
-	   | OPNON
+binairetoile : /* Lambda, mot vide */ {}
+            | binaire binairetoile {}
 
-suffixe : PAROUV expression PARFER
-		| CROOUV expression CROFER
+binaire : ASSIGN {(print_endline "binaire : ASSIGN")}
+		| OPPT {(print_endline "binaire : OPPT")}
+		| OPPLUS {(print_endline "binaire : OPPLUS")}
+		| OPMOINS {(print_endline "binaire : OPMOINS")}
+		| OPMULT {(print_endline "binaire : OPMULT")}
+		| OPDIV {(print_endline "binaire : OPDIV")}
+		| OPMOD {(print_endline "binaire : OPMOD")}
+		| OPOU {(print_endline "binaire : OPOU")}
+		| OPET {(print_endline "binaire : OPET")}
+		| OPEG {(print_endline "binaire : OPEG")}
+		| OPNONEG {(print_endline "binaire : OPNONEG")}
+		| OPINF {(print_endline "binaire : OPINF")}
+		| OPSUP {(print_endline "binaire : OPSUP")}
+		| OPINFEG {(print_endline "binaire : OPINFEG")}
+		| OPSUPEG {(print_endline "binaire : OPSUPEG")}
+
+
+suffixe : PAROUV PARFER {}
+		| PAROUV exprvirg PARFER {}
+		| CROOUV expression CROFER {}
+
+suffixetoile : /* Lambda, mot vide */ {}
+             | suffixe suffixetoile {}
+
+exprvirg : expression {}
+		 | expression VIRG exprvirg {}
+
+exprourien : PAROUV PARFER {}
+		   | CROOUV expression CROFER {}
+
+exprouident : IDENT {}
+			| PAROUV expression PARFER {}
 
 %%
