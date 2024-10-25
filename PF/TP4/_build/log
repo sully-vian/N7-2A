@@ -1,17 +1,111 @@
 # dune utop
 # OCAMLPARAM: unset
 # Shared cache: disabled
-# Shared cache location: /home/sully_vian/.cache/dune/db
-# Workspace root: /home/sully_vian/Desktop/2a/PF/TP4
-# Auto-detected concurrency: 8
+# Workspace root: /home/vhy9665/Desktop/2a/PF/TP4
+# Auto-detected concurrency: 4
+$ /applications/opam-4.11.0/4.11.0/bin/ocamlc.opt -config > /tmp/dune_671794_output
 # Dune context:
 #  { name = "default"
 #  ; kind = "default"
 #  ; profile = Dev
 #  ; merlin = true
+#  ; for_host = None
 #  ; fdo_target_exe = None
 #  ; build_dir = In_build_dir "default"
-#  ; instrument_with = []
+#  ; ocaml_bin = External "/applications/opam-4.11.0/4.11.0/bin"
+#  ; ocaml = Ok External "/applications/opam-4.11.0/4.11.0/bin/ocaml"
+#  ; ocamlc = External "/applications/opam-4.11.0/4.11.0/bin/ocamlc.opt"
+#  ; ocamlopt = Ok External "/applications/opam-4.11.0/4.11.0/bin/ocamlopt.opt"
+#  ; ocamldep = Ok External "/applications/opam-4.11.0/4.11.0/bin/ocamldep.opt"
+#  ; ocamlmklib =
+#      Ok External "/applications/opam-4.11.0/4.11.0/bin/ocamlmklib.opt"
+#  ; env =
+#      map
+#        { "DUNE_OCAML_HARDCODED" : "/applications/opam-4.11.0/4.11.0/lib"
+#        ; "DUNE_OCAML_STDLIB" : "/applications/opam-4.11.0/4.11.0/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" : "/home/vhy9665/Desktop/2a/PF/TP4"
+#        ; "INSIDE_DUNE" : "/home/vhy9665/Desktop/2a/PF/TP4/_build/default"
+#        ; "OCAMLFIND_IGNORE_DUPS_IN" :
+#            "/home/vhy9665/Desktop/2a/PF/TP4/_build/install/default/lib"
+#        ; "OCAMLPATH" :
+#            "/home/vhy9665/Desktop/2a/PF/TP4/_build/install/default/lib"
+#        ; "OCAMLTOP_INCLUDE_PATH" :
+#            "/home/vhy9665/Desktop/2a/PF/TP4/_build/install/default/lib/toplevel"
+#        ; "OCAML_COLOR" : "always"
+#        ; "OPAMCOLOR" : "always"
+#        }
+#  ; findlib_paths = [ External "/applications/opam-4.11.0/4.11.0/lib" ]
+#  ; natdynlink_supported = true
+#  ; supports_shared_libraries = true
+#  ; ocaml_config =
+#      { version = "4.11.0"
+#      ; standard_library_default =
+#          "/applications/opam-4.11.0/4.11.0/lib/ocaml"
+#      ; standard_library = "/applications/opam-4.11.0/4.11.0/lib/ocaml"
+#      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
+#      ; ccomp_type = "cc"
+#      ; c_compiler = "gcc"
+#      ; ocamlc_cflags = [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-fPIC" ]
+#      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64"; "-D_REENTRANT" ]
+#      ; ocamlopt_cflags =
+#          [ "-O2"; "-fno-strict-aliasing"; "-fwrapv"; "-fPIC" ]
+#      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64"; "-D_REENTRANT" ]
+#      ; bytecomp_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ; "-D_REENTRANT"
+#          ]
+#      ; bytecomp_c_libraries = [ "-lm"; "-ldl"; "-lpthread" ]
+#      ; native_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-fPIC"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ; "-D_REENTRANT"
+#          ]
+#      ; native_c_libraries = [ "-lm"; "-ldl" ]
+#      ; native_pack_linker = [ "ld"; "-r"; "-o" ]
+#      ; cc_profile = []
+#      ; architecture = "amd64"
+#      ; model = "default"
+#      ; int_size = 63
+#      ; word_size = 64
+#      ; system = "linux"
+#      ; asm = [ "as" ]
+#      ; asm_cfi_supported = true
+#      ; with_frame_pointers = false
+#      ; ext_exe = ""
+#      ; ext_obj = ".o"
+#      ; ext_asm = ".s"
+#      ; ext_lib = ".a"
+#      ; ext_dll = ".so"
+#      ; os_type = "Unix"
+#      ; default_executable_name = "a.out"
+#      ; systhread_supported = true
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
+#      ; profiling = false
+#      ; flambda = false
+#      ; spacetime = false
+#      ; safe_string = true
+#      ; exec_magic_number = "Caml1999X028"
+#      ; cmi_magic_number = "Caml1999I028"
+#      ; cmo_magic_number = "Caml1999O028"
+#      ; cma_magic_number = "Caml1999A028"
+#      ; cmx_magic_number = "Caml1999Y028"
+#      ; cmxa_magic_number = "Caml1999Z028"
+#      ; ast_impl_magic_number = "Caml1999M028"
+#      ; ast_intf_magic_number = "Caml1999N028"
+#      ; cmxs_magic_number = "Caml1999D028"
+#      ; cmt_magic_number = "Caml1999T028"
+#      ; natdynlink_supported = true
+#      ; supports_shared_libraries = true
+#      ; windows_unicode = false
+#      }
 #  }
-$ /home/sully_vian/.opam/4.11.0/bin/ocamlc.opt -config > /tmp/dune_b0f3d2_output
-$ (cd _build/default && /home/sully_vian/.opam/4.11.0/bin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -o .utop/utop.bc /home/sully_vian/.opam/4.11.0/lib/ocaml/compiler-libs/ocamlcommon.cma /home/sully_vian/.opam/4.11.0/lib/ocaml/compiler-libs/ocamlbytecomp.cma /home/sully_vian/.opam/4.11.0/lib/ocaml/compiler-libs/ocamltoplevel.cma /home/sully_vian/.opam/4.11.0/lib/findlib/findlib.cma /home/sully_vian/.opam/4.11.0/lib/findlib/findlib_top.cma /home/sully_vian/.opam/4.11.0/lib/logs/logs.cma /home/sully_vian/.opam/4.11.0/lib/lwt/lwt.cma /home/sully_vian/.opam/4.11.0/lib/logs/logs_lwt.cma /home/sully_vian/.opam/4.11.0/lib/ocaml/unix.cma /home/sully_vian/.opam/4.11.0/lib/ocaml/bigarray.cma /home/sully_vian/.opam/4.11.0/lib/ocplib-endian/ocplib_endian.cma /home/sully_vian/.opam/4.11.0/lib/ocplib-endian/bigstring/ocplib_endian_bigstring.cma /home/sully_vian/.opam/4.11.0/lib/ocaml/threads/threads.cma /home/sully_vian/.opam/4.11.0/lib/lwt/unix/lwt_unix.cma -I /home/sully_vian/.opam/4.11.0/lib/lwt/../stublibs /home/sully_vian/.opam/4.11.0/lib/react/react.cma /home/sully_vian/.opam/4.11.0/lib/lwt_react/lwt_react.cma /home/sully_vian/.opam/4.11.0/lib/result/result.cma /home/sully_vian/.opam/4.11.0/lib/uutf/uutf.cma /home/sully_vian/.opam/4.11.0/lib/uucp/uucp.cma /home/sully_vian/.opam/4.11.0/lib/uuseg/uuseg.cma /home/sully_vian/.opam/4.11.0/lib/zed/zed.cma /home/sully_vian/.opam/4.11.0/lib/trie/trie.cma /home/sully_vian/.opam/4.11.0/lib/mew/mew.cma /home/sully_vian/.opam/4.11.0/lib/mew_vi/mew_vi.cma /home/sully_vian/.opam/4.11.0/lib/lambda-term/lambda_term.cma -I /home/sully_vian/.opam/4.11.0/lib/lambda-term/../stublibs /home/sully_vian/.opam/4.11.0/lib/xdg/xdg.cma -I /home/sully_vian/.opam/4.11.0/lib/xdg/../stublibs /home/sully_vian/.opam/4.11.0/lib/utop/uTop.cma /home/sully_vian/.opam/4.11.0/lib/ppx_inline_test/config/inline_test_config.cma /home/sully_vian/.opam/4.11.0/lib/base/base_internalhash_types/base_internalhash_types.cma -I /home/sully_vian/.opam/4.11.0/lib/base/../stublibs /home/sully_vian/.opam/4.11.0/lib/base/caml/caml.cma /home/sully_vian/.opam/4.11.0/lib/sexplib0/sexplib0.cma /home/sully_vian/.opam/4.11.0/lib/base/shadow_stdlib/shadow_stdlib.cma /home/sully_vian/.opam/4.11.0/lib/base/base.cma -I /home/sully_vian/.opam/4.11.0/lib/base/../stublibs /home/sully_vian/.opam/4.11.0/lib/jane-street-headers/jane_street_headers.cma /home/sully_vian/.opam/4.11.0/lib/ppx_sexp_conv/runtime-lib/ppx_sexp_conv_lib.cma /home/sully_vian/.opam/4.11.0/lib/ppx_compare/runtime-lib/ppx_compare_lib.cma /home/sully_vian/.opam/4.11.0/lib/ppx_enumerate/runtime-lib/ppx_enumerate_lib.cma /home/sully_vian/.opam/4.11.0/lib/ppx_hash/runtime-lib/ppx_hash_lib.cma /home/sully_vian/.opam/4.11.0/lib/time_now/time_now.cma -I /home/sully_vian/.opam/4.11.0/lib/time_now/../stublibs /home/sully_vian/.opam/4.11.0/lib/ppx_inline_test/runtime-lib/ppx_inline_test_lib.cma tp.cma .utop/.utop.eobjs/byte/dune__exe__Utop.cmo -linkall -warn-error -31)
