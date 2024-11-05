@@ -105,7 +105,8 @@ and parseEX stream =
     | EqualToken -> 
     (print_endline "= ER EX");
     (match (accept EqualToken stream) with
-       | Success next -> (match (parseER next) with
+       | Success next -> (
+          match (parseER next) with
           | Success next2 -> (parseEX next2)
           | _ -> Failure)
        | _ -> Failure)
@@ -120,7 +121,8 @@ and parseER stream =
   (match (peekAtFirstToken stream) with
     (* regle #8  - ER -> T TX     | { -, number, ident, true, false, ( } *)
     | (IdentToken _) | (NumberToken _) | TrueToken | FalseToken |
-        MinusToken | LeftParenthesisToken -> (print_endline "T TX");(match (parseT stream) with
+        MinusToken | LeftParenthesisToken -> (print_endline "T TX");(
+          match (parseT stream) with
           | Success next -> (parseTX next)
           | _ -> Failure)
     | _ -> Failure)
@@ -131,7 +133,21 @@ and parseTX stream =
   (print_string "TX -> ");
   (match (peekAtFirstToken stream) with
     (* regle #9  - TX -> + T TX   | { + } *)
+    | PlusToken -> (print_endline " + T TX");(
+      match (accept PlusToken stream) with
+      | Success next -> (
+        match (parseT next) with
+        | Success next2 -> (parseTX next2)
+        | _ -> Failure)
+      | _ -> Failure)
     (* regle #10 - TX -> - T TX   | { - } *)
+    | MinusToken -> (print_endline " - T TX");(
+      match (accept MinusToken stream) with
+      | Success next -> (
+        match (parseT next) with
+        | Success next2 -> (parseTX next2)
+        | _ -> Failure)
+      | _ -> Failure)
     (* regle #11 - TX ->          | { $, =, ) } *)
     | EOSToken | EqualToken | RightParenthesisToken | ThenToken | ElseToken -> (print_endline "");(Success stream)
     | _ -> Failure)
@@ -143,9 +159,10 @@ and parseT stream =
   (match (peekAtFirstToken stream) with
     (* regle #12 - T -> F FX      | { -, number, ident, true, false, ( } *)
     | (IdentToken _) | (NumberToken _) | TrueToken | FalseToken |
-        MinusToken | LeftParenthesisToken -> (print_endline "F FX");(match (parseF stream) with
-        | Success next -> (parseFX next)
-        | _ -> Failure)
+        MinusToken | LeftParenthesisToken -> (print_endline "F FX");(
+          match (parseF stream) with
+          | Success next -> (parseFX next)
+          | _ -> Failure)
     | _ -> Failure)
 
 (* parseFX : inputStream -> parseResult *)
@@ -154,7 +171,21 @@ and parseFX stream =
   (print_string "FX -> ");
   (match (peekAtFirstToken stream) with
     (* regle #13 - FX -> * F FX   | { * } *)
+    | TimesToken -> (print_endline " * F FX");(
+      match (accept TimesToken stream) with
+      | Success next -> (
+        match (parseF next) with
+        | Success next2 -> (parseFX next2)
+        | _ -> Failure)
+      | _ -> Failure)
     (* regle #14 - FX -> / F FX   | { / } *)
+    | DivideToken -> (print_endline " / F FX");(
+      match (accept DivideToken stream) with
+      | Success next -> (
+        match (parseF next) with
+        | Success next2 -> (parseFX next2)
+        | _ -> Failure)
+      | _ -> Failure)
     (* regle #15 - FX ->          | { $, +, -, =, ) } *)
     | EOSToken | PlusToken | MinusToken | EqualToken | RightParenthesisToken | ThenToken | ElseToken -> (print_endline "");(Success stream)
     | _ -> Failure)
@@ -165,9 +196,10 @@ and parseF stream =
   (print_string "F -> ");
   (match (peekAtFirstToken stream) with
     (* regle #16 - F -> - F       | { - } *)
-    | MinusToken -> (print_endline "- F");(match (accept MinusToken stream) with
-       | Success next -> (parseF next)
-       | _ -> Failure) 
+    | MinusToken -> (print_endline "- F");(
+        match (accept MinusToken stream) with
+        | Success next -> (parseF next)
+        |  _ -> Failure) 
     (* regle #17 - F -> number    | { number }  *)
     | NumberToken _ -> (print_endline "number");(acceptNumber stream)
     (* regle #20 - F -> ident     | { ident } *)
@@ -177,10 +209,12 @@ and parseF stream =
     (* regle #22 - F -> false     | { false } *)
     | FalseToken -> (print_endline "false");(accept FalseToken stream)
     (* regle #23 - F -> ( E )     | { ( } *)
-    | LeftParenthesisToken -> (print_endline "( E )");(match (accept LeftParenthesisToken stream) with
-        | Success next -> (match (parseE next) with
-           | Success next2 -> (accept RightParenthesisToken next2)
-           | _ -> Failure)
+    | LeftParenthesisToken -> (print_endline "( E )");(
+      match (accept LeftParenthesisToken stream) with
+      | Success next -> (
+        match (parseE next) with
+        | Success next2 -> (accept RightParenthesisToken next2)
+        | _ -> Failure)
         | _ -> Failure)
     | _ -> Failure)
 ;;

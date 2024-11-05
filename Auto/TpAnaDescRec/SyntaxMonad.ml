@@ -73,7 +73,7 @@ let accept expected stream =
 (* et avance dans l'analyse si c'est le cas *)
 let acceptIdent stream =
   match (peekAtFirstToken stream) with
-    | (IdentToken _) -> (Success (advanceInStream stream))
+    | (IdentToken ident) -> (print_endline ident);(Success (advanceInStream stream))
     | _ -> Failure
 ;;
 
@@ -82,7 +82,7 @@ let acceptIdent stream =
 (* et avance dans l'analyse si c'est le cas *)
 let acceptNumber stream =
   match (peekAtFirstToken stream) with
-    | (NumberToken _) -> (Success (advanceInStream stream))
+    | (NumberToken number) -> (print_endline (string_of_int number)); (Success (advanceInStream stream))
     | _ -> Failure
 ;;
 
@@ -119,11 +119,42 @@ let rec parseE stream =
   (print_endline "E");
   (match (peekAtFirstToken stream) with
     (* regle #1 *)
+    | FunctionToken ->
+      inject stream >>=
+      accept FunctionToken >>=
+      acceptIdent >>=
+      accept BodyToken >>=
+      parseE
     (* regle #2 *)
+    | LetToken ->
+      inject stream >>=
+      accept LetToken >>=
+      acceptIdent >>=
+      accept EqualToken >>=
+      parseE >>=
+      accept InToken >>=
+      parseE
     (* regle #3 *)
+    | RecToken ->
+      inject stream >>=
+      accept RecToken >>=
+      acceptIdent >>=
+      accept EqualToken >>=
+      parseE >>=
+      accept InToken >>=
+      parseE
     (* regle #4 *)
+    | IfToken ->
+      inject stream >>=
+      accept IfToken >>=
+      parseE >>=
+      accept ThenToken >>=
+      parseE >>=
+      accept ElseToken >>=
+      parseE
     (* regle #5 *)
     | ((IdentToken _) | (NumberToken _) | TrueToken | FalseToken | MinusToken | LeftParenthesisToken ) ->
+      (* ((inject stream) >>= parseER) >>= (parseEX) *)
         inject stream >>=
         parseER >>=
         parseEX
@@ -141,7 +172,7 @@ and parseEX stream =
         parseER >>=
         parseEX
     (* regle #7 *)
-    | (RightParenthesisToken) -> inject stream
+    | (RightParenthesisToken | InToken | ThenToken | ElseToken) -> inject stream
     | EOSToken -> inject stream
     | _ -> Failure)
 
@@ -175,7 +206,7 @@ and parseTX stream =
         parseT >>=
         parseTX
     (* regle 11 *)
-    | (RightParenthesisToken | EqualToken) -> inject stream
+    | (RightParenthesisToken | EqualToken | InToken | ThenToken | ElseToken) -> inject stream
     | EOSToken -> inject stream
     | _ -> Failure)
 
@@ -184,11 +215,11 @@ and parseTX stream =
 and parseT stream =
   (print_endline "T");
   (match (peekAtFirstToken stream) with
-    (* regle 12 *)
-    | ((IdentToken _) | (NumberToken _) | TrueToken | FalseToken | MinusToken | LeftParenthesisToken) ->
-        inject stream >>=
-        parseF >>=
-        parseFX
+    (* règle 12 *)
+    | (MinusToken | LeftParenthesisToken | IdentToken _ | TrueToken | FalseToken | NumberToken _) ->
+      inject stream >>=
+      parseF >>=
+      parseFX
     | _ -> Failure)
 
 (* parseFX : inputStream -> parseResult *)
@@ -209,7 +240,7 @@ and parseFX stream =
         parseF >>=
         parseFX
     (* regle 15 *)
-    | (RightParenthesisToken | EqualToken | PlusToken | MinusToken) ->
+    | (RightParenthesisToken | EqualToken | PlusToken | MinusToken | InToken | ThenToken | ElseToken) ->
         inject stream
     | EOSToken -> inject stream
     | _ -> Failure)
@@ -249,7 +280,15 @@ and parseFF stream =
   (print_endline "FF");
   (match (peekAtFirstToken stream) with
     (* regle 23 *)
+    | LeftParenthesisToken ->
+      inject stream >>=
+      accept LeftParenthesisToken >>=
+      parseE >>=
+      accept RightParenthesisToken
     (* regle 24 *)
+    | IdentToken _ ->
+      inject stream >>=
+      acceptIdent
     | _ -> Failure)
 
 (* parseARG : inputStream -> parseResult *)
@@ -258,6 +297,13 @@ and parseARG stream =
   (print_endline "ARG");
   (match (peekAtFirstToken stream) with
     (* regle 25 *)
+    | LeftParenthesisToken ->
+      inject stream >>=
+      accept LeftParenthesisToken >>=
+      parseE >>=
+      accept RightParenthesisToken
     (* regle 26 *)
+    | (TimesToken | DivideToken | PlusToken | MinusToken | EqualToken | RightParenthesisToken | EOSToken | InToken | ThenToken | ElseToken) ->
+      inject stream
     | _ -> Failure)
 ;;
