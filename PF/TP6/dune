@@ -1,0 +1,6 @@
+(library
+ (name tp6_etu)
+ (modules tp6 nlist hlist peano test_nlist test_hlist)
+ (inline_tests)
+ (preprocess
+  (pps ppx_inline_test)))
