@@ -50,13 +50,38 @@ let rec exec : code -> valeur list -> valeur list =
 ;;
 
 (* Exercice 6 *)
-type ('stin, 'stout) code =
-  | Nil : (nil, nil) code
-  | Cons :
-      ('stin_ * 'stout_) * ('stin, 'stout) code
-      -> ('stin_ * 'stout_, 'stin * 'stout) code
+type ('stin, 'stout) code' =
+  (* besoin de rien en stin, mais place int sur stout *)
+  | PushI : int -> ('a, int * 'b) code'
+  (* idem pour bool *)
+  | PushB : bool -> ('a, bool * 'b) code'
+  (* besoin de deux int en entrée et en sort un *)
+  | Add : (int * (int * 'next), int * 'next) code'
+  (* besoin de deux types identiques en entrée pour un bool en sortie *)
+  | Equ : ('a * ('a * 'next), bool * 'next) code'
+  (* "loi de Chasles" *)
+  | Seq : ('stin, 'stmid) code' * ('stmid, 'stout) code' -> ('stin, 'stout) code'
 
-let compile : 't expr -> ('stin, 'stout) code = function
+(* Exercice 7 *)
+let rec compile : type stin t. t expr -> (stin, t * stin) code' = function
   | Entier n -> PushI n
-  | _ -> failwith "aaa"
+  | Booleen b -> PushB b
+  | Plus (e1, e2) -> Seq (compile e1, Seq (compile e2, Add))
+  | Egal (e1, e2) -> Seq (compile e1, Seq (compile e2, Equ))
+;;
+
+let rec exec : type stin stout. (stin, stout) code' -> stin -> stout = function
+  | PushI n -> fun st -> n, st
+  | PushB b -> fun st -> b, st
+  | Add ->
+    (* Pas besoin de plus de cas puisque le 2e arg de exec est de type stin donc  *)
+    (function
+      | x, (y, st) -> x + y, st)
+  | Equ ->
+    (function
+      | x, (y, st) -> x = y, st)
+  | Seq (code1, code2) ->
+    fun st ->
+      let stmid = exec code1 st in
+      exec code2 stmid
 ;;
