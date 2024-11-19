@@ -1,0 +1,6 @@
+(library
+ (name ccinp2023)
+ (modules partie1 test_partie1)
+ (inline_tests)
+ (preprocess
+   (pps ppx_inline_test)))
