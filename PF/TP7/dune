@@ -1,6 +1,7 @@
-(library
- (name tp7_etu)
- (libraries unix graphics)
- (inline_tests)
- (preprocess
-  (pps ppx_inline_test)))
+; ./_build/default/main.exe [args] -> run
+; dune exec ./main.exe [args] -> compile & run
+
+(executable
+ (name main)
+ (libraries graphics unix)
+ (modules main flux drawing simulation1 simulation2))
