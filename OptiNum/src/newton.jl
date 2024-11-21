@@ -13,20 +13,20 @@ Approximation d'une solution du problème min f(x), x ∈ Rⁿ, en utilisant l'a
    - hessf   : (Function) la Hessienne de la fonction f
    - x0      : (Union{Real,Vector{<:Real}}) itéré initial
    - kwargs  : les options sous formes d'arguments "keywords"
-      • max_iter : (Integer) le nombre maximal d'iterations (optionnel, par défaut 1000)
-      • tol_abs  : (Real) la tolérence absolue (optionnel, par défaut 1e-10)
-      • tol_rel  : (Real) la tolérence relative (optionnel, par défaut 1e-8)
-      • epsilon  : (Real) le epsilon pour les tests de stagnation (optionnel, par défaut 1)
+	  • max_iter : (Integer) le nombre maximal d'iterations (optionnel, par défaut 1000)
+	  • tol_abs  : (Real) la tolérence absolue (optionnel, par défaut 1e-10)
+	  • tol_rel  : (Real) la tolérence relative (optionnel, par défaut 1e-8)
+	  • epsilon  : (Real) le epsilon pour les tests de stagnation (optionnel, par défaut 1)
 
 # Sorties
 
    - x_sol : (Union{Real,Vector{<:Real}}) une approximation de la solution du problème
    - f_sol : (Real) f(x_sol)
    - flag  : (Integer) indique le critère sur lequel le programme s'est arrêté
-      • 0  : convergence
-      • 1  : stagnation du xk
-      • 2  : stagnation du f
-      • 3  : nombre maximal d'itération dépassé
+	  • 0  : convergence
+	  • 1  : stagnation du xk
+	  • 2  : stagnation du f
+	  • 3  : nombre maximal d'itération dépassé
    - nb_iters : (Integer) le nombre d'itérations faites par le programme
    - xs    : (Vector{Vector{<:Real}}) les itérés
 
@@ -39,18 +39,49 @@ Approximation d'une solution du problème min f(x), x ∈ Rⁿ, en utilisant l'a
    x_sol, f_sol, flag, nb_iters, xs = newton(f, gradf, hessf, x0, max_iter=10)
 
 """
-function newton(f::Function, gradf::Function, hessf::Function, x0::Union{Real,Vector{<:Real}}; 
-    max_iter::Integer = 1000, 
-    tol_abs::Real = 1e-10, 
-    tol_rel::Real = 1e-8, 
-    epsilon::Real = 1)
+function newton(f::Function, gradf::Function, hessf::Function, x0::Union{Real, Vector{<:Real}};
+	max_iter::Integer = 1000, tol_abs::Real = 1e-10, tol_rel::Real = 1e-8, epsilon::Real = 1)
 
-    #
-    x_sol = x0
-    f_sol = f(x_sol)
-    flag  = -1
-    nb_iters = 0
-    xs = [x0] # vous pouvez faire xs = vcat(xs, [xk]) pour concaténer les valeurs
+	nb_it = 0
 
-    return x_sol, f_sol, flag, nb_iters, xs
+	x_sol = x0
+	f_sol = f(x_sol)
+	flag = -1
+	nb_iters = 0
+	xs = [x0] # vous pouvez faire xs = vcat(xs, [xk]) pour concaténer les valeurs
+
+	# vérifier CN1 dès le début
+	if (norm(f(x0)) <= max(tol_rel * norm(gradf(x0)), tol_abs))
+		flag = 0
+	end
+
+	while (flag == -1)
+		xk = xs[end]
+		h_f = hessf(xk)
+		grad_f = gradf(xk)
+		dk = h_f \ (-grad_f)
+		xk1 = xk + dk
+		xs = vcat(xs, [xk1])
+		nb_iters += 1
+
+		if (norm(gradf(xk1)) <= max(tol_rel * norm(gradf(x0)), tol_abs))
+			# CN1: ∥∇f(xk+1)∥ ≤ max(tol_rel*∥∇f(x0)∥, tol_abs)
+			flag = 0
+		elseif (norm(xk1 - xk) <= epsilon * max(tol_rel * norm(xk), tol_abs))
+			# Stagnation de l'itéré: ∥xk+1−xk∥ ≤ ε*max(tol_rel∥xk∥,tol_abs)
+			flag = 1
+		elseif (abs(f(xk1) - f(xk)) <= epsilon * max(tol_rel * abs(f(xk)), tol_abs))
+			# Stagnation de la fonction: |f(xk+1)−f(xk)| ≤ ε*max(tol_rel|f(xk)|,tol_abs)
+			flag = 2
+		elseif (nb_iters + 1 == max_iter)
+			# Nb d'itérations max
+			flag = 3
+		end
+	end
+
+
+	x_sol = xs[end]
+	f_sol = f(x_sol)
+
+	return x_sol, f_sol, flag, nb_iters, xs
 end
