@@ -51,16 +51,19 @@ function newton(f::Function, gradf::Function, hessf::Function, x0::Union{Real, V
 	xs = [x0] # vous pouvez faire xs = vcat(xs, [xk]) pour concaténer les valeurs
 
 	# vérifier CN1 dès le début
-	if (norm(f(x0)) <= max(tol_rel * norm(gradf(x0)), tol_abs))
+	if (norm(gradf(x0)) <= max(tol_rel * norm(gradf(x0)), tol_abs))
 		flag = 0
 	end
 
 	while (flag == -1)
 		xk = xs[end]
-		h_f = hessf(xk)
 		grad_f = gradf(xk)
-		dk = h_f \ (-grad_f)
-		xk1 = xk + dk
+		h_f = hessf(xk)
+    
+		dk = - hessf(xk) \ gradf(xk)
+		# dk = - h_f \ grad_f
+
+    	xk1 = xk + dk
 		xs = vcat(xs, [xk1])
 		nb_iters += 1
 
