@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/home/vhy9665/Desktop/N7-2A/SysCon/TP4-CSP/jcsp-core.jar"
+    ]
+}

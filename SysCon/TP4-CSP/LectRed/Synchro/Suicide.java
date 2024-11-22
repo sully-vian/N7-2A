@@ -3,6 +3,5 @@
 package Synchro;
 
 @SuppressWarnings("serial")
-public class Suicide extends RuntimeException
-{
+public class Suicide extends RuntimeException {
 }

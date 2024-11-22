@@ -11,6 +11,7 @@ Le répertoire contient trois solutions complètes au problème des lecteurs-ré
 
 Compilation et exécution
 ----------------------
+
     make compile
     make run
 ou ajouter `../jcsp-core.jar` au classpath

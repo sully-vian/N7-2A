@@ -34,6 +34,7 @@ Visuellement, les trains sont représentés par une flèche indiquant leur direc
 
 Code fourni
 -----------
+
 Seuls `VoieUnique*`, `ProcessusTrain` et `Sens` ont besoin d'être consultés.
 
 - `VoieUnique.java` : interface de la synchronisation entre trains.
@@ -46,6 +47,7 @@ Seuls `VoieUnique*`, `ProcessusTrain` et `Sens` ont besoin d'être consultés.
 
 Compilation et exécution
 ----------------------
+
     make compile
     make run
 ou ajouter `../jcsp-core.jar` au classpath
@@ -56,20 +58,18 @@ ou ajouter `../jcsp-core.jar` au classpath
 -------
 
 Les deux exercices sont indépendants et peuvent être faits dans un ordre
-quelconque. 
+quelconque.
 
 ### Approche automate
 
 Donner, dans `VoieUniqueAutomate.java`, une solution construite par l'approche automate.
 
-   - pas de limite à la capacité du tronçon à voie unique (il peut y avoir un nombre quelconque de trains, tous dans le même sens bien sûr);
-   - ne pas se préoccuper du risque de famine.
+- pas de limite à la capacité du tronçon à voie unique (il peut y avoir un nombre quelconque de trains, tous dans le même sens bien sûr);
+- ne pas se préoccuper du risque de famine.
 
 ### Approche par condition
 
 Donner, dans `VoieUniqueCondition.java`, une solution construite par l'approche par condition.
 
-   - tronçon unique de capacité limitée à 3 trains simultanément;
-   - ne pas se préoccuper du risque de famine.
-
-
+- tronçon unique de capacité limitée à 3 trains simultanément;
+- ne pas se préoccuper du risque de famine.

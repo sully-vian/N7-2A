@@ -1,11 +1,15 @@
 // Time-stamp: <02 mai 2013 14:09 queinnec@enseeiht.fr>
 
-/** Sens de circulation d'un train */
+/**
+ * Sens de circulation d'un train
+ */
 public enum Sens {
 
     NS, SN; /* nord->sud et sud->nord */
 
-    /** Sens inverse correspondant à ce sens. */
+    /**
+     * Sens inverse correspondant à ce sens.
+     */
     public Sens inverse() {
         return (this == SN) ? NS : SN;
     }

@@ -10,30 +10,30 @@ public class ProcessusLecteur extends Thread {
     private IHMLectRed ihm;
 
     public ProcessusLecteur(LectRed lr, Simulateur simu, IHMLectRed ihm) {
-        super (simu.getThreadGroup(), "");
-    	this.no = no;
-    	this.lr = lr;
+        super(simu.getThreadGroup(), "");
+        this.no = no;
+        this.lr = lr;
         this.simu = simu;
         this.ihm = ihm;
     }
 
     public void run() {
-        setName("Lecteur-"+ProcId.getSelf());
+        setName("Lecteur-" + ProcId.getSelf());
         ihm.ajouterLecteur();
         try {
-            simu.sleep(0, Main.MaxDelayLRien/2);
+            simu.sleep(0, Main.MaxDelayLRien / 2);
             while (true) {
                 // demande à lire
                 ihm.changerEtat(LectRedEtat.Lecteur_Demande);
                 lr.demanderLecture();
                 ihm.changerEtat(LectRedEtat.Lecteur_Lit);
-                
+
                 // utilise
                 simu.sleep(Main.MinDelayLit, Main.MaxDelayLit);
-                
+
                 lr.terminerLecture();
                 ihm.changerEtat(LectRedEtat.Lecteur_Rien);
-                
+
                 // pense
                 simu.sleep(Main.MinDelayLRien, Main.MaxDelayLRien);
             }
@@ -46,4 +46,3 @@ public class ProcessusLecteur extends Thread {
         }
     }
 }
-

@@ -5,13 +5,14 @@ import CSP.*;
 /** Réalisation de la voie unique avec des canaux JCSP. */
 /* Version par automate d'états */
 public class VoieUniqueAutomate implements VoieUnique {
+    enum ChannelId {
+        EntrerNS, EntrerSN, Sortir
+    };
 
-    enum ChannelId { EntrerNS, EntrerSN, Sortir };
-    
     private Channel<ChannelId> entrerNS;
     private Channel<ChannelId> entrerSN;
     private Channel<ChannelId> sortir;
-    
+
     public VoieUniqueAutomate() {
         this.entrerNS = new Channel<>(ChannelId.EntrerNS);
         this.entrerSN = new Channel<>(ChannelId.EntrerSN);
@@ -22,12 +23,12 @@ public class VoieUniqueAutomate implements VoieUnique {
     public void entrer(Sens sens) {
         System.out.println("In  entrer " + sens);
         switch (sens) {
-          case NS:
-            entrerNS.write(true);
-            break;
-          case SN:
-            entrerSN.write(true);
-            break;
+            case NS:
+                entrerNS.write(true);
+                break;
+            case SN:
+                entrerSN.write(true);
+                break;
         }
         System.out.println("Out entrer " + sens);
     }
@@ -44,10 +45,64 @@ public class VoieUniqueAutomate implements VoieUnique {
 
     /****************************************************************/
 
+    /**
+     * L'état actuel de l'automate
+     */
+    enum Etat {
+        TrainNS, TrainSN, Vide
+    }
+
     class Scheduler implements Runnable {
+        private Etat etat = Etat.Vide;
+        private int nbTrains = 0;
+
         public void run() {
-            /* XXXX TODO XXXX */
+            Alternative<ChannelId> alt = new Alternative<>(entrerNS, entrerSN, sortir);
+
+            while (true) {
+                switch (etat) {
+                    case Vide:
+                        switch (alt.select()) {
+                            case EntrerNS:
+                                entrerNS.read();
+                                etat = Etat.TrainNS;
+                                nbTrains = 1;
+                                break;
+                            case EntrerSN:
+                                entrerSN.read();
+                                etat = Etat.TrainSN;
+                                nbTrains = 1;
+                                break;
+                        }
+                        break;
+                    case TrainNS:
+                        switch (alt.select()) {
+                            case EntrerNS:
+                                entrerNS.read();
+                                nbTrains++;
+                                break;
+                            case Sortir:
+                                sortir.read();
+                                nbTrains--;
+                                etat = (nbTrains == 0) ? Etat.Vide : Etat.TrainNS;
+                                break;
+                        }
+                        break;
+                    case TrainSN:
+                        switch (alt.select()) {
+                            case EntrerSN:
+                                entrerSN.read();
+                                nbTrains++;
+                                break;
+                            case Sortir:
+                                sortir.read();
+                                nbTrains--;
+                                etat = (nbTrains == 0) ? Etat.Vide : Etat.TrainSN;
+                                break;
+                        }
+                        break;
+                }
+            }
         }
     } // class Scheduler
 }
-

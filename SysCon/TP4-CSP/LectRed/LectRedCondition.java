@@ -2,12 +2,16 @@
 
 import CSP.*;
 
-/** Lecteurs/rédacteurs - approche service */
-public class LectRedCondition implements LectRed
-{
-    enum ChannelId { DL, DE, TL, TE }
+/**
+ * Approche par condition, sans priorité particulière.
+ */
+public class LectRedCondition implements LectRed {
+    enum ChannelId {
+        DL, DE, TL, TE
+    }
+
     private Channel<ChannelId> dl, de, tl, te;
-    
+
     public LectRedCondition() {
         this.dl = new Channel<>(ChannelId.DL);
         this.de = new Channel<>(ChannelId.DE);
@@ -41,30 +45,31 @@ public class LectRedCondition implements LectRed
     class Scheduler implements Runnable {
         private int nblecteurs = 0;
         private boolean ecrivain = false;
+
         public void run() {
-            var gdl = new GuardedChannel<>(dl, () -> (! ecrivain));
+            var gdl = new GuardedChannel<>(dl, () -> (!ecrivain));
             var gde = new GuardedChannel<>(de, () -> ((nblecteurs == 0) && !ecrivain));
             var gtl = new GuardedChannel<>(tl, Predicate::True);
             var gte = new GuardedChannel<>(te, Predicate::True);
             var alt = new Alternative<>(gdl, gde, gtl, gte);
             while (true) {
                 switch (alt.select()) {
-                  case DL:
-                    dl.read();
-                    nblecteurs++;
-                    break;
-                  case DE:
-                    de.read();
-                    ecrivain = true;
-                    break;
-                  case TL:
-                    tl.read();
-                    nblecteurs--;
-                    break;
-                  case TE:
-                    te.read();
-                    ecrivain = false;
-                    break;
+                    case DL:
+                        dl.read();
+                        nblecteurs++;
+                        break;
+                    case DE:
+                        de.read();
+                        ecrivain = true;
+                        break;
+                    case TL:
+                        tl.read();
+                        nblecteurs--;
+                        break;
+                    case TE:
+                        te.read();
+                        ecrivain = false;
+                        break;
                 }
             }
         }

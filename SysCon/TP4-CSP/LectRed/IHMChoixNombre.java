@@ -21,28 +21,28 @@ public class IHMChoixNombre extends JPanel implements ActionListener {
         textField = new JTextField(Integer.toString(ini), 3);
         textField.addActionListener(this);
         textField.addFocusListener(new FocusAdapter() {
-                public void focusLost(FocusEvent e) {
-                    actionPerformed(null);
-                }
-            });
+            public void focusLost(FocusEvent e) {
+                actionPerformed(null);
+            }
+        });
         this.add(textField);
 
         js = new JSlider(JSlider.HORIZONTAL, min, max, ini);
         js.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    JSlider source = (JSlider) e.getSource();
-                    valeur=source.getValue();
-                    textField.setText(Integer.toString(valeur));
-                }
-            });
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider) e.getSource();
+                valeur = source.getValue();
+                textField.setText(Integer.toString(valeur));
+            }
+        });
         if (otherChangeListener != null)
-          js.addChangeListener(otherChangeListener);
+            js.addChangeListener(otherChangeListener);
 
         js.setMajorTickSpacing(10);
         js.setMinorTickSpacing(5);
         js.setPaintTicks(true);
         // crée table de labels
-        Hashtable<Integer,JLabel> labelTable = new Hashtable<Integer,JLabel>();
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
         labelTable.put(min, new JLabel(Integer.toString(min)));
         labelTable.put(max, new JLabel(Integer.toString(max)));
         js.setLabelTable(labelTable);
@@ -62,14 +62,12 @@ public class IHMChoixNombre extends JPanel implements ActionListener {
             if (valeur < min) {
                 textField.setText(Integer.toString(min));
                 valeur = min;
-            }
-            else if (valeur > max) {
+            } else if (valeur > max) {
                 textField.setText(Integer.toString(max));
                 valeur = max;
             }
             js.setValue(valeur);
-        }
-        catch (NumberFormatException exc) {
+        } catch (NumberFormatException exc) {
             textField.setText(Integer.toString(min));
             valeur = min;
         }

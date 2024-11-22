@@ -3,11 +3,13 @@
 import CSP.*;
 
 /** Lecteurs/rédacteurs - approche automate, priorité rédacteur */
-public class LectRedAutomatePrioRed implements LectRed
-{
-    enum ChannelId { DL, DE, TL, TE }
+public class LectRedAutomatePrioRed implements LectRed {
+    enum ChannelId {
+        DL, DE, TL, TE
+    }
+
     private Channel<ChannelId> dl, de, tl, te;
-    
+
     public LectRedAutomatePrioRed() {
         this.dl = new Channel<>(ChannelId.DL);
         this.de = new Channel<>(ChannelId.DE);
@@ -38,10 +40,14 @@ public class LectRedAutomatePrioRed implements LectRed
 
     /****************************************************************/
 
-    enum Etat { Libre, LectureEnCours, EcritureEnCours }
+    enum Etat {
+        Libre, LectureEnCours, EcritureEnCours
+    }
+
     class Scheduler implements Runnable {
         private Etat etat = Etat.Libre;
         private int nblecteurs = 0; // uniquement si etat = LectureEnCours
+
         public void run() {
             var gdl = new GuardedChannel<>(dl, () -> !de.pending());
             var gde = new GuardedChannel<>(de, Predicate::True);
@@ -52,28 +58,29 @@ public class LectRedAutomatePrioRed implements LectRed
             while (true) {
                 if (etat == Etat.Libre) {
                     switch (altLibre.select()) {
-                      case DL:
-                        dl.read();
-                        etat = Etat.LectureEnCours;
-                        nblecteurs = 1;
-                        break;
-                      case DE:
-                        de.read();
-                        etat = Etat.EcritureEnCours;
-                        break;
+                        case DL:
+                            dl.read();
+                            etat = Etat.LectureEnCours;
+                            nblecteurs = 1;
+                            break;
+                        case DE:
+                            de.read();
+                            etat = Etat.EcritureEnCours;
+                            break;
                     }
                 } else if (etat == Etat.LectureEnCours) {
                     switch (altLectureEnCours.select()) {
-                      case DL:
-                        dl.read();
-                        //etat = Etat.LectureEnCours; // inchangé
-                        nblecteurs++;
-                        break;
-                      case TL:
-                        tl.read();
-                        nblecteurs--;
-                        if (nblecteurs == 0) etat = Etat.Libre;
-                        break;
+                        case DL:
+                            dl.read();
+                            // etat = Etat.LectureEnCours; // inchangé
+                            nblecteurs++;
+                            break;
+                        case TL:
+                            tl.read();
+                            nblecteurs--;
+                            if (nblecteurs == 0)
+                                etat = Etat.Libre;
+                            break;
                     }
                 } else if (etat == Etat.EcritureEnCours) {
                     te.read();

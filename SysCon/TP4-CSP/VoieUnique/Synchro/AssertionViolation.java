@@ -6,13 +6,17 @@ package Synchro;
  * Exception levée en cas d'assertion invalide.
  * Il s'agit d'une <code>Error</code>, qui ne doit pas être capturée
  * ou traitée.
+ * 
  * @see Assert
  *
  * @author Philippe Quéinnec
  */
 @SuppressWarnings("serial")
-public class AssertionViolation extends Error
-{
-    public AssertionViolation () {}
-    public AssertionViolation (String s) {super(s);}
+public class AssertionViolation extends Error {
+    public AssertionViolation() {
+    }
+
+    public AssertionViolation(String s) {
+        super(s);
+    }
 }

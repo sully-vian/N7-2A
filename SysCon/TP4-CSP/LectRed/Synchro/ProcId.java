@@ -2,7 +2,8 @@
 
 package Synchro;
 
-/** Identification de processus.
+/**
+ * Identification de processus.
  * Opérations: ProcId.getId(), equals(ProcId) et equals(int).
  *
  * En interne, contient un entier unique, non recyclé, utile pour les traces
@@ -14,14 +15,15 @@ public class ProcId {
 
     private static Object verrouLastId = new Object();
     private static int lastId = 0;
-    
+
     private int id;
 
-    private ProcId (int id) {
+    private ProcId(int id) {
         this.id = id;
     }
 
-    /** Obtention de l'identité du processus appelant.
+    /**
+     * Obtention de l'identité du processus appelant.
      * S'il n'en avait pas, on lui en crée une.
      */
     public static ProcId getSelf() {
@@ -29,29 +31,30 @@ public class ProcId {
             synchronized (verrouLastId) {
                 if (clefId == null) {
                     clefId = new ThreadLocal<ProcId>() {
-                            protected ProcId initialValue() {
-                                synchronized (verrouLastId) {
-                                    return new ProcId (lastId++);
-                                }
-                            }};
+                        protected ProcId initialValue() {
+                            synchronized (verrouLastId) {
+                                return new ProcId(lastId++);
+                            }
+                        }
+                    };
                 }
             }
         }
         return clefId.get();
     }
 
-    public boolean equals (Object o) {
-        if (! (o instanceof ProcId))
-          return false;
-        return (((ProcId)o).id == this.id);
+    public boolean equals(Object o) {
+        if (!(o instanceof ProcId))
+            return false;
+        return (((ProcId) o).id == this.id);
     }
 
-    public boolean equals (int id) {
+    public boolean equals(int id) {
         return (id == this.id);
     }
 
     public String toString() {
-        return ""+id;
+        return "" + id;
     }
-    
+
 }

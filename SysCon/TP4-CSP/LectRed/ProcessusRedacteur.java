@@ -10,30 +10,30 @@ public class ProcessusRedacteur extends Thread {
     private IHMLectRed ihm;
 
     public ProcessusRedacteur(LectRed lr, Simulateur simu, IHMLectRed ihm) {
-        super (simu.getThreadGroup(), "");
-    	this.no = no;
-    	this.lr = lr;
+        super(simu.getThreadGroup(), "");
+        this.no = no;
+        this.lr = lr;
         this.simu = simu;
         this.ihm = ihm;
     }
 
     public void run() {
-        setName("Redacteur-"+ProcId.getSelf());
+        setName("Redacteur-" + ProcId.getSelf());
         ihm.ajouterRedacteur();
         try {
-            simu.sleep(0, Main.MaxDelayERien/2);
+            simu.sleep(0, Main.MaxDelayERien / 2);
             while (true) {
                 // demande à écrire
                 ihm.changerEtat(LectRedEtat.Redacteur_Demande);
                 lr.demanderEcriture();
                 ihm.changerEtat(LectRedEtat.Redacteur_Ecrit);
-                
+
                 // utilise
                 simu.sleep(Main.MinDelayEcrit, Main.MaxDelayEcrit);
-                
+
                 lr.terminerEcriture();
                 ihm.changerEtat(LectRedEtat.Redacteur_Rien);
-                
+
                 // pense
                 simu.sleep(Main.MinDelayERien, Main.MaxDelayERien);
             }
@@ -46,4 +46,3 @@ public class ProcessusRedacteur extends Thread {
         }
     }
 }
-

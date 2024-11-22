@@ -3,11 +3,13 @@
 import CSP.*;
 
 /** Lecteurs/rédacteurs - approche automate */
-public class LectRedAutomate implements LectRed
-{
-    enum ChannelId { DL, DE, TL, TE }
+public class LectRedAutomate implements LectRed {
+    enum ChannelId {
+        DL, DE, TL, TE
+    }
+
     private Channel<ChannelId> dl, de, tl, te;
-    
+
     public LectRedAutomate() {
         this.dl = new Channel<>(ChannelId.DL);
         this.de = new Channel<>(ChannelId.DE);
@@ -37,11 +39,15 @@ public class LectRedAutomate implements LectRed
     }
 
     /****************************************************************/
-        
-    enum Etat { Libre, LectureEnCours, EcritureEnCours }
+
+    enum Etat {
+        Libre, LectureEnCours, EcritureEnCours
+    }
+
     class Scheduler implements Runnable {
         private Etat etat = Etat.Libre;
         private int nblecteurs = 0; // uniquement si etat = LectureEnCours
+
         public void run() {
             var altLibre = new Alternative<>(dl, de);
             var altLectureEnCours = new Alternative<>(dl, tl);
@@ -49,28 +55,29 @@ public class LectRedAutomate implements LectRed
             while (true) {
                 if (etat == Etat.Libre) {
                     switch (altLibre.select()) {
-                      case DL:
-                        dl.read();
-                        etat = Etat.LectureEnCours;
-                        nblecteurs = 1;
-                        break;
-                      case DE:
-                        de.read();
-                        etat = Etat.EcritureEnCours;
-                        break;
+                        case DL:
+                            dl.read();
+                            etat = Etat.LectureEnCours;
+                            nblecteurs = 1;
+                            break;
+                        case DE:
+                            de.read();
+                            etat = Etat.EcritureEnCours;
+                            break;
                     }
                 } else if (etat == Etat.LectureEnCours) {
                     switch (altLectureEnCours.select()) {
-                      case DL:
-                        dl.read();
-                        //etat = Etat.LectureEnCours; // inchangé
-                        nblecteurs++;
-                        break;
-                      case TL:
-                        tl.read();
-                        nblecteurs--;
-                        if (nblecteurs == 0) etat = Etat.Libre;
-                        break;
+                        case DL:
+                            dl.read();
+                            // etat = Etat.LectureEnCours; // inchangé
+                            nblecteurs++;
+                            break;
+                        case TL:
+                            tl.read();
+                            nblecteurs--;
+                            if (nblecteurs == 0)
+                                etat = Etat.Libre;
+                            break;
                     }
                 } else if (etat == Etat.EcritureEnCours) {
                     te.read();

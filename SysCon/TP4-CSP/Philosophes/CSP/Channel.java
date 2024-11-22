@@ -2,9 +2,10 @@ package CSP;
 
 import org.jcsp.lang.*;
 
-/** A communication channel with an identification.
- *  This class is generic with regard to the id.
- *  A channel supports `read` and `write` of Object.
+/**
+ * A communication channel with an identification.
+ * This class is generic with regard to the id.
+ * A channel supports `read` and `write` of Object.
  */
 public class Channel<T> {
 
@@ -16,7 +17,9 @@ public class Channel<T> {
         this.id = id;
     }
 
-    public T getId() { return id; }
+    public T getId() {
+        return id;
+    }
 
     /* needed by Alt. */
     protected AltingChannelInput in() {
@@ -35,7 +38,9 @@ public class Channel<T> {
         c.out().write(o);
     }
 
-    /** Returns whether there is data pending on this channel: read will not block. */
+    /**
+     * Returns whether there is data pending on this channel: read will not block.
+     */
     public boolean pending() {
         return c.in().pending();
     }

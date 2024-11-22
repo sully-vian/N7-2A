@@ -1,7 +1,9 @@
 package CSP;
 
-/** A predicate holds a boolean function.
- * As it is a FunctionalInterface, it is expected to be used as `() -> (boolean expression)`.
+/**
+ * A predicate holds a boolean function.
+ * As it is a FunctionalInterface, it is expected to be used as `() -> (boolean
+ * expression)`.
  */
 @FunctionalInterface
 public interface Predicate {

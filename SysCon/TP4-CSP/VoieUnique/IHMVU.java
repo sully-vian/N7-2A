@@ -2,6 +2,8 @@
 
 public interface IHMVU {
     public void ajouterTrain(Position posInit);
+
     public void enleverTrain();
+
     public void changerEtat(Position pos);
 }
