@@ -42,8 +42,6 @@ Approximation d'une solution du problème min f(x), x ∈ Rⁿ, en utilisant l'a
 function newton(f::Function, gradf::Function, hessf::Function, x0::Union{Real, Vector{<:Real}};
 	max_iter::Integer = 1000, tol_abs::Real = 1e-10, tol_rel::Real = 1e-8, epsilon::Real = 1)
 
-	nb_it = 0
-
 	x_sol = x0
 	f_sol = f(x_sol)
 	flag = -1
@@ -59,10 +57,7 @@ function newton(f::Function, gradf::Function, hessf::Function, x0::Union{Real, V
 		xk = xs[end]
 		grad_f = gradf(xk)
 		h_f = hessf(xk)
-    
-		dk = - hessf(xk) \ gradf(xk)
-		# dk = - h_f \ grad_f
-
+		dk = - h_f \ grad_f
     	xk1 = xk + dk
 		xs = vcat(xs, [xk1])
 		nb_iters += 1
@@ -73,10 +68,10 @@ function newton(f::Function, gradf::Function, hessf::Function, x0::Union{Real, V
 		elseif (norm(xk1 - xk) <= epsilon * max(tol_rel * norm(xk), tol_abs))
 			# Stagnation de l'itéré: ∥xk+1−xk∥ ≤ ε*max(tol_rel∥xk∥,tol_abs)
 			flag = 1
-		elseif (abs(f(xk1) - f(xk)) <= epsilon * max(tol_rel * abs(f(xk)), tol_abs))
+		elseif (abs.(f(xk1) - f(xk)) <= epsilon * max(tol_rel * abs.(f(xk)), tol_abs))
 			# Stagnation de la fonction: |f(xk+1)−f(xk)| ≤ ε*max(tol_rel|f(xk)|,tol_abs)
 			flag = 2
-		elseif (nb_iters + 1 == max_iter)
+		elseif (nb_iters + 1 >= max_iter)
 			# Nb d'itérations max
 			flag = 3
 		end
