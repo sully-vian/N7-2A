@@ -1,32 +1,32 @@
 (****** Algorithmes combinatoires et monades ********)
 
-module type FONCTEUR =
-  sig
-    type 'a t
-    val map : ('a -> 'b) -> ('a t -> 'b t)
-  end
+module type FONCTEUR = sig
+  type 'a t
 
-module type MONADE =
-  sig
-    include FONCTEUR
-    val return : 'a -> 'a t
-    val (>>=)  : 'a t -> ('a -> 'b t) -> 'b t
-  end
+  val map : ('a -> 'b) -> 'a t -> 'b t
+end
 
-module type MONADE_PLUS =
-  sig
-    include MONADE
-    val zero : 'a t
-    val (++) : 'a t -> 'a t -> 'a t
-  end
+module type MONADE = sig
+  include FONCTEUR
+
+  val return : 'a -> 'a t
+  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
+end
+
+module type MONADE_PLUS = sig
+  include MONADE
+
+  val zero : 'a t
+  val ( ++ ) : 'a t -> 'a t -> 'a t
+end
 
 (* interface incluant l'affichage des éléments calculés *)
 (* pour les listes d'entiers uniquement                 *)
-module type MONADE_PLUS_PRINT =
-  sig
-    include MONADE_PLUS
-    val print : Format.formatter -> int list t -> unit
-  end
+module type MONADE_PLUS_PRINT = sig
+  include MONADE_PLUS
+
+  val print : Format.formatter -> int list t -> unit
+end
 
 (* fonction auxiliaire pour compter le nombre maximum d'octets alloués en mémoire *)
 let max_bytes () =
@@ -35,193 +35,235 @@ let max_bytes () =
 
 (* fonction auxiliaire pour afficher une liste d'entiers *)
 let print_int_list fmt l =
-  begin
-    Format.fprintf fmt "[";
-    List.iter (Format.fprintf fmt "%d; ") l;
-    Format.fprintf fmt "]"
-  end
-
+  Format.fprintf fmt "[";
+  List.iter (Format.fprintf fmt "%d; ") l;
+  Format.fprintf fmt "]"
 
 (* implantation de la monade ND avec des listes *)
 (* ne fonctionne qu'en l'absence de doublons    *)
-module NDList : MONADE_PLUS_PRINT =
-  struct
-    type 'a t = 'a list
-    let map = List.map
-    let return v = [v]
-    let (>>=) s f = List.flatten (List.map f s)
-    let zero = []
-    let (++) = (@)
+module NDList : MONADE_PLUS_PRINT = struct
+  type 'a t = 'a list
 
-    (* fonction d'affichage pour les tests *)
-    let print fmt =
-      List.iter (Format.fprintf fmt "%a@." print_int_list) 
-  end
+  let map = List.map
+  let return v = [ v ]
+  let ( >>= ) s f = List.flatten (List.map f s)
+  let zero = []
+  let ( ++ ) = ( @ )
 
+  (* fonction d'affichage pour les tests *)
+  let print fmt = List.iter (Format.fprintf fmt "%a@." print_int_list)
+end
 
 (*** Combinaisons d'une liste ***)
 
-module Exo1 (ND : MONADE_PLUS) =
-  struct
-    (* CONTRAT 
+module Exo1 (ND : MONADE_PLUS) = struct
+  (* CONTRAT
        Fonction qui renvoie toutes les combinaisons possible de k éléments d'une liste l
        Paramètre k : le nombre d'éléments dans la liste retournée
-       Precondition : k>= taille de l
+       Precondition : k <= |l|
        Paramètre l : la liste dans laquelle on prend les éléments
        Resultat : les combinaisons de k éléments choisis dans l
      *)
-    let rec combinaisons k l = failwith "a définir"
-  end
+  let rec combinaisons k l =
+    match k, l with
+    | 0, _ -> ND.return []
+    | _, [] -> ND.zero
+    | _, h :: t ->
+      ND.((combinaisons (k - 1) t >>= fun l' -> return (h :: l')) ++ combinaisons k t)
+end
 
 (* TESTS *)
 let test1 (module ND : MONADE_PLUS_PRINT) =
   let module M = Exo1 (ND) in
   let old_bytes = max_bytes () in
-  let result = M.combinaisons 4 [1;2;3;4;5;6;7;8;9;10] in
-  begin
-    Format.printf "@.TEST combinaisons@.memory used: %f@.result:@. %a@." (max_bytes () -. old_bytes) ND.print result
-  end
+  let result = M.combinaisons 4 [ 1; 2; 3; 4; 5; 6; 7; 8; 9; 10 ] in
+  Format.printf
+    "@.TEST combinaisons@.memory used: %f@.result:@. %a@."
+    (max_bytes () -. old_bytes)
+    ND.print
+    result
 
 let _ = test1 (module NDList)
 
-
 (*** Permutations d'une liste ***)
 
-module Exo2 (ND : MONADE_PLUS) =
-  struct
-    (* CONTRAT
+module Exo2 (ND : MONADE_PLUS) = struct
+  (* CONTRAT
        Fonction prend en paramètre un élément e et une liste l et qui insére e à toutes les possitions possibles dans l
        Pamaètre e : ('a) l'élément à insérer
        Paramètre l : ('a l  ist) la liste initiale dans laquelle insérer e
        Résultat : toutes les insertions possible de e dans l
      *)
-    let rec insertion e l = failwith "a définir"
+  let rec insertion e l =
+    match l with
+    | [] -> ND.return [ e ]
+    | h :: t -> ND.(return (e :: l) ++ (insertion e t >>= fun l' -> return (h :: l')))
 
-    (* CONTRAT
+  (* CONTRAT
        Fonction qui renvoie la liste des permutations d'une liste
        Paramètre l : une liste
        Résultat : les permutations de l (toutes différentes si les élements de l sont différents deux à deux)
      *)
-    let rec permutations l = failwith "a définir"
+  let rec permutations l =
+    match l with
+    | [] -> ND.return []
+    | h :: t -> ND.(permutations t >>= insertion h)
 end
 
 (* TESTS *)
 let test2 (module ND : MONADE_PLUS_PRINT) =
   let module M = Exo2 (ND) in
   let old_bytes = max_bytes () in
-  let result = M.permutations [1;2;3;4;5] in
-  begin
-    Format.printf "@.TEST permutations@.memory used: %f@.result:@. %a@." (max_bytes () -. old_bytes) ND.print result
-  end
+  let result = M.permutations [ 1; 2; 3; 4; 5 ] in
+  Format.printf
+    "@.TEST permutations@.memory used: %f@.result:@. %a@."
+    (max_bytes () -. old_bytes)
+    ND.print
+    result
 
 let _ = test2 (module NDList)
 
-
 (*** Partition d'un entier ***)
 
-module Exo3 (ND : MONADE_PLUS) =
-  struct
-    (* CONTRAT
+module Exo3 (ND : MONADE_PLUS) = struct
+  (* CONTRAT
        partition int -> int list
        Fonction qui calcule toutes les partitions possibles d'un entier n
        Paramètre n : un entier dont on veut calculer les partitions
        Préconditions : n >0
        Résultat : les partitions de n
      *)
-    let partitions n = failwith "a définir"
-  end
+  let partitions n =
+    let rec aux t n =
+      if t > n
+      then ND.zero
+      else if t = n
+      then ND.return [ n ]
+      else ND.((aux t (n - t) >>= fun l' -> return (t :: l')) ++ aux (t + 1) n)
+    in
+    aux 1 n
+end
 
 (* TESTS *)
 let test3 (module ND : MONADE_PLUS_PRINT) =
   let module M = Exo3 (ND) in
   let old_bytes = max_bytes () in
   let result = M.partitions 5 in
-  begin
-    Format.printf "@.TEST partitions@.memory used: %f@.result: %a@." (max_bytes () -. old_bytes) ND.print result
-  end
+  Format.printf
+    "@.TEST partitions@.memory used: %f@.result: %a@."
+    (max_bytes () -. old_bytes)
+    ND.print
+    result
 
 let _ = test3 (module NDList)
 
-
 (* fonction auxiliaire pour réaliser tous les tests des fonctions combinatoires *)
 let test_combinatoire (module ND : MONADE_PLUS_PRINT) =
-  begin
-    test1 (module ND);
-    test2 (module ND);
-    test3 (module ND)
-  end
+  test1 (module ND);
+  test2 (module ND);
+  test3 (module ND)
 
 (*** Autre implantation de ND par itérateurs ***)
-    
-module NDIter : MONADE_PLUS_PRINT =
-  struct
-    type 'a t = Tick of ('a * 'a t) option Lazy.t
 
-    let uncons = failwith "a définir"
-    let ( ++ ) = failwith "a définir"
-    let zero = failwith "a définir"
-    let ( >>= ) = failwith "a définir"
-    let return =  failwith "a définir"
-    let map = failwith "a définir"
+module NDIter : MONADE_PLUS_PRINT = struct
+  type 'a t = Tick of ('a * 'a t) option Lazy.t
 
-    (* fonction d'affichage pour les tests *)
-    let rec print fmt it =
-      match uncons it with
-      | None          -> Format.fprintf fmt "@."
-      | Some (a, it') -> Format.fprintf fmt "%a@.%a" print_int_list a print it'
-  end
+  let uncons (Tick flux) = Lazy.force flux
+
+  let rec ( ++ ) flux1 flux2 =
+    Tick
+      (lazy
+        (match uncons flux1 with
+         | None -> uncons flux2
+         | Some (h, t) -> Some (h, t ++ flux2)))
+
+  let zero = Tick (lazy None)
+
+  let rec ( >>= ) x f =
+    Tick
+      (lazy
+        (match uncons x with
+         | None -> None
+         | Some (h, t) -> uncons (f h ++ (t >>= f))))
+
+  let return x = Tick (lazy (Some (x, Tick (lazy None))))
+
+  let rec map f x =
+    Tick
+      (lazy
+        (match uncons x with
+         | None -> None
+         | Some (h, t) -> Some (f h, map f t)))
+
+  (* fonction d'affichage pour les tests *)
+  let rec print fmt it =
+    match uncons it with
+    | None -> Format.fprintf fmt "@."
+    | Some (a, it') -> Format.fprintf fmt "%a@.%a" print_int_list a print it'
+end
 
 (* TESTS *)
 let test_iter () =
-  begin
-    Format.printf "@.TEST itérateur@.";
-    test_combinatoire (module NDIter)
-  end
-
+  Format.printf "@.TEST itérateur@.";
+  test_combinatoire (module NDIter)
 
 (*** Autre implantation de ND par tirage aléatoire ***)
 
-module NDRandom : MONADE_PLUS_PRINT =
-  struct
-    type 'a t = unit -> 'a option
+module NDRandom : MONADE_PLUS_PRINT = struct
+  type 'a t = unit -> 'a option
 
-    (* à compléter *)
-    let ( ++ ) = failwith "a définir"
-    let zero = failwith "a définir"
-    let ( >>= ) = failwith "a définir"
-    let return =  failwith "a définir"
-    let map = failwith "a définir"
+  (* choix entre a et b équitables *)
+  let ( ++ ) a b () =
+    match a (), b () with
+    | None, None -> None
+    | None, Some rb -> Some rb
+    | Some ra, None -> Some ra
+    | Some ra, Some rb -> if Random.bool () then Some ra else Some rb
 
-    (* fonction d'affichage pour les tests *)
-    let print fmt it =
-      match it () with
-      | None   -> Format.fprintf fmt "@."
-      | Some v -> Format.fprintf fmt "%a@." print_int_list v
-  end
+  (* pas d'issue, impossible *)
+  let zero () = None
+
+  let ( >>= ) x f () =
+    match x () with
+    | None -> None
+    | Some r -> f a ()
+
+  (* 100% de chance d'avoir x *)
+  let return x () = Some x
+
+  let map f x () =
+    match x () with
+    | None -> None
+    | Some r -> Some (f r)
+
+  (* fonction d'affichage pour les tests *)
+  let print fmt it =
+    match it () with
+    | None -> Format.fprintf fmt "@."
+    | Some v -> Format.fprintf fmt "%a@." print_int_list v
+end
 
 (* TESTS *)
 let test_random (module ND : MONADE_PLUS_PRINT) =
-  begin
-    Format.printf "@.TEST aléatoire@."; test_combinatoire (module ND)
-  end
+  Format.printf "@.TEST aléatoire@.";
+  test_combinatoire (module ND)
 
 let _ = test_random (module NDRandom)
-
-
+(*
 (*** Autre implantation de ND par tirage aléatoire équitable ***)
 
-module NDFairRandom : MONADE_PLUS_PRINT =
-  struct
-    type 'a t = int * (unit -> 'a)
+module NDFairRandom : MONADE_PLUS_PRINT = struct
+  type 'a t = int * (unit -> 'a)
 
-    (* à compléter *)
+  (* à compléter *)
 
-    (* fonction d'affichage pour les tests *)
-    let print fmt (n, it) =
-      match n with
-      | 0 -> Format.fprintf fmt "@."
-      | _ -> Format.fprintf fmt "%a@." print_int_list (it ())
-  end
+  (* fonction d'affichage pour les tests *)
+  let print fmt (n, it) =
+    match n with
+    | 0 -> Format.fprintf fmt "@."
+    | _ -> Format.fprintf fmt "%a@." print_int_list (it ())
+end
 
 (* TESTS *)
 let _ = test_random (module NDFairRandom)
+*)
