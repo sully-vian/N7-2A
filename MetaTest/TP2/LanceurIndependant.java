@@ -84,7 +84,6 @@ public class LanceurIndependant {
         }
 
         // Exécuter les méthodes de test
-
         List<Method> methods = Arrays.stream(classe.getMethods())
                 .filter(e -> e.getName().startsWith("tester"))
                 .collect(Collectors.toList());
