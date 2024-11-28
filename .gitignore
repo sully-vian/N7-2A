@@ -2,5 +2,6 @@
 _build/
 *.tar
 *.tar.gz
+*.tgz
 *.ipynb_checkpoints
 *.DS_Store
