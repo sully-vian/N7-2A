@@ -1,0 +1,19 @@
+begin
+    on;
+    turn 180;
+    move 200;
+    turn 135;
+    move 50;
+    turn 45;
+    move 130;
+    turn 45;
+    move 50;
+    turn 135;
+    move 100;
+    turn 270;
+    move 100;
+    turn 225;
+    move 106;
+    turn 225;
+    move 75;
+end
