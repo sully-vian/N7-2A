@@ -1,6 +1,4 @@
-(library
- (name tp9_etu)
+(executable
+ (name main)
  (libraries graphics)
- (inline_tests)
- (preprocess
-  (pps ppx_inline_test)))
+ (modules main monadic_flux parsing))

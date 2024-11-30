@@ -1,0 +1,7 @@
+begin
+    on;
+    repeat 6 begin
+        move 100;
+        turn 144;
+    end;
+end
