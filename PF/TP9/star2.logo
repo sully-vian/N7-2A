@@ -1,0 +1,10 @@
+begin
+    proc branch begin
+        move 100;
+        turn 144;
+    end;
+    on;
+    repeat 6 begin
+        call branch;
+    end;
+end

@@ -163,3 +163,136 @@ and parse_C : (char, cmd) parser =
    ++ (p_call >>= fun _ -> p_ident >>= fun identifiant -> return (Call identifiant)))
     flux
 ;;
+
+(* fonction principale de parsing des programmes LOGO *)
+let parse_logo flux = run (map fst (parse_P *> p_eof)) flux
+
+(* fonctions auxiliaires *)
+(* flux construit à partir des caractères de la chaîne s *)
+let flux_of_string s =
+  Flux.unfold
+    (fun (i, l) -> if i = l then None else Some (s.[i], (i + 1, l)))
+    (0, String.length s)
+;;
+
+(* flux construit à partir du contenu du fichier 'name' *)
+let flux_of_file name =
+  let f = open_in name in
+  Flux.unfold
+    (fun () ->
+      try Some (input_char f, ()) with
+      | End_of_file ->
+        close_in f;
+        None)
+    ()
+;;
+
+(* conversion d'un programme en chaîne de caractères *)
+let rec logo_to_string (d, i) =
+  String.concat ";\n" (List.map decl_to_string d)
+  ^ String.concat "; " (List.map cmd_to_string i)
+
+(* conversion d'une déclaration en chaîne de caractères *)
+and decl_to_string (Decl (nom, programme)) =
+  Format.sprintf "proc %s %s " nom (logo_to_string programme)
+
+(* conversion d'une commande en chaîne de caractères *)
+and cmd_to_string c =
+  match c with
+  | Repeat (n, p) -> Format.sprintf "repeat %d %s" n (logo_to_string p)
+  | Move d -> Format.sprintf "move %d" d
+  | Turn a -> Format.sprintf "turn %d" a
+  | On -> Format.sprintf "on"
+  | Off -> Format.sprintf "off"
+  | Call nom -> Format.sprintf "call %s" nom
+;;
+
+(* affichage des programmes LOGO solutions du parsing *)
+let rec print_solutions progs =
+  match Solution.uncons progs with
+  | None -> ()
+  | Some (p, q) ->
+    Format.printf "LOGO program recognized: %s@." (logo_to_string p);
+    print_solutions q
+;;
+
+(* programme interactif de test qui parse un programme LOGO lu au clavier *)
+(* puis affiche tous les parsings possibles                               *)
+let test_parser_logo () =
+  let rec loop () =
+    Format.printf "programme?@.";
+    flush stdout;
+    let l = read_line () in
+    let f = flux_of_string l in
+    let progs = parse_logo f in
+    match Solution.uncons progs with
+    | None ->
+      Format.printf "** parsing failed ! **@.";
+      loop ()
+    | Some (p, q) ->
+      print_solutions (Solution.cons p q);
+      loop ()
+  in
+  loop ()
+;;
+
+(* conversion de degrés en radians *)
+let rad_of_deg = 2. *. Float.pi /. 360.
+
+let rec assoc_decls : string -> decls -> prog option =
+  fun nom declarations ->
+  match declarations with
+  | [] -> None
+  | Decl (h_nom, programme) :: t ->
+    if nom = h_nom then Some programme else assoc_decls nom t
+;;
+
+type etat = bool * float * float * float
+
+(* exécution d'un programme LOGO *)
+let rec exec_logo : etat -> prog -> etat =
+  fun (on, x, y, a) (declarations, instructions) ->
+  fst (List.fold_left exec_cmd ((on, x, y, a), declarations) instructions)
+
+and exec_cmd : etat * decls -> cmd -> etat * decls =
+  fun ((on, x, y, a), declarations) commande ->
+  match commande with
+  | Repeat (n, p) ->
+    if n <= 0
+    then (on, x, y, a), declarations
+    else exec_cmd (exec_logo (on, x, y, a) p, declarations) (Repeat (n - 1, p))
+  | Move d ->
+    let x' = x +. (float_of_int d *. cos (rad_of_deg *. a))
+    and y' = y +. (float_of_int d *. sin (rad_of_deg *. a)) in
+    (if on then Graphics.lineto else Graphics.moveto) (int_of_float x') (int_of_float y');
+    (on, x', y', a), declarations
+  | Turn b -> (on, x, y, mod_float (a +. float_of_int b) 360.), declarations
+  | On -> (true, x, y, a), declarations
+  | Off -> (false, x, y, a), declarations
+  | Call nom ->
+    (match assoc_decls nom declarations with
+     | None -> failwith ("missing program declaration : " ^ nom)
+     | Some programme -> exec_logo (on, x, y, a) programme, declarations)
+;;
+
+let run_logo programme =
+  Graphics.open_graph " 800*600";
+  Graphics.moveto 400 300;
+  ignore (exec_logo (false, 400., 300., 0.) programme);
+  ignore (read_line ());
+  Graphics.close_graph ()
+;;
+
+let exec_file : string -> unit =
+  fun nom ->
+  Format.printf "parsing file %s@." nom;
+  let f = flux_of_file nom in
+  let progs = parse_logo f in
+  match Solution.uncons progs with
+  | None -> Format.printf "** parsing failed ! **@."
+  | Some (p, q) ->
+    Format.printf "LOGO program recognized: %s@." (logo_to_string p);
+    run_logo p
+;;
+
+let () = exec_file Sys.argv.(1)

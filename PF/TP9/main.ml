@@ -213,10 +213,10 @@ let run_logo prog =
 ;;
 
 (* read content of file and execute it *)
-let exex_file : string -> unit =
-  fun name ->
-    Format.printf "parsing file %s@." name;
-  let f = flux_of_file name in
+let exec_file : string -> unit =
+  fun nom ->
+    Format.printf "parsing file %s@." nom;
+  let f = flux_of_file nom in
   let progs = parse_logo f in
   match Solution.uncons progs with
   | None -> Format.printf "** parsing failed ! **@."
@@ -225,4 +225,4 @@ let exex_file : string -> unit =
     run_logo p
 ;;
 
-let () = exex_file Sys.argv.(1)
+let () = exec_file Sys.argv.(1)

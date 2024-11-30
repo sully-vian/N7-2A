@@ -1,9 +1,9 @@
 (executable
  (name main)
  (libraries graphics)
- (modules main monadic_flux parsing))
+ (modules main parsing monadic_flux))
 
 (executable
  (name main2)
  (libraries graphics)
- (modules main2 monadic_flux parsing))
+ (modules main2 parsing monadic_flux))
