@@ -1,6 +1,6 @@
 using LinearAlgebra
-include("../src/cauchy.jl")
-include("../src/gct.jl")
+include("./cauchy.jl")
+include("./gct.jl")
 """
 Approximation de la solution du problème min f(x), x ∈ Rⁿ.
 
@@ -54,8 +54,8 @@ du gradient conjugué tronqué.
 """
 function regions_de_confiance(f::Function, gradf::Function, hessf::Function, x0::Vector{<:Real};
 	max_iter::Integer = 5000, tol_abs::Real = 1e-10, tol_rel::Real = 1e-8, epsilon::Real = 1,
-	Δ0::Real = 2, Δmax::Real = 10, γ1::Real = 0.5, γ2::Real = 2, η1::Real = 0.25, η2::Real = 0.75, algo_pas::String = "gct",
-	max_iter_gct::Integer = 2 * length(x0))
+	Δ0::Real = 2, Δmax::Real = 10, γ1::Real = 0.5, γ2::Real = 2, η1::Real = 0.25, η2::Real = 0.75,
+	algo_pas::String = "gct", max_iter_gct::Integer = 2 * length(x0))
 
 	#
 	x_sol = x0
@@ -70,42 +70,54 @@ function regions_de_confiance(f::Function, gradf::Function, hessf::Function, x0:
 	Δ = [Δ0]
 	Δₖ = Δ[end]
 
-	# définition en une ligne de la fonction modèle
-	mₖ(s) = f(xₖ) + (gₖ' * s) + (1 / 2 * s' * Hₖ * s)
+	# vérifier CN1 dès le début
+	if (norm(gradf(x0)) <= max(tol_rel * norm(gradf(x0)), tol_abs))
+		flag = 0
+	end
 
 	while (flag == -1)
 		xₖ = xs[end]
-		Δₖ = Δ[end]
 
 		Hₖ = hessf(xₖ)
 		gₖ = gradf(xₖ)
-		sₖ = cauchy(gₖ, Hₖ, Δₖ)
 
-		pₖ = (f(xₖ) - f(xₖ + sₖ)) / (mₖ(0 * sₖ) - mₖ(sₖ))
+		if (algo_pas == "cauchy")
+			sₖ = cauchy(gₖ, Hₖ, Δₖ, tol_abs=tol_abs)
+		elseif (algo_pas == "gct")
+			sₖ = 0 # TODO
+		else
+			error("Pas d'algo portant le nom \"" * algo_pas * "\", les seuls choix possibles sont \"cauchy\" et \"gct\".")
+		end
 
-		if (pₖ >= η1)
-			# mise-à-jour de l'itéré
+		mₖ0 = f(xₖ)
+		mₖsₖ = f(xₖ) + (gₖ' * sₖ) + (1 / 2 * sₖ' * Hₖ * sₖ)
+
+		ρₖ = (f(xₖ) - f(xₖ + sₖ)) / (mₖ0 - mₖsₖ)
+
+		# mise-à-jour (ou non) de l'itéré
+		if (ρₖ >= η1)
 			xₖ₊₁ = xₖ + sₖ
 		else
 			xₖ₊₁ = xₖ
 		end
 
-		if (pₖ >= η2)
+		if (ρₖ >= η2)
 			# augmentation de la région de confiance
 			Δₖ₊₁ = min(γ2 * Δₖ, Δmax)
-		elseif (pₖ >= η1)
-			# on ne touche pas la région de confiance
-			Δₖ₊₁ = Δₖ
-		else
+		elseif (ρₖ <= η1)
 			# diminution de la région de confiance
 			Δₖ₊₁ = γ1 * Δₖ
+		else
+			# on ne touche pas la région de confiance
+			Δₖ₊₁ = Δₖ
 		end
 		nb_iters += 1
 
 		if (norm(gradf(xₖ₊₁)) <= max(tol_rel * norm(gradf(x0)), tol_abs))
 			# CN1: ∥∇f(xk+1)∥ ≤ max(tol_rel*∥∇f(x0)∥, tol_abs)
 			flag = 0
-		elseif (norm(xₖ₊₁ - xₖ) <= epsilon * max(tol_rel * norm(xₖ), tol_abs))
+		elseif (ρₖ >= η1) && (norm(xₖ₊₁ - xₖ) <= epsilon * max(tol_rel * norm(xₖ), tol_abs))
+			# vérifier seulement si l'itéré a été mis à jour
 			# Stagnation de l'itéré: ∥xk+1−xk∥ ≤ ε*max(tol_rel∥xk∥,tol_abs)
 			flag = 1
 		elseif (abs(f(xₖ₊₁) - f(xₖ)) <= epsilon * max(tol_rel * abs(f(xₖ)), tol_abs))
@@ -117,7 +129,7 @@ function regions_de_confiance(f::Function, gradf::Function, hessf::Function, x0:
 		end
 
 		# mise à jur des variables qu'on se trimballe
-		Δ = vcat(Δ, [Δₖ₊₁])
+		Δₖ = Δₖ₊₁
 		xs = vcat(xs, [xₖ₊₁])
 
 	end
