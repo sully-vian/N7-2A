@@ -4,7 +4,7 @@ open Parser
 (* un programme est une séquence de déclarations suivi d'une séquence d'instructions *)
 type prog = decls * inst
 and decls = decl list
-and decl = Decl of string * prog (* declaration d'un sous-programme nommé *)
+and decl = Decl of string * prog (* déclaration d'un sous-programme nommé *)
 and inst = cmd list
 
 and cmd =
@@ -119,39 +119,42 @@ let rec parse_P : (char, prog) parser =
    >>= fun _ ->
    parse_D
    >>= fun declarations ->
-   parse_I >>= fun instruction -> p_end >>= fun _ -> return (declarations, instruction))
+   parse_I declarations
+   >>= fun instruction -> p_end >>= fun _ -> return (declarations, instruction))
     flux
 
-and parse_I : (char, inst) parser =
-  fun flux ->
+and parse_I : decls -> (char, inst) parser =
+  fun declarations flux ->
   (return []
-   ++ (parse_C
+   ++ (parse_C declarations
        >>= fun commande ->
        p_ptvirg
-       >>= fun _ -> parse_I >>= fun instruction -> return (commande :: instruction)))
+       >>= fun _ ->
+       parse_I declarations >>= fun instruction -> return (commande :: instruction)))
     flux
 
 and parse_D : (char, decls) parser =
   fun flux ->
   (return []
    ++ (parse_S
-       >>= fun declaration ->
+       >>= fun (Decl (nom, programme)) ->
        p_ptvirg
-       >>= fun _ -> parse_D >>= fun declarations -> return (declaration :: declarations))
-  )
+       >>= fun _ ->
+       parse_D >>= fun declarations -> return (Decl (nom, programme) :: declarations)))
     flux
 
 and parse_S : (char, decl) parser =
+  print_endline "parse_S appelé";
   fun flux ->
-  (p_proc
-   >>= fun _ ->
-   p_ident
-   >>= fun identifiant ->
-   parse_P >>= fun programme -> return (Decl (identifiant, programme)))
-    flux
+    (p_proc
+     >>= fun _ ->
+     p_ident
+     >>= fun identifiant ->
+     parse_P >>= fun programme -> return (Decl (identifiant, programme)))
+      flux
 
-and parse_C : (char, cmd) parser =
-  fun flux ->
+and parse_C : decls -> (char, cmd) parser =
+  fun declarations flux ->
   ((p_repeat
     >>= fun _ ->
     p_entier
@@ -199,7 +202,7 @@ and decl_to_string (Decl (nom, programme)) =
 (* conversion d'une commande en chaîne de caractères *)
 and cmd_to_string c =
   match c with
-  | Repeat (n, p) -> Format.sprintf "repeat %d %s" n (logo_to_string p)
+  | Repeat (n, p) -> Format.sprintf "repeat %d %s " n (logo_to_string p)
   | Move d -> Format.sprintf "move %d" d
   | Turn a -> Format.sprintf "turn %d" a
   | On -> Format.sprintf "on"
@@ -239,20 +242,21 @@ let test_parser_logo () =
 (* conversion de degrés en radians *)
 let rad_of_deg = 2. *. Float.pi /. 360.
 
-let rec assoc_decls : string -> decls -> prog option =
+(* variante de List.assoc qi déconstruit le constructeur Decl deu type decl *)
+let rec assoc_decls : string -> decls -> prog =
   fun nom declarations ->
   match declarations with
-  | [] -> None
-  | Decl (h_nom, programme) :: t ->
-    if nom = h_nom then Some programme else assoc_decls nom t
+  | [] -> failwith ("missing program declaration : [" ^ nom ^ "]")
+  | Decl (nom', programme) :: t -> if nom = nom' then programme else assoc_decls nom t
 ;;
 
+(* type de l'état de l'exécution d'un programme LOGO *)
 type etat = bool * float * float * float
 
 (* exécution d'un programme LOGO *)
-let rec exec_logo : etat -> prog -> etat =
-  fun (on, x, y, a) (declarations, instructions) ->
-  fst (List.fold_left exec_cmd ((on, x, y, a), declarations) instructions)
+let rec exec_logo : etat * decls -> prog -> etat * decls =
+  fun ((on, x, y, a), mem_decls) (prog_decls, instructions) ->
+  List.fold_left exec_cmd ((on, x, y, a), mem_decls @ prog_decls) instructions
 
 and exec_cmd : etat * decls -> cmd -> etat * decls =
   fun ((on, x, y, a), declarations) commande ->
@@ -260,7 +264,9 @@ and exec_cmd : etat * decls -> cmd -> etat * decls =
   | Repeat (n, p) ->
     if n <= 0
     then (on, x, y, a), declarations
-    else exec_cmd (exec_logo (on, x, y, a) p, declarations) (Repeat (n - 1, p))
+    else (
+      let foo = exec_logo ((on, x, y, a), declarations) p, declarations in
+      exec_cmd (fst foo) (Repeat (n - 1, p)))
   | Move d ->
     let x' = x +. (float_of_int d *. cos (rad_of_deg *. a))
     and y' = y +. (float_of_int d *. sin (rad_of_deg *. a)) in
@@ -269,16 +275,13 @@ and exec_cmd : etat * decls -> cmd -> etat * decls =
   | Turn b -> (on, x, y, mod_float (a +. float_of_int b) 360.), declarations
   | On -> (true, x, y, a), declarations
   | Off -> (false, x, y, a), declarations
-  | Call nom ->
-    (match assoc_decls nom declarations with
-     | None -> failwith ("missing program declaration : " ^ nom)
-     | Some programme -> exec_logo (on, x, y, a) programme, declarations)
+  | Call nom -> exec_logo ((on, x, y, a), declarations) (assoc_decls nom declarations)
 ;;
 
 let run_logo programme =
   Graphics.open_graph " 800*600";
   Graphics.moveto 400 300;
-  ignore (exec_logo (false, 400., 300., 0.) programme);
+  ignore (exec_logo ((false, 400., 300., 0.), []) programme);
   ignore (read_line ());
   Graphics.close_graph ()
 ;;
