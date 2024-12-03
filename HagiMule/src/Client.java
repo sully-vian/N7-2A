@@ -1,5 +1,3 @@
-public class Client {
-
-    private Downloader downloader;
+public interface Client {
 
 }

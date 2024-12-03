@@ -3,6 +3,6 @@
  * Permet le téléchargement de fragments.
  * Accessible avec des sockets TCP.
  */
-public class Daemon {
+public interface Daemon {
 
 }
