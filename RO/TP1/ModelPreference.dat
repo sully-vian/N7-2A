@@ -1,0 +1,20 @@
+data;
+
+set PERSONNES :=
+P1
+P2
+P3;
+
+set TACHES :=
+T1
+T2
+T3;
+
+# nom des colonnes pis nom des lignes
+param preference:
+   T1 T2 T3 :=
+P1  4  7  9
+P2  9  8  3
+P3  2  1  2;
+
+end;
