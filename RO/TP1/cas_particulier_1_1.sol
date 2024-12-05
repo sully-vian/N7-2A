@@ -1,4 +1,4 @@
-Problem:    ModelCommerce
+Problem:    cas_particulier_1_1
 Rows:       11
 Columns:    12
 Non-zeros:  36

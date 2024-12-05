@@ -1,4 +1,4 @@
-Problem:    ModelPreference
+Problem:    affectation
 Rows:       7
 Columns:    9 (9 integer, 9 binary)
 Non-zeros:  27
