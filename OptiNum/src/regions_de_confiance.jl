@@ -120,10 +120,10 @@ function regions_de_confiance(f::Function, gradf::Function, hessf::Function, x0:
 			# vérifier seulement si l'itéré a été mis à jour
 			# Stagnation de l'itéré: ∥xk+1−xk∥ ≤ ε*max(tol_rel∥xk∥,tol_abs)
 			flag = 1
-		elseif (abs(f(xₖ₊₁) - f(xₖ)) <= epsilon * max(tol_rel * abs(f(xₖ)), tol_abs))
+		elseif (ρₖ >= η1) && (abs(f(xₖ₊₁) - f(xₖ)) <= epsilon * max(tol_rel * abs(f(xₖ)), tol_abs))
 			# Stagnation de la fonction: |f(xk+1)−f(xk)| ≤ ε*max(tol_rel|f(xk)|,tol_abs)
 			flag = 2
-		elseif (nb_iters + 1 >= max_iter)
+		elseif (nb_iters >= max_iter)
 			# Nb d'itérations max
 			flag = 3
 		end
