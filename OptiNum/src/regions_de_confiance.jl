@@ -84,7 +84,7 @@ function regions_de_confiance(f::Function, gradf::Function, hessf::Function, x0:
 		if (algo_pas == "cauchy")
 			sₖ = cauchy(gₖ, Hₖ, Δₖ, tol_abs=tol_abs)
 		elseif (algo_pas == "gct")
-			sₖ = 0 # TODO
+			sₖ = gct(gₖ, Hₖ, Δₖ)
 		else
 			error("Pas d'algo portant le nom \"" * algo_pas * "\", les seuls choix possibles sont \"cauchy\" et \"gct\".")
 		end
