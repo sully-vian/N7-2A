@@ -23,7 +23,7 @@ du gradient conjugué tronqué.
 		• max_iter      : (Integer) le nombre maximal d'iterations (optionnel, par défaut 5000)
 		• tol_abs       : (Real) la tolérence absolue (optionnel, par défaut 1e-10)
 		• tol_rel       : (Real) la tolérence relative (optionnel, par défaut 1e-8)
-		• epsilon       : (Real) le epsilon pour les tests de stagnation (optionnel, par défaut 1)
+		• epsilon       : (Real) le epsilon pour les tests de stagnation (optionnel, par défaut 1) (vaut 1 ou 0 pour si on veut vérif les stagnations ou pas)
 		• Δ0            : (Real) le rayon initial de la région de confiance (optionnel, par défaut 2)
 		• Δmax          : (Real) le rayon maximal de la région de confiance (optionnel, par défaut 10)
 		• γ1, γ2        : (Real) les facteurs de mise à jour de la région de confiance (optionnel, par défaut 0.5 et 2)

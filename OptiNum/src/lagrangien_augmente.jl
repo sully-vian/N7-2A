@@ -11,7 +11,7 @@ par l'algorithme du lagrangien augmenté.
 
 # Syntaxe
 
-    x_sol, f_sol, flag, nb_iters, μs, λs = lagrangien_augmente(f, gradf, hessf, c, gradc, hessc, x0; kwargs...)
+    x_sol, f_sol, flag, nb_iters, μs, λs = lagrangien_augmente(f, gradf, hessf, c, gradc, hessc, x₀; kwargs...)
 
 # Entrées
 
@@ -21,13 +21,13 @@ par l'algorithme du lagrangien augmenté.
     - c      : (Function) la c à valeur dans R
     - gradc  : (Function) le gradient de c
     - hessc  : (Function) la hessienne de c
-    - x0     : (Vector{<:Real}) itéré initial
+    - x₀     : (Vector{<:Real}) itéré initial
     - kwargs : les options sous formes d'arguments "keywords"
         • max_iter  : (Integer) le nombre maximal d'iterations (optionnel, par défaut 1000)
         • tol_abs   : (Real) la tolérence absolue (optionnel, par défaut 1e-10)
         • tol_rel   : (Real) la tolérence relative (optionnel, par défaut 1e-8)
-        • λ0        : (Real) le multiplicateur de lagrange associé à c initial (optionnel, par défaut 2)
-        • μ0        : (Real) le facteur initial de pénalité de la c (optionnel, par défaut 10)
+        • λ₀        : (Real) le multiplicateur de lagrange associé à c initial (optionnel, par défaut 2)
+        • μ₀        : (Real) le facteur initial de pénalité de la c (optionnel, par défaut 10)
         • τ         : (Real) le facteur d'accroissement de μ (optionnel, par défaut 2)
         • algo_noc  : (String) l'algorithme sans c à utiliser (optionnel, par défaut "rc-gct")
             * "newton"    : pour l'algorithme de Newton
@@ -53,22 +53,42 @@ par l'algorithme du lagrangien augmenté.
     c(x) =  x[1]^2 + x[2]^2 - 1.5
     gradc(x) = 2*x
     hessc(x) = [2 0; 0 2]
-    x0 = [1; 0]
-    x_sol, _ = lagrangien_augmente(f, gradf, hessf, c, gradc, hessc, x0, algo_noc="rc-gct")
+    x₀ = [1; 0]
+    x_sol, _ = lagrangien_augmente(f, gradf, hessf, c, gradc, hessc, x₀, algo_noc="rc-gct")
 
 """
 function lagrangien_augmente(f::Function, gradf::Function, hessf::Function, 
-        c::Function, gradc::Function, hessc::Function, x0::Vector{<:Real}; 
+        c::Function, gradc::Function, hessc::Function, x₀::Vector{<:Real}; 
         max_iter::Integer=1000, tol_abs::Real=1e-10, tol_rel::Real=1e-8,
-        λ0::Real=2, μ0::Real=10, τ::Real=2, algo_noc::String="rc-gct")
+        λ₀::Real=2, μ₀::Real=10, τ::Real=2, algo_noc::String="rc-gct")
 
     #
-    x_sol = x0
+    x_sol = x₀
     f_sol = f(x_sol)
     flag  = -1
     nb_iters = 0
-    μs = [μ0] # vous pouvez faire μs = vcat(μs, μk) pour concaténer les valeurs
-    λs = [λ0]
+    μs = [μ₀] # vous pouvez faire μs = vcat(μs, μk) pour concaténer les valeurs
+    λs = [λ₀]
+
+    while (flag == -1)
+        xₖ₊₁ = 0 # TODO
+
+        if (norm(c(xₖ₊₁)) <= ηₖ) # mettre à jour (entre autres) les multiplicateurs
+            λₖ₊₁ = λₖ + μₖ * c(xₖ₊₁)
+            μₖ₊₁ = μₖ
+            εₖ₊₁ = εₖ / μₖ
+            ηₖ₊₁ = ηₖ / μₖ
+        else # Autrement, mettre à jour (entre autres) le paramètre de pénalité
+            λₖ₊₁ = λₖ
+            μₖ₊₁ = τ * μₖ
+            εₖ₊₁ = ε₀ / μₖ₊₁
+            ηₖ₊₁ = ηₖ / μₖ₊₁
+        end
+        k = k  + 1
+
+        # TODO: flags
+
+    end
 
     return x_sol, f_sol, flag, nb_iters, μs, λs
 
