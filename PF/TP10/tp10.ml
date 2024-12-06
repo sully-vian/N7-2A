@@ -85,8 +85,18 @@ module type Channel = sig
 end
 
 module GTChannel : Channel = struct
-  (* à compléter/modifier *)
-  let create = assert false
+  let create : unit -> ('a -> unit) * (unit -> 'a) =
+    fun () ->
+    let queue = Queue.create () in
+    let writer v = Queue.push v queue in
+    let reader () =
+      while Queue.is_empty queue do
+        GreenThreads.yield ()
+      done;
+      Queue.pop queue
+    in
+    writer, reader
+  ;;
 end
 
 (* affiche tous les nombres premiers de 2 à 1000 *)
