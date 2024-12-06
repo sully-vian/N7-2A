@@ -1,5 +1,4 @@
 module GreenThreads = struct
-  (* à compléter/modifier *)
   type res =
     | Done
     | Yield of (unit -> res)
@@ -8,9 +7,9 @@ module GreenThreads = struct
   let prompt0 = Delimcc.new_prompt ()
 
   let scheduler : (unit -> unit) -> unit =
-   fun prog_init ->
+    fun prog_init ->
     let rec loop : (unit -> res) Queue.t -> unit =
-     fun queue ->
+      fun queue ->
       if Queue.is_empty queue
       then ()
       else (
@@ -20,37 +19,74 @@ module GreenThreads = struct
           Queue.push proc queue;
           loop queue
         | Fork (new_prog, kproc) ->
-          let new_proc () = Fork (new_prog, fun () -> Done) in
-          Queue.push new_proc queue;
           Queue.push kproc queue;
+          let new_proc () =
+            new_prog ();
+            Done
+          in
+          Queue.push new_proc queue;
           loop queue)
     in
     let queue = Queue.create () in
     (* Transformer le programme init en processus *)
-    let proc_init () = Fork (prog_init, fun () -> Done) in
+    let proc_init () =
+      prog_init ();
+      Done
+    in
     Queue.push proc_init queue;
     loop queue
- ;;
+  ;;
 
   (* rend la main au scheduler qui doit le rempiler *)
   let yield : unit -> unit = fun () -> Delimcc.shift prompt0 (fun k -> Yield k)
 
   (* rend la main pr démarrer l'exec de p *)
   let fork : (unit -> unit) -> unit =
-   fun proc -> Delimcc.shift prompt0 (fun k -> Fork (proc, k))
- ;;
+    fun proc -> Delimcc.shift prompt0 (fun k -> Fork (proc, k))
+  ;;
 
   (* termine l'exec du proc, le scheduler ne doit pas rempiler *)
   let exit : unit -> unit = fun () -> Delimcc.shift prompt0 (fun _ -> Done)
 end
 
+let ping : unit -> unit =
+  fun () ->
+  GreenThreads.(
+    for i = 1 to 10 do
+      Format.printf "ping! %d\n" i;
+      yield ()
+    done;
+    exit ())
+;;
+
+let pong : unit -> unit =
+  fun () ->
+  GreenThreads.(
+    for i = 1 to 10 do
+      Format.printf "pong! %d\n" i;
+      yield ()
+    done;
+    exit ())
+;;
+
+let ping_pong : unit -> unit =
+  fun () ->
+  GreenThreads.(
+    fork ping;
+    fork pong;
+    exit ())
+;;
+
+let ping_pong_scheduler () = GreenThreads.scheduler ping_pong
+
 module type Channel = sig
+  (* écriture non-bloquante * lecture non-bloquante *)
   val create : unit -> ('a -> unit) * (unit -> 'a)
 end
 
 module GTChannel : Channel = struct
   (* à compléter/modifier *)
-  let create () = assert false
+  let create = assert false
 end
 
 (* affiche tous les nombres premiers de 2 à 1000 *)

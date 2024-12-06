@@ -1,5 +1,6 @@
 (library
  (name tp10)
+ (modules tp10)
  (libraries delimcc)
  (inline_tests)
  (preprocess
