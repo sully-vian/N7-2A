@@ -1,4 +1,4 @@
-package test.fr.n7.hagimule;
+package fr.n7.hagimule.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import fr.n7.hagimule.Host;
 
-public class HostTest {
+public class TestHost {
 
     private String randName1;
     private String randName2;

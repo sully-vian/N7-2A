@@ -1,5 +1,7 @@
 package fr.n7.hagimule.client.downloader;
 
+import fr.n7.hagimule.Host;
+
 /**
  * Sur les clients.
  * <p>
@@ -9,19 +11,17 @@ public class Downloader extends Thread {
 
     private int numFragments = 1;
     private String fileName;
-    private String host;
-    private int port;
+    private Host host;
 
-    public Downloader(String fileName, String host, int port) {
+    public Downloader(String fileName, Host host) {
         super();
         this.fileName = fileName;
         this.host = host;
-        this.port = port;
     }
 
     @Override
     public void run() {
-        DownloaderSlave slave = new DownloaderSlave(this.fileName, this.host, this.port, this.numFragments, 1);
+        DownloaderSlave slave = new DownloaderSlave(this.fileName, this.host, this.numFragments, 1);
         slave.start();
         System.out.println("DownloaderSlave started");
     }

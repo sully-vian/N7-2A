@@ -1,7 +1,5 @@
-package test.fr.n7.hagimule.diary;
+package fr.n7.hagimule.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -9,9 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.rmi.RemoteException;
 
 import org.junit.Before;
@@ -20,7 +15,7 @@ import org.junit.Test;
 import fr.n7.hagimule.Host;
 import fr.n7.hagimule.diary.DiaryImpl;
 
-public class DiaryImplTest {
+public class TestDiaryImpl {
 
     private DiaryImpl diary;
     private Host host1;

@@ -4,6 +4,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Set;
 
+import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.daemon.Daemon;
 import fr.n7.hagimule.client.downloader.Downloader;
 import fr.n7.hagimule.diary.Diary;
@@ -21,7 +22,8 @@ public class Client {
             daemon.start();
             System.out.println("Daemon started");
         } else if (Integer.parseInt(args[0]) == 1) {
-            Downloader downloader = new Downloader("foo.txt", "localhost", 8080);
+            Host host = new Host("localhost", 8080);
+            Downloader downloader = new Downloader("foo.txt", host);
             downloader.start();
             System.out.println("Downloader started");
         } else {

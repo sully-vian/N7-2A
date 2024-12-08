@@ -9,33 +9,33 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import fr.n7.hagimule.Host;
+
 public class DownloaderSlave extends Thread {
 
     private String fileName;
     private int numFragments;
     private int fragmentNumero;
     private int fragmentSize = 1024;
-    private String host;
-    private int port;
+    private Host host;
 
-    public DownloaderSlave(String fileName, String host, int port, int numFragments, int fragmentNumero) {
+    public DownloaderSlave(String fileName, Host host, int numFragments, int fragmentNumero) {
         this.fileName = fileName;
         this.host = host;
-        this.port = port;
         this.numFragments = numFragments;
         this.fragmentNumero = fragmentNumero;
     }
 
     @Override
     public void run() {
-        System.out.println("Trying to connect to " + this.host + ":" + this.port);
+        System.out.println("Trying to connect to " + this.host);
 
-        try (Socket socket = new Socket(this.host, this.port);
+        try (Socket socket = new Socket(this.host.getName(), this.host.getPort());
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 InputStream is = socket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is);) {
-            System.out.println("DownloaderSlave connected with " + this.host + ":" + this.port);
+            System.out.println("DownloaderSlave connected with " + this.host + ":" + this.host.getPort());
 
             oos.writeUTF(this.fileName);
             System.out.println("sent file name:" + this.fileName);
