@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.n7.hagimule.Host;
+
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
-    private HashMap<String, HashSet<String>> map;
+    private HashMap<String, HashSet<Host>> map;
 
     /**
      * Crée un DiaryImpl vide.
@@ -26,14 +28,14 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public HashSet<String> getHosts(String file) throws RemoteException {
-        Set<String> hosts = this.map.get(file);
+    public HashSet<Host> getHosts(String file) throws RemoteException {
+        Set<Host> hosts = this.map.get(file);
         return hosts == null ? new HashSet<>() : new HashSet<>(hosts);
     }
 
     @Override
-    public void addHost(String file, String host) throws RemoteException {
-        HashSet<String> hosts = this.map.get(file);
+    public void addHost(String file, Host host) throws RemoteException {
+        HashSet<Host> hosts = this.map.get(file);
         if (hosts == null) {
             hosts = new HashSet<>();
             this.map.put(file, hosts);
@@ -42,8 +44,8 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public void removeHost(String file, String host) throws RemoteException {
-        HashSet<String> hosts = this.map.get(file);
+    public void removeHost(String file, Host host) throws RemoteException {
+        HashSet<Host> hosts = this.map.get(file);
         if (hosts != null) {
             hosts.remove(host);
         }
