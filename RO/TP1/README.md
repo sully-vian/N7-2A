@@ -58,7 +58,7 @@ Pour cette situation, on pose comme variable la matrice $vol$ telle que $vol_{f,
 
 $$
 \begin{aligned}
-    \min \quad & \sum_{f,d,m} vol_{f,m,d}  \times C_{m,f} \\
+    \min \quad & \sum_{f,d,m} vol_{f,m,d} \times C_{m,f} \\
     & vol_{f,m,d} \geqslant 0 \quad \forall f \quad \forall m \quad \forall d \\
     & \sum_{m} vol_{f,m,d} = A_{d,f} \quad \forall d \quad \forall f \\
     & \sum_{d} vol_{f,m,d} \leqslant B_{m,f} \quad \forall m \quad \forall f \\
@@ -77,13 +77,12 @@ Ce problème étend le précédent en ajoutant d'autres coûts. On n'a donc pas 
 
 $$
 \begin{aligned}
-    \min \quad & \sum_{f,d,m} vol_{f,m,d}  \times C_{m,f} + D_{d,m} + E_{d,m} \\
+    \min \quad & \sum_{f,d,m} vol_{f,m,d} \times C_{m,f} + D_{d,m} + E_{d,m} \\
     & vol_{f,m,d} \geqslant 0 \quad \forall f \quad \forall m \quad \forall d \\
     & \sum_{m} vol_{f,m,d} = A_{d,f} \quad \forall d \quad \forall f \\
     & \sum_{d} vol_{f,m,d} \leqslant B_{m,f} \quad \forall m \quad \forall f \\
 \end{aligned}
 $$
-
 
 Le modèle de ce problème se trouve dans `cas_particulier_1_2.mod`. On définit les données dans `cas_particulier_1_2.dat` et on lance le solveur GLPK avec la commande suivante :
 
@@ -92,5 +91,30 @@ Le modèle de ce problème se trouve dans `cas_particulier_1_2.mod`. On définit
 ```
 
 ## Cas particulier 2
+
+1. Ce problème corrrespond au problème du voyageur de commerce, où on aurait imposé le point de départ.
+
+2. La situation ressemble en quelque sorte au problème d'affectation traité plus haut. C'est pourquoi nous avaons introduit une variable matrice $trajets_{i,j}$ qui vaut $1$ si le livreur livre le client $i$ puis drirectment après le client $j$, et $0$ sinon. Ensuite, plus qu'à multiplier par la distance associée dans les données et on a la distance totale du circuit.
+
+    Toutefois, il manque la contrainte d'interdire les sous-boucles, qui est difficile à écrire. Pour cela nous avons introduit une variable vecteur $rang$ qui tient compte du rang de chaque client visité. Le magasin ALPHA doit avoir un rang de $1$, et tous les clients ont un rang distinct entre $2$ et $n$ (avec $n$ le nombre de clients). On a donc:
+
+    $$rang_i-rang_j + n \times trajets_{i,j} \leqslant n-1 \quad \forall i,j \neq \text{ALPHA}, i\neq j$$
+
+    En effet, on capture ici que si $i$ et $j$ se succèdent, $rang_i + 1 = rang_j$. De plus, cette variable mettra facilement en évidence le trajet complet du livreur dans la fichier solution.
+
+Le problème complet s'écrit donc, avec $dist$ la matrice donnée des distances :
+
+$$
+\begin{aligned}
+    \min \quad & \sum_{i,j} trajets_{i,j} \times dist_{i,j} \\
+    & trajets_{i,j} \in \{0,1\} \quad \forall i,j \\
+    & trajets_{i,i} = 0 \quad \forall i \\
+    & \sum_{j} trajets_{i,j} = 1 \quad \forall i \neq \text{ALPHA} \\
+    & \sum_{i} trajets_{i,j} = 1 \quad \forall j \neq \text{ALPHA} \\
+    & rang_i \in [\![1,n]\!] \quad \forall i \\
+    & rang_{\text{ALPHA}} = 1 \\
+    & rang_i-rang_j + n \times trajets_{i,j} \leqslant n-1 \quad \forall i,j \neq \text{ALPHA}, i\neq j \\
+\end{aligned}
+$$
 
 ## Minimisation des émissions polluantes
