@@ -16,13 +16,6 @@ public class DiaryServer {
             Registry registry = LocateRegistry.createRegistry(PORT);
             registry.rebind("Diary", diary);
             System.out.println("Diary served on port " + PORT);
-
-            // save the diary map to a file every 10 seconds
-            // while (true) {
-            //     diary.saveMapToFile();
-            //     System.out.println("Diary map saved to file");
-            //     Thread.sleep(10_000);
-            // }
         } catch (Exception e) {
             e.printStackTrace();
         }

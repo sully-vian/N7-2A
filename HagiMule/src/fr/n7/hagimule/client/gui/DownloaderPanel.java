@@ -14,6 +14,8 @@ public class DownloaderPanel extends JPanel {
 
     private Downloader downloader;
 
+    private DownloadTaskPanel downloadTaskPanel;
+
     private JButton reloadButton;
     private JComboBox<String> filesBox;
     private JButton downloadButton;
@@ -36,6 +38,9 @@ public class DownloaderPanel extends JPanel {
         this.downloadButton = new JButton("Download");
         this.downloadButton.addActionListener(this::downloadSelectedFile);
         this.add(this.downloadButton);
+
+        this.downloadTaskPanel = new DownloadTaskPanel(this.downloader);
+        this.add(this.downloadTaskPanel);
     }
 
     private String[] getStortedFileNames() {

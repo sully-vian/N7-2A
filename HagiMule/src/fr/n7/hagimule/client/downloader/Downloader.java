@@ -4,7 +4,9 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 import fr.n7.hagimule.Host;
 import fr.n7.hagimule.diary.Diary;
@@ -19,6 +21,7 @@ public class Downloader extends Thread {
 
     /** Les noms des fichiers disponibles dans l'annuaire */
     private String[] availableFileNames;
+    private Set<DownloadTask> currentTasks;
 
     private Registry registry;
     private Host diaryHost;
@@ -31,6 +34,9 @@ public class Downloader extends Thread {
      */
     public Downloader(Host diaryHost) {
         super();
+        this.availableFileNames = new String[0];
+        this.currentTasks = new HashSet<>();
+
         this.diaryHost = diaryHost;
         this.fetchDiary();
         this.fetchFileNames();
@@ -44,6 +50,10 @@ public class Downloader extends Thread {
      */
     public String[] getAvailableFileNames() {
         return this.availableFileNames;
+    }
+
+    public Set<DownloadTask> getCurrentTasks() {
+        return this.currentTasks;
     }
 
     public void downloadFile(String fileName) {

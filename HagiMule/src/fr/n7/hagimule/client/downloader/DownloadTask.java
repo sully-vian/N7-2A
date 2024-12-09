@@ -27,6 +27,15 @@ public class DownloadTask extends Thread {
         this.fetchHosts();
     }
 
+    /**
+     * Retourne le nom du fichier à télécharger.
+     *
+     * @return le nom du fichier à télécharger.
+     */
+    public String getFileName() {
+        return this.fileName;
+    }
+
     @Override
     public void run() {
         for (int i = 0; i < this.hosts.length; i++) {
