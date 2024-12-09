@@ -11,6 +11,24 @@ import fr.n7.hagimule.diary.Diary;
 
 public class Client {
 
+    private final Host DIARY_HOST = new Host("localhost", 1099);
+    private Downloader downloader;
+    private Daemon daemon;
+
+    public Client() {
+        this.downloader = new Downloader(this.DIARY_HOST);
+        this.daemon = new Daemon(1000);
+    }
+
+    public Downloader getDownloader() {
+        return this.downloader;
+    }
+
+    public Daemon getDaemon() {
+        return this.daemon;
+    }
+
+
     public static void main(String[] args) {
         if (args.length != 1) {
             System.out.println("Usage: java Client [0|1]");
@@ -23,7 +41,7 @@ public class Client {
             System.out.println("Daemon started");
         } else if (Integer.parseInt(args[0]) == 1) {
             Host host = new Host("localhost", 8080);
-            Downloader downloader = new Downloader("foo.txt", host);
+            Downloader downloader = new Downloader(host);
             downloader.start();
             System.out.println("Downloader started");
         } else {
@@ -39,7 +57,7 @@ public class Client {
             Diary stub = (Diary) registry.lookup("Diary");
             System.out.println("got stub");
 
-            Set<String> files = stub.getFiles();
+            Set<String> files = stub.getFileNames();
             System.out.println(files);
         } catch (Exception e) {
             System.err.println("Client exception: " + e.toString());

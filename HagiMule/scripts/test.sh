@@ -1,11 +1,16 @@
 #!/bin/bash
 
 # Compile the test files
-javac -d bin -cp bin:lib/* $(find src -name "*.java")
+javac -d bin -cp bin:lib/* fr.n7.hagimule.test/*.java
 
-echo "Test compilation completed."
+echo -e "\e[32mCompilation successful.\e[0m"
 
 # Run the tests
 java -cp bin:lib/* org.junit.runner.JUnitCore fr.n7.hagimule.test.AllTests
 
-echo "Tests completed."
+if [ $? -ne 0 ]; then
+    echo -e "\e[31mTests failed.\e[0m"
+    exit 1
+fi
+
+echo -e "\e[32mTests successful.\e[0m"

@@ -30,14 +30,14 @@ public class TestDiaryImpl {
 
     @Test
     public void testDiaryImpl() throws RemoteException {
-        assertTrue(this.diary.getFiles().isEmpty());
+        assertTrue(this.diary.getFileNames().isEmpty());
     }
 
     @Test
     public void testGetFiles() throws RemoteException {
-        assertTrue(this.diary.getFiles().isEmpty());
+        assertTrue(this.diary.getFileNames().isEmpty());
         this.diary.addHost("file1", host1);
-        assertTrue(this.diary.getFiles().contains("file1"));
+        assertTrue(this.diary.getFileNames().contains("file1"));
     }
 
     @Test
@@ -50,11 +50,26 @@ public class TestDiaryImpl {
     @Test
     public void testAddHost() throws RemoteException {
         this.diary.addHost("file1", host1);
-        assertTrue(this.diary.getFiles().contains("file1"));
+        assertTrue(this.diary.getFileNames().contains("file1"));
         assertTrue(this.diary.getHosts("file1").contains(host1));
 
         this.diary.addHost("file1", host2);
         assertTrue(this.diary.getHosts("file1").contains(host2));
+    }
+
+    @Test
+    public void testAddHostAlreadyPresent() throws RemoteException {
+        this.diary.addHost("file1", host1);
+        int initialSize = this.diary.getHosts("file1").size();
+        System.out.println(this.diary.getHosts("file1"));
+        System.out.println(this.diary.getFileNames());
+
+        this.diary.addHost("file1", new Host("host1", 1234));
+        int newSize = this.diary.getHosts("file1").size();
+        System.out.println(this.diary.getHosts("file1"));
+        System.out.println(this.diary.getFileNames());
+
+        assertTrue(initialSize == newSize);
     }
 
     @Test

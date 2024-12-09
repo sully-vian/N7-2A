@@ -51,11 +51,23 @@ public class Host implements Serializable {
         if (other == this) {
             return true;
         }
-        if (!(other instanceof Host)) {
+        if (other == null || getClass() != other.getClass()) {
             return false;
         }
         Host otherHost = (Host) other;
-        return name.equals(otherHost.name) && port == otherHost.port;
+        return port == otherHost.port && java.util.Objects.equals(name, otherHost.name);
+    }
+
+    /**
+     * Renvoie le code de hachage de l'hôte.
+     *
+     * @return le code de hachage de l'hôte
+     */
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + port;
+        return result;
     }
 
     /**

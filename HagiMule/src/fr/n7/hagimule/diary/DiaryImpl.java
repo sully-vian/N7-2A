@@ -46,7 +46,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public HashSet<String> getFiles() throws RemoteException {
+    public HashSet<String> getFileNames() throws RemoteException {
         return new HashSet<>(this.map.keySet());
     }
 

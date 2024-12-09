@@ -14,4 +14,6 @@
 
 [`diary.sh`](scripts/diary.sh) : lance le serveur de l'annuaire.
 
+[`gui.sh`](scripts/gui.sh) : lance l'interface graphique du client.
+
 [`test.sh`](scripts/test.sh) : compile et lance la suite de tous les tests (trouvables dans [`src/fr/n7/hagimule/test`](src/fr/n7/hagimule/test)).

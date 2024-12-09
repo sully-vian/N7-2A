@@ -21,7 +21,7 @@ public interface Diary extends Remote {
      * @return la liste des fichiers de l'annuaire
      * @throws RemoteException
      */
-    HashSet<String> getFiles() throws RemoteException;
+    HashSet<String> getFileNames() throws RemoteException;
 
     /**
      * Renvoie la liste des hôtes ayant le fichier donné.

@@ -1,0 +1,67 @@
+package fr.n7.hagimule.client.gui;
+
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import fr.n7.hagimule.client.downloader.Downloader;
+
+public class DownloaderPanel extends JPanel {
+
+    private Downloader downloader;
+
+    private JButton reloadButton;
+    private JComboBox<String> filesBox;
+    private JButton downloadButton;
+
+    public DownloaderPanel(Downloader downloader) {
+        super();
+        this.downloader = downloader;
+
+        this.reloadButton = new JButton("Reload");
+        this.reloadButton.addActionListener(this::reloadAvailableFiles);
+
+        this.add(this.reloadButton);
+        System.out.println("DownloaderPanel created");
+
+        this.add(new JLabel("Available files:"));
+
+        this.filesBox = new JComboBox<>(this.getStortedFileNames());
+        this.add(this.filesBox);
+
+        this.downloadButton = new JButton("Download");
+        this.downloadButton.addActionListener(this::downloadSelectedFile);
+        this.add(this.downloadButton);
+    }
+
+    private String[] getStortedFileNames() {
+        String[] fileNames = this.downloader.getAvailableFileNames();
+        Arrays.sort(fileNames);
+        return fileNames;
+    }
+
+    /**
+     * Recharge l'affichage des fichiers disponibles.
+     *
+     * @param e l'événement qui a déclenché l'action
+     */
+    private void reloadAvailableFiles(ActionEvent e) {
+        this.downloader.fetchFileNames();
+        this.filesBox = new JComboBox<>(this.downloader.getAvailableFileNames());
+        System.out.println("Files menu reloaded");
+    }
+
+    /**
+     * Lance le téléchargement du fichier sélectionné.
+     *
+     * @param e l'événement qui a déclenché l'action
+     */
+    private void downloadSelectedFile(ActionEvent e) {
+        String fileName = (String) this.filesBox.getSelectedItem();
+        this.downloader.downloadFile(fileName);
+    }
+}
