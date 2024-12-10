@@ -7,6 +7,9 @@ import javax.swing.SwingUtilities;
 
 import fr.n7.hagimule.client.Client;
 
+/**
+ * Fenêtre principale de l'application.
+ */
 public class MainWindow extends JFrame {
 
     private final Client client;

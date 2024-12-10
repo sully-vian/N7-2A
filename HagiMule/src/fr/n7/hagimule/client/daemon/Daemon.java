@@ -7,7 +7,7 @@ import java.net.Socket;
 /**
  * Sur chaque client.
  * <p>
- * Permet le téléchargement de fragments.
+ * Permet le téléchargement de fragments depuis un autre client.
  * <p>
  * Accessible avec des sockets TCP.
  */

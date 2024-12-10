@@ -4,19 +4,19 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Set;
 
-import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.daemon.Daemon;
 import fr.n7.hagimule.client.downloader.Downloader;
 import fr.n7.hagimule.diary.Diary;
 
+/**
+ * Client principal.
+ */
 public class Client {
-
-    private final Host DIARY_HOST = new Host("localhost", 1099);
     private Downloader downloader;
     private Daemon daemon;
 
     public Client() {
-        this.downloader = new Downloader(this.DIARY_HOST);
+        this.downloader = new Downloader();
         this.daemon = new Daemon(1000);
     }
 
@@ -40,8 +40,7 @@ public class Client {
             daemon.start();
             System.out.println("Daemon started");
         } else if (Integer.parseInt(args[0]) == 1) {
-            Host host = new Host("localhost", 8080);
-            Downloader downloader = new Downloader(host);
+            Downloader downloader = new Downloader();
             downloader.start();
             System.out.println("Downloader started");
         } else {

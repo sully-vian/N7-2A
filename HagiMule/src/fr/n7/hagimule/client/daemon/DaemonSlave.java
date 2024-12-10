@@ -8,13 +8,15 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * Traite les requêtes de téléchargement de fragments.
+ */
 public class DaemonSlave extends Thread {
 
     private Socket clientSocket;
 
     private String fileName;
     private int numFragments;
-    private int fragmentSize = 1024;
     private int fragmentNumero;
 
     public DaemonSlave(Socket clienSocket) {

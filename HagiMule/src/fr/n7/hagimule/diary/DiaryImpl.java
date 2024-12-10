@@ -8,6 +8,9 @@ import java.util.Set;
 
 import fr.n7.hagimule.Host;
 
+/**
+ * Implémentation de l'annuaire.
+ */
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
     private HashMap<String, HashSet<Host>> map;

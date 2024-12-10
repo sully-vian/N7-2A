@@ -5,7 +5,6 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 import fr.n7.hagimule.Host;
@@ -29,19 +28,11 @@ public class Downloader extends Thread {
 
     /**
      * Crée un nouveau téléchargeur.
-     *
-     * @param diaryHost
      */
-    public Downloader(Host diaryHost) {
+    public Downloader() {
         super();
         this.availableFileNames = new String[0];
         this.currentTasks = new HashSet<>();
-
-        this.diaryHost = diaryHost;
-        if (this.fetchDiary()) {
-            this.fetchFileNames();
-            this.addTestHosts();
-        }
     }
 
     public Host getDiaryHost() {
@@ -84,38 +75,22 @@ public class Downloader extends Thread {
      *
      * @return true si l'annuaire a été récupéré, false sinon
      */
-    public boolean fetchDiary() {
+    public void fetchDiary(Host diaryHost) {
         try {
-            this.registry = LocateRegistry.getRegistry(this.diaryHost.getName(), this.diaryHost.getPort());
+            this.registry = LocateRegistry.getRegistry(diaryHost.getName(), diaryHost.getPort());
             this.diary = (Diary) this.registry.lookup("Diary");
-            return true;
+            System.out.println("Diary connected");
         } catch (RemoteException | NotBoundException e) {
             System.err.println("Error when fetching diary: " + e.toString());
-            return false;
         }
     }
 
     public void fetchFileNames() {
         try {
             this.availableFileNames = this.diary.getFileNames().toArray(new String[0]);
+            System.out.println("File names fetched");
         } catch (RemoteException e) {
             System.err.println("Error when fetching fileNames: " + e.toString());
-        }
-    }
-
-    // TODO: retirer cette méthode
-    private void addTestHosts() {
-        try {
-            Random random = new Random();
-            for (int i = 0; i < 10; i++) {
-                String fileName = "file" + i;
-                this.diary.addHost(fileName, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
-                this.diary.addHost(fileName, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
-                this.diary.addHost(fileName, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
-                this.diary.addHost(fileName, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
-            }
-        } catch (RemoteException e) {
-            System.err.println("Error when adding test hosts: " + e.toString());
         }
     }
 }

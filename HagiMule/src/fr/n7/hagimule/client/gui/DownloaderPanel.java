@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -11,6 +12,9 @@ import javax.swing.JPanel;
 
 import fr.n7.hagimule.client.downloader.Downloader;
 
+/**
+ * Panneau d'affichage pour choisir le fichier à télécharger.
+ */
 public class DownloaderPanel extends JPanel {
 
     private Downloader downloader;
@@ -56,7 +60,9 @@ public class DownloaderPanel extends JPanel {
             return;
         }
         this.downloader.fetchFileNames();
-        this.filesBox = new JComboBox<>(this.downloader.getAvailableFileNames());
+        String[] fileNames = this.getStortedFileNames();
+        this.filesBox.setModel(new DefaultComboBoxModel<>(fileNames));
+
         System.out.println("Files menu reloaded");
     }
 
@@ -67,6 +73,10 @@ public class DownloaderPanel extends JPanel {
      */
     private void downloadSelectedFile(ActionEvent e) {
         String fileName = (String) this.filesBox.getSelectedItem();
+        if (fileName == null) {
+            System.out.println("No file selected");
+            return;
+        }
         this.downloader.downloadFile(fileName);
     }
 }

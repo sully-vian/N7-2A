@@ -10,6 +10,9 @@ import java.util.Random;
 
 import fr.n7.hagimule.Host;
 
+/**
+ * Traite le téléchargement d'un fragment.
+ */
 public class DownloaderSlave extends Thread {
 
     private String fileName;

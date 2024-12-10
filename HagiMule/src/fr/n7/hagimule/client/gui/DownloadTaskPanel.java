@@ -15,6 +15,9 @@ import javax.swing.Timer;
 import fr.n7.hagimule.client.downloader.DownloadTask;
 import fr.n7.hagimule.client.downloader.Downloader;
 
+/**
+ * Panneau d'affichage pour les tâches de téléchargement en cours.
+ */
 public class DownloadTaskPanel extends JPanel {
 
     private Downloader downloader;
