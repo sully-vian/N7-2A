@@ -20,8 +20,8 @@ import fr.n7.hagimule.diary.Diary;
 public class Downloader extends Thread {
 
     /** Les noms des fichiers disponibles dans l'annuaire */
-    private String[] availableFileNames;
-    private Set<DownloadTask> currentTasks;
+    private String[] availableFileNames = new String[0];
+    private Set<DownloadTask> currentTasks = new HashSet<>();
 
     private Registry registry;
     private Host diaryHost;
@@ -38,16 +38,21 @@ public class Downloader extends Thread {
         this.currentTasks = new HashSet<>();
 
         this.diaryHost = diaryHost;
-        this.fetchDiary();
-        this.fetchFileNames();
-        this.addTestHosts();
+        if (this.fetchDiary()) {
+            this.fetchFileNames();
+            this.addTestHosts();
+        }
     }
 
-    /**
-     * Renvoie les noms des fichiers disponibles.
-     *
-     * @return les noms des fichiers disponibles
-     */
+    public Host getDiaryHost() {
+        return this.diaryHost;
+    }
+
+    /** Retourne true si l'annuaire est connecté, false sinon */
+    public boolean IsDiaryConnected() {
+        return this.diary != null;
+    }
+
     public String[] getAvailableFileNames() {
         return this.availableFileNames;
     }
@@ -56,20 +61,37 @@ public class Downloader extends Thread {
         return this.currentTasks;
     }
 
+    /**
+     * Lance le téléchargement d'un fichier s'il n'est pas déjà en cours.
+     *
+     * @param fileName le nom du fichier à télécharger
+     */
     public void downloadFile(String fileName) {
-        DownloadTask task = new DownloadTask(diary, fileName);
+        if (this.currentTasks.stream().anyMatch(task -> task.getFileName().equals(fileName))) {
+            return;
+        }
+        DownloadTask task = new DownloadTask(this, diary, fileName);
         task.start();
+        this.currentTasks.add(task);
+    }
+
+    public void taskFinished(DownloadTask task) {
+        this.currentTasks.remove(task);
     }
 
     /**
      * Récupère l'annuaire depuis le serveur.
+     *
+     * @return true si l'annuaire a été récupéré, false sinon
      */
-    public void fetchDiary() {
+    public boolean fetchDiary() {
         try {
             this.registry = LocateRegistry.getRegistry(this.diaryHost.getName(), this.diaryHost.getPort());
             this.diary = (Diary) this.registry.lookup("Diary");
+            return true;
         } catch (RemoteException | NotBoundException e) {
             System.err.println("Error when fetching diary: " + e.toString());
+            return false;
         }
     }
 
@@ -81,6 +103,7 @@ public class Downloader extends Thread {
         }
     }
 
+    // TODO: retirer cette méthode
     private void addTestHosts() {
         try {
             Random random = new Random();

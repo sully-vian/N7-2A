@@ -3,6 +3,7 @@ package fr.n7.hagimule.client.gui;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -14,8 +15,6 @@ public class DownloaderPanel extends JPanel {
 
     private Downloader downloader;
 
-    private DownloadTaskPanel downloadTaskPanel;
-
     private JButton reloadButton;
     private JComboBox<String> filesBox;
     private JButton downloadButton;
@@ -23,12 +22,12 @@ public class DownloaderPanel extends JPanel {
     public DownloaderPanel(Downloader downloader) {
         super();
         this.downloader = downloader;
+        this.setBorder(BorderFactory.createTitledBorder("New Download"));
 
         this.reloadButton = new JButton("Reload");
         this.reloadButton.addActionListener(this::reloadAvailableFiles);
 
         this.add(this.reloadButton);
-        System.out.println("DownloaderPanel created");
 
         this.add(new JLabel("Available files:"));
 
@@ -38,9 +37,6 @@ public class DownloaderPanel extends JPanel {
         this.downloadButton = new JButton("Download");
         this.downloadButton.addActionListener(this::downloadSelectedFile);
         this.add(this.downloadButton);
-
-        this.downloadTaskPanel = new DownloadTaskPanel(this.downloader);
-        this.add(this.downloadTaskPanel);
     }
 
     private String[] getStortedFileNames() {
@@ -55,6 +51,10 @@ public class DownloaderPanel extends JPanel {
      * @param e l'événement qui a déclenché l'action
      */
     private void reloadAvailableFiles(ActionEvent e) {
+        if (!this.downloader.IsDiaryConnected()) {
+            System.out.println("Diary not connected");
+            return;
+        }
         this.downloader.fetchFileNames();
         this.filesBox = new JComboBox<>(this.downloader.getAvailableFileNames());
         System.out.println("Files menu reloaded");

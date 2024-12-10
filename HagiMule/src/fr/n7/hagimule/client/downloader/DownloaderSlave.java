@@ -27,12 +27,12 @@ public class DownloaderSlave extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Trying to connect to " + this.host);
+        // System.out.println("Trying to connect to " + this.host);
 
         // Pour simuler un téléchargement
         Random random = new Random();
         try {
-            Thread.sleep(random.nextInt(1000));
+            Thread.sleep(random.nextInt(10000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

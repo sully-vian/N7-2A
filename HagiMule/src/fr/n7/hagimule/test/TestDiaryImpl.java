@@ -61,13 +61,9 @@ public class TestDiaryImpl {
     public void testAddHostAlreadyPresent() throws RemoteException {
         this.diary.addHost("file1", host1);
         int initialSize = this.diary.getHosts("file1").size();
-        System.out.println(this.diary.getHosts("file1"));
-        System.out.println(this.diary.getFileNames());
 
         this.diary.addHost("file1", new Host("host1", 1234));
         int newSize = this.diary.getHosts("file1").size();
-        System.out.println(this.diary.getHosts("file1"));
-        System.out.println(this.diary.getFileNames());
 
         assertTrue(initialSize == newSize);
     }
