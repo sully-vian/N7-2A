@@ -4,6 +4,9 @@ geometry: margin=2cm
 
 # Sujet 1 : Modélisation + Résolution de PL/PLNE avec le solveur GLPK
 
+DEMAZURE Clément \
+HERVY Vianney
+
 ## Assemblage
 
 On modélise la situation par le probème suivant :
@@ -94,7 +97,7 @@ Le modèle de ce problème se trouve dans `cas_particulier_1_2.mod`. On définit
 
 1. Ce problème corrrespond au problème du voyageur de commerce, où on aurait imposé le point de départ.
 
-2. La situation ressemble en quelque sorte au problème d'affectation traité plus haut. C'est pourquoi nous avaons introduit une variable matrice $trajets_{i,j}$ qui vaut $1$ si le livreur livre le client $i$ puis drirectment après le client $j$, et $0$ sinon. Ensuite, plus qu'à multiplier par la distance associée dans les données et on a la distance totale du circuit.
+2. La situation ressemble en quelque sorte au problème d'affectation traité plus haut. C'est pourquoi nous avaons introduit une variable matrice $trajets_{i,j}$ qui vaut $1$ si le livreur livre le client $i$ puis drirectment après le client $j$, et $0$ sinon. Ensuite, il n'y a plus qu'à multiplier par la distance associée dans les données et sommer pour obtenir la longueur totale du circuit.
 
     Toutefois, il manque la contrainte d'interdire les sous-boucles, qui est difficile à écrire. Pour cela nous avons introduit une variable vecteur $rang$ qui tient compte du rang de chaque client visité. Le magasin ALPHA doit avoir un rang de $1$, et tous les clients ont un rang distinct entre $2$ et $n$ (avec $n$ le nombre de clients). On a donc:
 
@@ -109,12 +112,37 @@ $$
     \min \quad & \sum_{i,j} trajets_{i,j} \times dist_{i,j} \\
     & trajets_{i,j} \in \{0,1\} \quad \forall i,j \\
     & trajets_{i,i} = 0 \quad \forall i \\
-    & \sum_{j} trajets_{i,j} = 1 \quad \forall i \neq \text{ALPHA} \\
-    & \sum_{i} trajets_{i,j} = 1 \quad \forall j \neq \text{ALPHA} \\
+    & \sum_j trajets_{i,j} = 1 \quad \forall i \\
+    & \sum_i trajets_{i,j} = 1 \quad \forall j \\
     & rang_i \in [\![1,n]\!] \quad \forall i \\
     & rang_{\text{ALPHA}} = 1 \\
+    & rang_i \geq 2 \quad \forall i \neq \text{ALPHA} \\
     & rang_i-rang_j + n \times trajets_{i,j} \leqslant n-1 \quad \forall i,j \neq \text{ALPHA}, i\neq j \\
 \end{aligned}
 $$
 
-## Minimisation des émissions polluantes
+De même qu'avant, on lance le solveur GLPK avec la commande suivante :
+
+```bash
+./glpsol -m cas_particulier_2.mod -d cas_particulier_2.dat -o cas_particulier_2.sol
+```
+
+Avec les données du sujet, on obtient un trajet de longueur 22:
+
+$$
+\text{ALPHA} \rightarrow \text{C2} \rightarrow \text{C3} \rightarrow \text{C5} \rightarrow \text{C4} \rightarrow \text{C1} \rightarrow \text{ALPHA}
+$$
+
+## Rendu et Archive
+
+Ce rendu a été généré avec pandoc via la commande suivante :
+
+```bash
+pandoc rapport.md -o rapport.pdf
+```
+
+L'archive a été créée avec la commande suivante :
+
+```bash
+zip Sujet_1_DEMAZURE_Clement_HERVY_Vianney.zip *.mod *.dat *.lp *.sol rapport.pdf
+```
