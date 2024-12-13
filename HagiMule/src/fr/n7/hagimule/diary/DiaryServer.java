@@ -36,12 +36,13 @@ public class DiaryServer {
             Random random = new Random();
             for (int i = 0; i < 10; i++) {
                 String fileName = "file" + i;
-                diary.addHost(fileName, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
-                diary.addHost(fileName, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
-                diary.addHost(fileName, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
-                diary.addHost(fileName, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
+                int fileSize = random.nextInt(10000);
+                diary.addFile(fileName, fileSize, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
+                diary.addFile(fileName, fileSize, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
+                diary.addFile(fileName, fileSize, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
+                diary.addFile(fileName, fileSize, new Host("host" + random.nextInt(10000), random.nextInt(10000)));
             }
-        } catch (RemoteException e) {
+        } catch (RemoteException | DuplicateFileNameException e) {
             System.err.println("Error when adding test hosts: " + e.toString());
         }
     }

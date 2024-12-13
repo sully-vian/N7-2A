@@ -24,7 +24,8 @@ public interface Diary extends Remote {
     HashSet<String> getFileNames() throws RemoteException;
 
     /**
-     * Renvoie la liste des hôtes ayant le fichier donné.
+     * Renvoie la liste des hôtes ayant le fichier donné. null si le fichier n'est
+     * pas répertorié.
      *
      * @param file le fichier.
      * @return la liste des adresses des hôtes ayant le fichier donné, vide si le
@@ -34,14 +35,18 @@ public interface Diary extends Remote {
     HashSet<Host> getHosts(String file) throws RemoteException;
 
     /**
-     * Ajoute un hôte à la liste des hôtes ayant le fichier donné.
+     * Ajoute un hôte à la liste des hôtes ayant le fichier donné de la taille
+     * donnée.
+     * Le fichier est ajouté s'il n'est pas répertorié.
      *
-     * @param file le fichier
+     * @param file     le fichier.
      * @param fileSize la taille du fichier en octets.
-     * @param host l'hôte hébergeant le fichier
+     * @param host     l'hôte hébergeant le fichier.
      * @throws RemoteException
+     * @throws DuplicateFileNameException si le fichier est déjà répertorié avec une
+     *                                    taille différente.
      */
-    void addFile(String file, int fileSize, Host host) throws RemoteException; // TODO: throw DuplicateFileException si fichier de même nom et taille différente existe
+    void addFile(String file, int fileSize, Host host) throws RemoteException, DuplicateFileNameException;
 
     /**
      * Supprime un hôte de la liste des hôtes ayant le fichier donné.

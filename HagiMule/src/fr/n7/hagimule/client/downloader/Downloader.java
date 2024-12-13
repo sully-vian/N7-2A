@@ -13,8 +13,8 @@ import fr.n7.hagimule.diary.Diary;
 /**
  * Sur les clients.
  * <p>
- * Permet de télécharger en parallèle des fichiers en créant des tâches de
- * téléchargement pour chaque fichier.
+ * Permet de télécharger en parallèle des fichiers en créant des
+ * {@link DownloadTask} pour chaque fichier.
  */
 public class Downloader extends Thread {
 
@@ -46,6 +46,10 @@ public class Downloader extends Thread {
 
     public String[] getAvailableFileNames() {
         return this.availableFileNames;
+    }
+
+    public Diary getDiary() {
+        return this.diary;
     }
 
     public Set<DownloadTask> getCurrentTasks() {

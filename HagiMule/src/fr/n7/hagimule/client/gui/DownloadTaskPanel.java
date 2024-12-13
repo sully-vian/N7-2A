@@ -16,7 +16,7 @@ import fr.n7.hagimule.client.downloader.DownloadTask;
 import fr.n7.hagimule.client.downloader.Downloader;
 
 /**
- * Panneau d'affichage pour les tâches de téléchargement en cours.
+ * Panneau d'affichage pour les {@link DownloadTask} en cours.
  */
 public class DownloadTaskPanel extends JPanel {
 
@@ -38,10 +38,13 @@ public class DownloadTaskPanel extends JPanel {
 
         this.updateTaskList();
 
-        this.refreshTimer = new Timer(100, e -> this.updateTaskList());
+        this.refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updateTaskList());
         this.refreshTimer.start();
     }
 
+    /**
+     * Met à jour l'affichage de la liste des tableaux tous les
+     */
     private void updateTaskList() {
         Set<String> currentTasks = downloader.getCurrentTasks().stream()
                 .map(DownloadTask::toString)
@@ -64,10 +67,5 @@ public class DownloadTaskPanel extends JPanel {
 
         this.previousTasks = new HashSet<>(currentTasks);
 
-        // this.taskListModel.clear();
-        // Set<DownloadTask> tasks = this.downloader.getCurrentTasks();
-        // for (DownloadTask task : tasks) {
-        //     this.taskListModel.addElement(task.toString());
-        // }
     }
 }

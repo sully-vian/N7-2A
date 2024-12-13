@@ -12,6 +12,8 @@ import fr.n7.hagimule.client.Client;
  */
 public class MainWindow extends JFrame {
 
+    public static final int REFRESH_DELAY = 100; // ms
+
     private final Client client;
     private DiaryPanel diaryPanel;
     private DownloaderPanel downloaderPanel;

@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 import fr.n7.hagimule.Host;
 
@@ -34,18 +33,17 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
     @Override
     public HashSet<Host> getHosts(String file) throws RemoteException {
-        Set<Host> hosts = this.hostMap.get(file);
-        return hosts == null ? new HashSet<>() : new HashSet<>(hosts);
+        return this.hostMap.get(file);
     }
 
     // TODO: à tester
     @Override
-    public void addFile(String file, int fileSize, Host host) throws RemoteException {
+    public void addFile(String file, int fileSize, Host host) throws RemoteException, DuplicateFileNameException {
 
         Integer expectedSize = this.sizeMap.get(file);
 
         if (expectedSize != null && expectedSize != fileSize) {
-            // TODO: throw DuplicateFileException
+            throw new DuplicateFileNameException("File \"" + file + "\" already exists with a different size.");
         }
 
         this.sizeMap.put(file, fileSize);

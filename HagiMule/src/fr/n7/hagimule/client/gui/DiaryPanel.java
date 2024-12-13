@@ -11,7 +11,7 @@ import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.downloader.Downloader;
 
 /**
- * Panneau d'affichage pour se connecter à un annuaire.
+ * Panneau d'affichage pour se connecter à un {@link Diary}.
  */
 public class DiaryPanel extends JPanel {
 

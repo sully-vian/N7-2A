@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -33,19 +32,30 @@ public class DaemonSlave extends Thread {
             System.out.println("DeamonSlave connected with " + this.clientSocket.getInetAddress().getHostAddress() + ":"
                     + this.clientSocket.getPort());
 
+            // récupérer le nom du fichier
             this.fileName = ois.readUTF();
-            System.out.println("recieved file name:" + this.fileName);
+            // puis le nombre de fragments
             this.numFragments = ois.readInt();
-            System.out.println("recieved numFragment:" + this.numFragments);
+            // et le numéro du fragment à fournir
             this.fragmentNumero = ois.readInt();
-            System.out.println("recieved fragmentNumero:" + this.fragmentNumero);
 
-            oos.writeUTF("Recieved !");
+            byte[] fragment = this.getFileFragment();
+            oos.write(fragment);
             oos.flush();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Récupérer le fragment voulu dans le fichier demandé
+     *
+     * @return le fragmen issu du fichier
+     */
+    private byte[] getFileFragment() {
+        // TODO
+        return null;
     }
 
 }
