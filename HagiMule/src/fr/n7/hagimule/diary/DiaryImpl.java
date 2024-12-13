@@ -13,7 +13,8 @@ import fr.n7.hagimule.Host;
  */
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
-    private HashMap<String, HashSet<Host>> map;
+    private HashMap<String, HashSet<Host>> hostMap;
+    private HashMap<String, Integer> sizeMap;
 
     /**
      * Crée un DiaryImpl vide.
@@ -22,35 +23,57 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
      */
     public DiaryImpl() throws RemoteException {
         super();
-        this.map = new HashMap<>();
+        this.hostMap = new HashMap<>();
+        this.sizeMap = new HashMap<>();
     }
 
     @Override
     public HashSet<String> getFileNames() throws RemoteException {
-        return new HashSet<>(this.map.keySet());
+        return new HashSet<>(this.hostMap.keySet());
     }
 
     @Override
     public HashSet<Host> getHosts(String file) throws RemoteException {
-        Set<Host> hosts = this.map.get(file);
+        Set<Host> hosts = this.hostMap.get(file);
         return hosts == null ? new HashSet<>() : new HashSet<>(hosts);
     }
 
+    // TODO: à tester
     @Override
-    public void addHost(String file, Host host) throws RemoteException {
-        HashSet<Host> hosts = this.map.get(file);
+    public void addFile(String file, int fileSize, Host host) throws RemoteException {
+
+        Integer expectedSize = this.sizeMap.get(file);
+
+        if (expectedSize != null && expectedSize != fileSize) {
+            // TODO: throw DuplicateFileException
+        }
+
+        this.sizeMap.put(file, fileSize);
+
+        HashSet<Host> hosts = this.hostMap.get(file);
         if (hosts == null) {
             hosts = new HashSet<>();
-            this.map.put(file, hosts);
+            this.hostMap.put(file, hosts);
         }
         hosts.add(host);
     }
 
     @Override
     public void removeHost(String file, Host host) throws RemoteException {
-        HashSet<Host> hosts = this.map.get(file);
+        HashSet<Host> hosts = this.hostMap.get(file);
         if (hosts != null) {
             hosts.remove(host);
         }
+
+        if (hosts.isEmpty()) {
+            this.hostMap.remove(file);
+            this.sizeMap.remove(file);
+        }
+    }
+
+    // TODO: à tester
+    @Override
+    public Integer getFileSize(String file) throws RemoteException {
+        return this.sizeMap.get(file);
     }
 }

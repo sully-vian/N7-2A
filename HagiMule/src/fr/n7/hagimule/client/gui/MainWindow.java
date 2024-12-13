@@ -43,7 +43,9 @@ public class MainWindow extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MainWindow(new Client()).setVisible(true);
+                Client client = new Client();
+                new MainWindow(client).setVisible(true);
+                client.getDaemon().start();
             }
         });
     }

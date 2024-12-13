@@ -17,7 +17,7 @@ public class Client {
 
     public Client() {
         this.downloader = new Downloader();
-        this.daemon = new Daemon(1000);
+        this.daemon = new Daemon(2048);
     }
 
     public Downloader getDownloader() {

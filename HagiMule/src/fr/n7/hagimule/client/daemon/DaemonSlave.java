@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * Traite les requêtes de téléchargement de fragments.
+ * Traite une requête de téléchargement d'un fragment.
  */
 public class DaemonSlave extends Thread {
 
@@ -19,8 +19,8 @@ public class DaemonSlave extends Thread {
     private int numFragments;
     private int fragmentNumero;
 
-    public DaemonSlave(Socket clienSocket) {
-        this.clientSocket = clienSocket;
+    public DaemonSlave(Socket clientSocket) {
+        this.clientSocket = clientSocket;
     }
 
     @Override
@@ -34,11 +34,11 @@ public class DaemonSlave extends Thread {
                     + this.clientSocket.getPort());
 
             this.fileName = ois.readUTF();
-            System.out.println("received file name:" + this.fileName);
+            System.out.println("recieved file name:" + this.fileName);
             this.numFragments = ois.readInt();
-            System.out.println("received numFragment:" + this.numFragments);
+            System.out.println("recieved numFragment:" + this.numFragments);
             this.fragmentNumero = ois.readInt();
-            System.out.println("received fragmentNumero:" + this.fragmentNumero);
+            System.out.println("recieved fragmentNumero:" + this.fragmentNumero);
 
             oos.writeUTF("Recieved !");
             oos.flush();
