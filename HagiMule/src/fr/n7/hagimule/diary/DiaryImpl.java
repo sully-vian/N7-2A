@@ -36,7 +36,6 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         return this.hostMap.get(file);
     }
 
-    // TODO: à tester
     @Override
     public void addFile(String file, int fileSize, Host host) throws RemoteException, DuplicateFileNameException {
 
@@ -69,7 +68,6 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         }
     }
 
-    // TODO: à tester
     @Override
     public Integer getFileSize(String file) throws RemoteException {
         return this.sizeMap.get(file);

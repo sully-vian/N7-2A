@@ -70,9 +70,12 @@ public class DownloadTask extends Thread {
         }
 
         System.out.println("DownloaderTask finished for " + this.fileName + " with " + this.hosts.length + " slaves");
-        this.downloader.taskFinished(this);
 
         this.joinFragments();
+        // TODO: enregistrer le fichier et ptet notifier le downloader pr que ça se voit
+        // à l'interface chépa.
+
+        this.downloader.taskFinished(this);
     }
 
     /**

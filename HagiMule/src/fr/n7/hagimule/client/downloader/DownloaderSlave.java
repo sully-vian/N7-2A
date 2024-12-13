@@ -52,8 +52,6 @@ public class DownloaderSlave extends Thread {
             e.printStackTrace();
         }
 
-        // TODO: Télécharger le fragment du fichier
-
         try (Socket socket = new Socket(this.host.getName(), this.host.getPort());
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
