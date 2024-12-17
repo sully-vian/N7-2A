@@ -11,7 +11,8 @@ import fr.n7.hagimule.Host;
  * <p>
  * Enregistre les fichiers des clients connectés.
  * <p>
- * Accessible par RMI.
+ * Accessible par RMI donc les méthodes doivent lever RemoteException et
+ * retourner des objets sérialisables.
  */
 public interface Diary extends Remote {
 
