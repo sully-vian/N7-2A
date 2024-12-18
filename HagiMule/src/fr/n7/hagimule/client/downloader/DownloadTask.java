@@ -1,5 +1,8 @@
 package fr.n7.hagimule.client.downloader;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 import fr.n7.hagimule.Host;
@@ -15,7 +18,7 @@ public class DownloadTask extends Thread {
     private Downloader downloader;
     private final Diary diary;
     private final String fileName;
-    private int fileSize;
+    private long fileSize;
 
     private Host[] hosts;
     private DownloaderSlave[] slaves;
@@ -72,8 +75,8 @@ public class DownloadTask extends Thread {
         System.out.println("DownloaderTask finished for " + this.fileName + " with " + this.hosts.length + " slaves");
 
         this.joinFragments();
-        // TODO: enregistrer le fichier et ptet notifier le downloader pr que ça se voit
-        // à l'interface chépa.
+
+        this.saveFile();
 
         this.downloader.taskFinished(this);
     }
@@ -112,6 +115,17 @@ public class DownloadTask extends Thread {
     private void joinFragments() {
         for (int i = 0; i < this.slaves.length; i++) {
             this.fragments[i] = this.slaves[i].getFragment();
+        }
+    }
+
+    private void saveFile() {
+        File outputFile = new File(Downloader.STORAGE_PATH + this.fileName);
+        System.out.println("Saving to " + outputFile.getPath());
+
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(this.fragments[0]);
+        } catch (IOException e) {
+            System.err.println("DownloadTask: Error when saving file: " + e.toString());
         }
     }
 }

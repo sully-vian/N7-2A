@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.Client;
 
 /**
@@ -46,8 +47,13 @@ public class MainWindow extends JFrame {
             @Override
             public void run() {
                 Client client = new Client();
-                new MainWindow(client).setVisible(true);
+                if (args.length > 0) {
+                    // TODO: décommenter
+                    new MainWindow(client).setVisible(true);
+                }
+                client.getDaemon().fetchDiary(new Host("localhost", 1099));
                 client.getDaemon().start();
+                ;
             }
         });
     }

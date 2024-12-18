@@ -47,7 +47,7 @@ public interface Diary extends Remote {
      * @throws DuplicateFileNameException si le fichier est déjà répertorié avec une
      *                                    taille différente.
      */
-    void addFile(String file, int fileSize, Host host) throws RemoteException, DuplicateFileNameException;
+    void addFile(String file, long fileSize, Host host) throws RemoteException, DuplicateFileNameException;
 
     /**
      * Supprime un hôte de la liste des hôtes ayant le fichier donné.
@@ -66,5 +66,5 @@ public interface Diary extends Remote {
      * @return la taille du fichier en octets, ou null si le fichier n'existe pas.
      * @throws RemoteException
      */
-    Integer getFileSize(String file) throws RemoteException;
+    Long getFileSize(String file) throws RemoteException;
 }

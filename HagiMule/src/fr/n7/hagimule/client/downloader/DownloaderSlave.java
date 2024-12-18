@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Random;
 
 import fr.n7.hagimule.Host;
 
@@ -31,34 +30,23 @@ public class DownloaderSlave extends Thread {
      *                       découpé.
      * @param fragmentNumero Le numéro du fragement à télécharger.
      */
-    public DownloaderSlave(String fileName, int fileSize, Host host, int numFragments, int fragmentNumero) {
+    public DownloaderSlave(String fileName, long fileSize, Host host, int numFragments, int fragmentNumero) {
         this.fileName = fileName;
         this.host = host;
         this.numFragments = numFragments;
         this.fragmentNumero = fragmentNumero;
         this.downloadFinished = false;
-        this.fragment = new byte[fileSize / numFragments];
+        this.fragment = new byte[(int) fileSize / numFragments];
     }
 
     @Override
     public void run() {
-        // System.out.println("Trying to connect to " + this.host);
-
-        // Pour simuler un téléchargement
-        Random random = new Random();
-        try {
-            Thread.sleep(random.nextInt(10000));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         try (Socket socket = new Socket(this.host.getName(), this.host.getPort());
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 InputStream is = socket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is);) {
-            System.out.println("DownloaderSlave connected with " + this.host + ":" +
-                    this.host.getPort());
+            System.out.println("DownloaderSlave connected with " + this.host);
 
             // écrire le nom du fichier
             oos.writeUTF(this.fileName);
@@ -70,8 +58,11 @@ public class DownloaderSlave extends Thread {
             oos.writeInt(this.fragmentNumero);
             oos.flush();
 
-            int numRead = ois.read(this.fragment);
-            System.out.println(numRead + "bytes read");
+            System.out.println("frag len before:" + this.fragment.length);
+            // lis les octets envoyés
+            int numRead = ois.read(this.fragment, 0, this.fragment.length);
+            System.out.println("frag len after:" + this.fragment.length);
+            System.out.println(numRead + " bytes read");
 
             this.downloadFinished = true;
         } catch (IOException e) {

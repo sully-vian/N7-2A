@@ -13,7 +13,7 @@ import fr.n7.hagimule.Host;
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
     private HashMap<String, HashSet<Host>> hostMap;
-    private HashMap<String, Integer> sizeMap;
+    private HashMap<String, Long> sizeMap;
 
     /**
      * Crée un DiaryImpl vide.
@@ -37,9 +37,9 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public void addFile(String file, int fileSize, Host host) throws RemoteException, DuplicateFileNameException {
+    public void addFile(String file, long fileSize, Host host) throws RemoteException, DuplicateFileNameException {
 
-        Integer expectedSize = this.sizeMap.get(file);
+        Long expectedSize = this.sizeMap.get(file);
 
         if (expectedSize != null && expectedSize != fileSize) {
             throw new DuplicateFileNameException("File \"" + file + "\" already exists with a different size.");
@@ -69,7 +69,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public Integer getFileSize(String file) throws RemoteException {
+    public Long getFileSize(String file) throws RemoteException {
         return this.sizeMap.get(file);
     }
 }

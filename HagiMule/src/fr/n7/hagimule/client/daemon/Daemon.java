@@ -1,8 +1,17 @@
 package fr.n7.hagimule.client.daemon;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+import fr.n7.hagimule.Host;
+import fr.n7.hagimule.diary.Diary;
+import fr.n7.hagimule.diary.DuplicateFileNameException;
 
 /**
  * Sur chaque client.
@@ -13,19 +22,54 @@ import java.net.Socket;
  */
 public class Daemon extends Thread {
 
-    private int port;
+    public static final String STORAGE_PATH = "storage/uploads/";
+
+    private final Host myHost;
     private ServerSocket serverSocket;
+    private Diary diary;
 
     public Daemon(int port) {
         super();
-        this.port = port;
+        this.myHost = new Host("localhost", port);
+    }
+
+    /** Récupère l'annuaire depuis le serveur */
+    public void fetchDiary(Host diaryHost) {
+        try {
+            Registry reg = LocateRegistry.getRegistry(diaryHost.getName(), diaryHost.getPort());
+            this.diary = (Diary) reg.lookup("Diary");
+            System.out.println("Daemon: Diary connected");
+        } catch (RemoteException | NotBoundException e) {
+            System.err.println("Error when fetching diary: " + e.toString());
+        }
+    }
+
+    public void addFiles() {
+        if (this.diary == null) {
+            System.err.println("Daemon: Diary not connected, cannot add files.");
+            return;
+        }
+        File[] files = new File(STORAGE_PATH).listFiles();
+        for (File file : files) {
+            String name = file.getName();
+            long size = file.length();
+            try {
+                this.diary.addFile(name, size, this.myHost);
+            } catch (DuplicateFileNameException e) {
+                System.err.println("Daemon: Diary already has \"" + name + "\" with different size.");
+            } catch (RemoteException e) {
+                System.err.println("Daemon: Could not add \"" + name + "\" to diary.");
+            }
+        }
     }
 
     @Override
     public void run() {
+        this.addFiles();
+
         try {
-            this.serverSocket = new ServerSocket(this.port);
-            System.out.println("Daemon started on port " + this.port);
+            this.serverSocket = new ServerSocket(this.myHost.getPort());
+            System.out.println("Daemon started on port " + this.myHost.getPort());
 
             while (true) {
                 Socket clientSocket = this.serverSocket.accept();

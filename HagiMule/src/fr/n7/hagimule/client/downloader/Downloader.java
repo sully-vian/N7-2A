@@ -18,6 +18,8 @@ import fr.n7.hagimule.diary.Diary;
  */
 public class Downloader extends Thread {
 
+    public static final String STORAGE_PATH = "storage/downloads/";
+
     /** Les noms des fichiers disponibles dans l'annuaire */
     private String[] availableFileNames = new String[0];
     private Set<DownloadTask> currentTasks = new HashSet<>();
@@ -83,7 +85,7 @@ public class Downloader extends Thread {
         try {
             this.registry = LocateRegistry.getRegistry(diaryHost.getName(), diaryHost.getPort());
             this.diary = (Diary) this.registry.lookup("Diary");
-            System.out.println("Diary connected");
+            System.out.println("Downloader: Diary connected");
         } catch (RemoteException | NotBoundException e) {
             System.err.println("Error when fetching diary: " + e.toString());
         }
