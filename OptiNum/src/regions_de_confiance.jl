@@ -128,7 +128,7 @@ function regions_de_confiance(f::Function, gradf::Function, hessf::Function, x0:
 			flag = 3
 		end
 
-		# mise à jur des variables qu'on se trimballe
+		# mise à jour des variables qu'on se trimballe
 		Δₖ = Δₖ₊₁
 		xs = vcat(xs, [xₖ₊₁])
 

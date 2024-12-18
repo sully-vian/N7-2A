@@ -62,7 +62,13 @@ function lagrangien_augmente(f::Function, gradf::Function, hessf::Function,
         max_iter::Integer=1000, tol_abs::Real=1e-10, tol_rel::Real=1e-8,
         λ₀::Real=2, μ₀::Real=10, τ::Real=2, algo_noc::String="rc-gct")
 
-    #
+    k = 0
+    β = 0.9
+    eta = 0.1258925
+    α = 0.1
+    ε₀ = 1 / μ₀
+    η₀ = eta / μ₀ ^ α
+
     x_sol = x₀
     f_sol = f(x_sol)
     flag  = -1
@@ -70,25 +76,70 @@ function lagrangien_augmente(f::Function, gradf::Function, hessf::Function,
     μs = [μ₀] # vous pouvez faire μs = vcat(μs, μk) pour concaténer les valeurs
     λs = [λ₀]
 
+    # initialisation des variables d'itération
+    xₖ = x₀
+    εₖ = ε₀
+    ηₖ = η₀
+
     while (flag == -1)
-        xₖ₊₁ = 0 # TODO
+        λₖ = λs[end]
+        μₖ = μs[end]
+
+        # λₖ scalaire
+        L(x) = f(x) + λₖ * c(x) + μₖ / 2 * norm(c(x))^2
+        gradL(x) = gradf(x) + (λₖ + μₖ * c(x)) * gradc(x)
+        hessL(x) = hessf(x) + μₖ * gradc(x) * gradc(x)' + (λₖ + μₖ * c(x)) * hessc(x)
+
+        if (algo_noc == "newton")
+            # ε=0 pour ne pas vérifier les contraintes de stagnation
+            xₖ₊₁,_,_,_,_ = newton(L, gradL, hessL, xₖ, tol_abs=εₖ , tol_rel=0,epsilon=0)
+        elseif (algo_noc == "rc-cauchy")
+            xₖ₊₁,_,_,_,_ = regions_de_confiance(L, gradL, hessL, xₖ, tol_abs=εₖ, tol_rel=0, epsilon=0, algo_pas="cauchy")
+        elseif (algo_noc == "rc-gct")
+            xₖ₊₁,_,_,_,_ = regions_de_confiance(L, gradL, hessL, xₖ, tol_abs=εₖ, tol_rel=0, epsilon=0, algo_pas="gct")
+        else
+            error("Pas d'algo portant le nom \"" * algo_noc * "\", les seuls choix possibles sont \"newton\", \"rc-cauchy\" et \"rc-gct\".")
+        end
 
         if (norm(c(xₖ₊₁)) <= ηₖ) # mettre à jour (entre autres) les multiplicateurs
             λₖ₊₁ = λₖ + μₖ * c(xₖ₊₁)
             μₖ₊₁ = μₖ
             εₖ₊₁ = εₖ / μₖ
-            ηₖ₊₁ = ηₖ / μₖ
+            ηₖ₊₁ = ηₖ / μₖ^β
         else # Autrement, mettre à jour (entre autres) le paramètre de pénalité
             λₖ₊₁ = λₖ
             μₖ₊₁ = τ * μₖ
             εₖ₊₁ = ε₀ / μₖ₊₁
-            ηₖ₊₁ = ηₖ / μₖ₊₁
+            ηₖ₊₁ = eta / μₖ₊₁^α
         end
         k = k  + 1
 
-        # TODO: flags
+        if (norm(gradf(xₖ₊₁)+λₖ₊₁*gradc(xₖ₊₁)) <= max(tol_rel * norm(gradf(x₀)+λ₀*gradc(x₀)), tol_abs)
+            && norm(c(xₖ₊₁)) <= max(tol_rel * norm(c(x₀)), tol_abs))
+			# CN1: différente (minimisation des contraintes)
+			flag = 0
+		# elseif (norm(xₖ₊₁ - xₖ) <= εₖ * max(tol_rel * norm(xₖ), tol_abs))
+		# 	# Stagnation de l'itéré: ∥xk+1−xk∥ ≤ ε*max(tol_rel∥xk∥,tol_abs)
+		# 	flag = 1
+		# elseif (abs.(f(xₖ₊₁) - f(xₖ)) <= εₖ * max(tol_rel * abs.(f(xₖ)), tol_abs))
+		# 	# Stagnation de la fonction: |f(xk+1)−f(xk)| ≤ ε*max(tol_rel|f(xk)|,tol_abs)
+		# 	flag = 2
+		elseif (k + 1 >= max_iter)
+			# Nb d'itérations max
+			flag = 3
+		end
 
+		# mise à jour des variables qu'on se trimballe
+        λs = vcat(λs, λₖ₊₁)
+        μs = vcat(μs, μₖ₊₁)
+        εₖ = εₖ₊₁
+        ηₖ = ηₖ₊₁
+        xₖ = xₖ₊₁
     end
+
+    x_sol = xₖ
+    f_sol = f(x_sol)
+    nb_iters = k
 
     return x_sol, f_sol, flag, nb_iters, μs, λs
 
