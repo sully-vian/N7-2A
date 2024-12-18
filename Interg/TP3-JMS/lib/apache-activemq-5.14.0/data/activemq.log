@@ -1,0 +1,101 @@
+2024-12-18 14:31:40,720 | INFO  | Refreshing org.apache.activemq.xbean.XBeanBrokerFactory$1@2145b572: startup date [Wed Dec 18 14:31:40 CET 2024]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory$1 | main
+2024-12-18 14:31:41,249 | INFO  | Using Persistence Adapter: KahaDBPersistenceAdapter[/home/vhy9665/Desktop/N7-2A/Interg/TP3-JMS/lib/apache-activemq-5.14.0/data/kahadb] | org.apache.activemq.broker.BrokerService | main
+2024-12-18 14:31:41,615 | INFO  | PListStore:[/home/vhy9665/Desktop/N7-2A/Interg/TP3-JMS/lib/apache-activemq-5.14.0/data/localhost/tmp_storage] started | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main
+2024-12-18 14:31:41,765 | INFO  | Apache ActiveMQ 5.14.0 (localhost, ID:boole.enseeiht.fr-36055-1734528701623-0:1) is starting | org.apache.activemq.broker.BrokerService | main
+2024-12-18 14:31:41,780 | INFO  | Listening for connections at: tcp://boole.enseeiht.fr:61616?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2024-12-18 14:31:41,780 | INFO  | Connector openwire started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:31:41,802 | INFO  | Listening for connections at: amqp://boole.enseeiht.fr:5672?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2024-12-18 14:31:41,809 | INFO  | Connector amqp started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:31:41,813 | INFO  | Listening for connections at: stomp://boole.enseeiht.fr:61613?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2024-12-18 14:31:41,918 | INFO  | Connector stomp started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:31:41,930 | INFO  | Listening for connections at: mqtt://boole.enseeiht.fr:1883?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2024-12-18 14:31:41,932 | INFO  | Connector mqtt started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:31:42,386 | WARN  | ServletContext@o.e.j.s.ServletContextHandler@49b07ee3{/,null,STARTING} has uncovered http methods for path: / | org.eclipse.jetty.security.SecurityHandler | main
+2024-12-18 14:31:42,446 | INFO  | Listening for connections at ws://boole.enseeiht.fr:61614?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.ws.WSTransportServer | main
+2024-12-18 14:31:42,446 | INFO  | Connector ws started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:31:42,448 | INFO  | Apache ActiveMQ 5.14.0 (localhost, ID:boole.enseeiht.fr-36055-1734528701623-0:1) started | org.apache.activemq.broker.BrokerService | main
+2024-12-18 14:31:42,449 | INFO  | For help or more information please see: http://activemq.apache.org | org.apache.activemq.broker.BrokerService | main
+2024-12-18 14:31:42,821 | INFO  | No Spring WebApplicationInitializer types detected on classpath | /admin | main
+2024-12-18 14:31:42,903 | INFO  | ActiveMQ WebConsole available at http://0.0.0.0:8161/ | org.apache.activemq.web.WebConsoleStarter | main
+2024-12-18 14:31:42,903 | INFO  | ActiveMQ Jolokia REST API available at http://0.0.0.0:8161/api/jolokia/ | org.apache.activemq.web.WebConsoleStarter | main
+2024-12-18 14:31:42,928 | INFO  | Initializing Spring FrameworkServlet 'dispatcher' | /admin | main
+2024-12-18 14:31:43,054 | INFO  | No Spring WebApplicationInitializer types detected on classpath | /api | main
+2024-12-18 14:31:43,114 | INFO  | jolokia-agent: Using policy access restrictor classpath:/jolokia-access.xml | /api | main
+2024-12-18 14:31:59,153 | INFO  | Apache ActiveMQ 5.14.0 (localhost, ID:boole.enseeiht.fr-36055-1734528701623-0:1) is shutting down | org.apache.activemq.broker.BrokerService | Thread-22
+2024-12-18 14:31:59,157 | INFO  | Connector openwire stopped | org.apache.activemq.broker.TransportConnector | Thread-22
+2024-12-18 14:31:59,158 | INFO  | Connector amqp stopped | org.apache.activemq.broker.TransportConnector | Thread-22
+2024-12-18 14:31:59,159 | INFO  | Connector stomp stopped | org.apache.activemq.broker.TransportConnector | Thread-22
+2024-12-18 14:31:59,159 | INFO  | Connector mqtt stopped | org.apache.activemq.broker.TransportConnector | Thread-22
+2024-12-18 14:31:59,164 | INFO  | Connector ws stopped | org.apache.activemq.broker.TransportConnector | Thread-22
+2024-12-18 14:31:59,166 | INFO  | PListStore:[/home/vhy9665/Desktop/N7-2A/Interg/TP3-JMS/lib/apache-activemq-5.14.0/data/localhost/tmp_storage] stopped | org.apache.activemq.store.kahadb.plist.PListStoreImpl | Thread-22
+2024-12-18 14:31:59,167 | INFO  | Stopping async queue tasks | org.apache.activemq.store.kahadb.KahaDBStore | Thread-22
+2024-12-18 14:31:59,167 | INFO  | Stopping async topic tasks | org.apache.activemq.store.kahadb.KahaDBStore | Thread-22
+2024-12-18 14:31:59,168 | INFO  | Stopped KahaDB | org.apache.activemq.store.kahadb.KahaDBStore | Thread-22
+2024-12-18 14:31:59,178 | INFO  | Apache ActiveMQ 5.14.0 (localhost, ID:boole.enseeiht.fr-36055-1734528701623-0:1) uptime 17.937 seconds | org.apache.activemq.broker.BrokerService | Thread-22
+2024-12-18 14:31:59,179 | INFO  | Apache ActiveMQ 5.14.0 (localhost, ID:boole.enseeiht.fr-36055-1734528701623-0:1) is shutdown | org.apache.activemq.broker.BrokerService | Thread-22
+2024-12-18 14:31:59,179 | INFO  | Closing org.apache.activemq.xbean.XBeanBrokerFactory$1@2145b572: startup date [Wed Dec 18 14:31:40 CET 2024]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory$1 | Thread-22
+2024-12-18 14:31:59,190 | INFO  | Destroying Spring FrameworkServlet 'dispatcher' | /admin | Thread-22
+2024-12-18 14:32:09,238 | INFO  | Refreshing org.apache.activemq.xbean.XBeanBrokerFactory$1@2145b572: startup date [Wed Dec 18 14:32:09 CET 2024]; root of context hierarchy | org.apache.activemq.xbean.XBeanBrokerFactory$1 | main
+2024-12-18 14:32:09,785 | INFO  | Using Persistence Adapter: KahaDBPersistenceAdapter[/home/vhy9665/Desktop/N7-2A/Interg/TP3-JMS/lib/apache-activemq-5.14.0/data/kahadb] | org.apache.activemq.broker.BrokerService | main
+2024-12-18 14:32:09,809 | INFO  | KahaDB is version 6 | org.apache.activemq.store.kahadb.MessageDatabase | main
+2024-12-18 14:32:09,819 | INFO  | Recovering from the journal @1:503 | org.apache.activemq.store.kahadb.MessageDatabase | main
+2024-12-18 14:32:09,820 | INFO  | Recovery replayed 4 operations from the journal in 0.008 seconds. | org.apache.activemq.store.kahadb.MessageDatabase | main
+2024-12-18 14:32:09,826 | INFO  | PListStore:[/home/vhy9665/Desktop/N7-2A/Interg/TP3-JMS/lib/apache-activemq-5.14.0/data/localhost/tmp_storage] started | org.apache.activemq.store.kahadb.plist.PListStoreImpl | main
+2024-12-18 14:32:09,947 | INFO  | Apache ActiveMQ 5.14.0 (localhost, ID:boole.enseeiht.fr-40475-1734528729833-0:1) is starting | org.apache.activemq.broker.BrokerService | main
+2024-12-18 14:32:09,958 | INFO  | Listening for connections at: tcp://boole.enseeiht.fr:61616?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2024-12-18 14:32:09,959 | INFO  | Connector openwire started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:32:09,962 | INFO  | Listening for connections at: amqp://boole.enseeiht.fr:5672?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2024-12-18 14:32:09,963 | INFO  | Connector amqp started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:32:09,965 | INFO  | Listening for connections at: stomp://boole.enseeiht.fr:61613?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2024-12-18 14:32:09,970 | INFO  | Connector stomp started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:32:09,973 | INFO  | Listening for connections at: mqtt://boole.enseeiht.fr:1883?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.TransportServerThreadSupport | main
+2024-12-18 14:32:09,977 | INFO  | Connector mqtt started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:32:10,047 | WARN  | ServletContext@o.e.j.s.ServletContextHandler@6f8d7714{/,null,STARTING} has uncovered http methods for path: / | org.eclipse.jetty.security.SecurityHandler | main
+2024-12-18 14:32:10,091 | INFO  | Listening for connections at ws://boole.enseeiht.fr:61614?maximumConnections=1000&wireFormat.maxFrameSize=104857600 | org.apache.activemq.transport.ws.WSTransportServer | main
+2024-12-18 14:32:10,096 | INFO  | Connector ws started | org.apache.activemq.broker.TransportConnector | main
+2024-12-18 14:32:10,100 | INFO  | Apache ActiveMQ 5.14.0 (localhost, ID:boole.enseeiht.fr-40475-1734528729833-0:1) started | org.apache.activemq.broker.BrokerService | main
+2024-12-18 14:32:10,102 | INFO  | For help or more information please see: http://activemq.apache.org | org.apache.activemq.broker.BrokerService | main
+2024-12-18 14:32:10,393 | INFO  | No Spring WebApplicationInitializer types detected on classpath | /admin | main
+2024-12-18 14:32:10,542 | INFO  | ActiveMQ WebConsole available at http://0.0.0.0:8161/ | org.apache.activemq.web.WebConsoleStarter | main
+2024-12-18 14:32:10,542 | INFO  | ActiveMQ Jolokia REST API available at http://0.0.0.0:8161/api/jolokia/ | org.apache.activemq.web.WebConsoleStarter | main
+2024-12-18 14:32:10,567 | INFO  | Initializing Spring FrameworkServlet 'dispatcher' | /admin | main
+2024-12-18 14:32:10,725 | INFO  | No Spring WebApplicationInitializer types detected on classpath | /api | main
+2024-12-18 14:32:10,748 | INFO  | jolokia-agent: Using policy access restrictor classpath:/jolokia-access.xml | /api | main
+2024-12-18 15:21:32,063 | WARN  | Transport Connection to: tcp://127.0.0.1:56604 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:56604@61616
+2024-12-18 15:21:34,611 | WARN  | Transport Connection to: tcp://127.0.0.1:56680 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:56680@61616
+2024-12-18 15:21:34,611 | WARN  | Transport Connection to: tcp://127.0.0.1:56462 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:56462@61616
+2024-12-18 15:21:34,610 | WARN  | Transport Connection to: tcp://127.0.0.1:56676 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:56676@61616
+2024-12-18 15:23:44,221 | WARN  | Transport Connection to: tcp://127.0.0.1:56924 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:56924@61616
+2024-12-18 15:23:46,317 | WARN  | Transport Connection to: tcp://127.0.0.1:56918 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:56918@61616
+2024-12-18 15:24:49,258 | WARN  | Transport Connection to: tcp://127.0.0.1:57382 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:57382@61616
+2024-12-18 15:26:36,550 | WARN  | Transport Connection to: tcp://127.0.0.1:57940 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:57940@61616
+2024-12-18 15:26:37,497 | WARN  | Transport Connection to: tcp://127.0.0.1:57920 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:57920@61616
+2024-12-18 15:30:59,712 | WARN  | Transport Connection to: tcp://127.0.0.1:58492 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:58492@61616
+2024-12-18 15:31:01,357 | WARN  | Transport Connection to: tcp://127.0.0.1:58512 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:58512@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59208 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59208@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59212 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59212@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59206 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59206@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59182 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59182@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59210 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59210@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59202 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59202@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59194 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59194@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59198 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59198@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59200 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59200@61616
+2024-12-18 15:31:59,976 | WARN  | Transport Connection to: tcp://127.0.0.1:59180 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59180@61616
+2024-12-18 15:33:42,611 | WARN  | Transport Connection to: tcp://127.0.0.1:59584 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59584@61616
+2024-12-18 15:33:42,611 | WARN  | Transport Connection to: tcp://127.0.0.1:59414 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59414@61616
+2024-12-18 15:33:42,611 | WARN  | Transport Connection to: tcp://127.0.0.1:59474 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59474@61616
+2024-12-18 15:33:42,611 | WARN  | Transport Connection to: tcp://127.0.0.1:59442 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59442@61616
+2024-12-18 15:43:31,642 | WARN  | Transport Connection to: tcp://127.0.0.1:59410 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:59410@61616
+2024-12-18 15:48:31,147 | WARN  | Transport Connection to: tcp://127.0.0.1:34882 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:34882@61616
+2024-12-18 15:50:18,054 | WARN  | Transport Connection to: tcp://127.0.0.1:35216 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:35216@61616
+2024-12-18 15:50:26,619 | WARN  | Transport Connection to: tcp://127.0.0.1:35332 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:35332@61616
+2024-12-18 15:58:33,334 | WARN  | Transport Connection to: tcp://127.0.0.1:37182 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:37182@61616
+2024-12-18 16:00:15,004 | WARN  | Transport Connection to: tcp://127.0.0.1:37562 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:37562@61616
+2024-12-18 16:00:57,574 | WARN  | Transport Connection to: tcp://127.0.0.1:37716 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:37716@61616
+2024-12-18 16:01:00,045 | WARN  | Transport Connection to: tcp://127.0.0.1:37730 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:37730@61616
+2024-12-18 16:07:02,945 | WARN  | Transport Connection to: tcp://127.0.0.1:38358 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:38358@61616
+2024-12-18 16:07:55,870 | WARN  | Transport Connection to: tcp://127.0.0.1:39392 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:39392@61616
+2024-12-18 16:10:19,536 | WARN  | Transport Connection to: tcp://127.0.0.1:39956 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:39956@61616
+2024-12-18 16:10:33,825 | WARN  | Transport Connection to: tcp://127.0.0.1:40062 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:40062@61616
+2024-12-18 16:12:10,730 | WARN  | Transport Connection to: tcp://127.0.0.1:40320 failed: java.io.EOFException | org.apache.activemq.broker.TransportConnection.Transport | ActiveMQ Transport: tcp:///127.0.0.1:40320@61616
