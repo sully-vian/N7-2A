@@ -2,6 +2,7 @@ package fr.n7.hagimule.client.daemon;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.NotBoundException;
@@ -40,11 +41,12 @@ public class Daemon extends Thread {
             this.diary = (Diary) reg.lookup("Diary");
             System.out.println("Daemon: Diary connected");
         } catch (RemoteException | NotBoundException e) {
-            System.err.println("Error when fetching diary: " + e.toString());
+            System.err.println("Daemon: Error when fetching diary: " + e.toString());
         }
     }
 
-    public void addFiles() {
+    /** Ajoute les fichiers du dossier de stockage à l'annuaire */
+    public void postFiles() {
         if (this.diary == null) {
             System.err.println("Daemon: Diary not connected, cannot add files.");
             return;
@@ -63,17 +65,32 @@ public class Daemon extends Thread {
         }
     }
 
+    /** Retire l'hôte de l'annuaire */
+    public void removeHost() {
+        if (this.diary == null) {
+            System.err.println("Daemon: Diary not connected, cannot remove host.");
+            return;
+        }
+        try {
+            this.diary.removeHost(myHost);
+        } catch (RemoteException e) {
+            System.err.println("Daemon: Could not remove host from diary.");
+        }
+    }
+
+    public boolean IsDiaryConnected() {
+        return this.diary != null;
+    }
+
     @Override
     public void run() {
-        this.addFiles();
-
         try {
             this.serverSocket = new ServerSocket(this.myHost.getPort());
-            System.out.println("Daemon started on port " + this.myHost.getPort());
+            System.out.println("Daemon: started on port " + this.myHost.getPort());
 
             while (true) {
                 Socket clientSocket = this.serverSocket.accept();
-                System.out.println("Daemon connected socket, starting slave");
+                System.out.println("Daemon: socket connected, starting slave");
                 Thread slave = new DaemonSlave(clientSocket);
                 slave.start();
             }

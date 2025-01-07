@@ -31,7 +31,7 @@ public class DaemonSlave extends Thread {
                 InputStream is = this.clientSocket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is);) {
 
-            System.out.println("DeamonSlave connected with " + this.clientSocket.getInetAddress().getHostAddress() + ":"
+            System.out.println("DeamonSlave: connected with " + this.clientSocket.getInetAddress().getHostAddress() + ":"
                     + this.clientSocket.getPort());
 
             // récupérer le nom du fichier

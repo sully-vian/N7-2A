@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import fr.n7.hagimule.Host;
+import fr.n7.hagimule.client.daemon.Daemon;
 import fr.n7.hagimule.client.downloader.Downloader;
 
 /**
@@ -16,14 +17,16 @@ import fr.n7.hagimule.client.downloader.Downloader;
 public class DiaryPanel extends JPanel {
 
     private Downloader downloader;
+    private Daemon daemon;
 
     private JTextField hostAddressField;
     private JTextField hostPortField;
     private JButton connectButton;
 
-    public DiaryPanel(Downloader downloader) {
+    public DiaryPanel(Downloader downloader, Daemon daemon) {
         super();
         this.downloader = downloader;
+        this.daemon = daemon;
         this.updatePanelTitle();
 
         this.hostAddressField = new JTextField("localhost", 10);
@@ -43,11 +46,15 @@ public class DiaryPanel extends JPanel {
         String address = this.hostAddressField.getText();
         int port = Integer.parseInt(this.hostPortField.getText());
         this.downloader.fetchDiary(new Host(address, port));
+        this.daemon.fetchDiary(new Host(address, port));
         this.updatePanelTitle();
     }
 
     private void updatePanelTitle() {
-        this.setBorder(BorderFactory.createTitledBorder("Diary " +
-                (downloader.IsDiaryConnected() ? "(connected)" : "(disconnected)")));
+        String connectionStatus = "(disconnected)";
+        if (this.downloader.IsDiaryConnected() && this.daemon.IsDiaryConnected()) {
+            connectionStatus = "(connected)";
+        }
+        this.setBorder(BorderFactory.createTitledBorder(connectionStatus));
     }
 }

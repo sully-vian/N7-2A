@@ -19,23 +19,26 @@ public class MainWindow extends JFrame {
     private DiaryPanel diaryPanel;
     private DownloaderPanel downloaderPanel;
     private DownloadTaskPanel downloadTaskPanel;
+    private DaemonPanel daemonPanel;
 
     public MainWindow(Client client) {
         super("HagiMule Client");
         this.client = client;
-        this.setSize(800, 600);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(1000, 450);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
 
         this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        this.diaryPanel = new DiaryPanel(this.client.getDownloader());
+        this.diaryPanel = new DiaryPanel(this.client.getDownloader(), this.client.getDaemon());
         this.downloaderPanel = new DownloaderPanel(this.client.getDownloader());
+        this.daemonPanel = new DaemonPanel(this.client.getDaemon());
         this.downloadTaskPanel = new DownloadTaskPanel(this.client.getDownloader());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(this.diaryPanel);
+        topPanel.add(this.daemonPanel);
         topPanel.add(this.downloaderPanel);
         this.add(topPanel);
 
@@ -47,11 +50,10 @@ public class MainWindow extends JFrame {
             @Override
             public void run() {
                 Client client = new Client();
-                if (args.length > 0) {
-                    // TODO: décommenter
+                // pas d'interface si arg
+                if (args.length == 0) {
                     new MainWindow(client).setVisible(true);
                 }
-                client.getDaemon().fetchDiary(new Host("localhost", 1099));
                 client.getDaemon().start();
                 ;
             }

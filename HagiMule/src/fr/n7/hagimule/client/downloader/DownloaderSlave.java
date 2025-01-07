@@ -46,7 +46,7 @@ public class DownloaderSlave extends Thread {
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 InputStream is = socket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is);) {
-            System.out.println("DownloaderSlave connected with " + this.host);
+            System.out.println("DownloaderSlave: connected with " + this.host);
 
             // écrire le nom du fichier
             oos.writeUTF(this.fileName);
@@ -58,11 +58,11 @@ public class DownloaderSlave extends Thread {
             oos.writeInt(this.fragmentNumero);
             oos.flush();
 
-            System.out.println("frag len before:" + this.fragment.length);
+            System.out.println("DownloaderSlave: frag len before:" + this.fragment.length);
             // lis les octets envoyés
             int numRead = ois.read(this.fragment, 0, this.fragment.length);
-            System.out.println("frag len after:" + this.fragment.length);
-            System.out.println(numRead + " bytes read");
+            System.out.println("DownloaderSlave: frag len after:" + this.fragment.length);
+            System.out.println("DownloaderSlave: " + numRead + " bytes read");
 
             this.downloadFinished = true;
         } catch (IOException e) {
@@ -77,7 +77,7 @@ public class DownloaderSlave extends Thread {
      */
     public byte[] getFragment() {
         if (!this.downloadFinished) {
-            System.err.println("Error: trying to retrieve the fragment " + this.fragmentNumero
+            System.err.println("DownloaderSlave: Error: trying to retrieve the fragment " + this.fragmentNumero
                     + " of " + this.fileName + " before download finised.");
             return null;
         }

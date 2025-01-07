@@ -60,6 +60,15 @@ public interface Diary extends Remote {
     void removeHost(String file, Host host) throws RemoteException;
 
     /**
+     * Supprime l'hôte de tous les fichiers qu'il héberge.
+     * TODO: tester
+     *
+     * @param host l'hôte
+     * @throws RemoteException
+     */
+    void removeHost(Host host) throws RemoteException;
+
+    /**
      * Renvoie la taille du fichier donné.
      *
      * @param file le fichier

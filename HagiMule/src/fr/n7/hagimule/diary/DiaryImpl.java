@@ -24,6 +24,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         super();
         this.hostMap = new HashMap<>();
         this.sizeMap = new HashMap<>();
+        new MainWindow(this);
     }
 
     @Override
@@ -65,6 +66,18 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         if (hosts.isEmpty()) {
             this.hostMap.remove(file);
             this.sizeMap.remove(file);
+        }
+    }
+
+    @Override
+    public void removeHost(Host host) throws RemoteException {
+        for (String file : this.hostMap.keySet()) {
+            HashSet<Host> hosts = this.hostMap.get(file);
+            hosts.remove(host);
+            if (hosts.isEmpty()) {
+                this.hostMap.remove(file);
+                this.sizeMap.remove(file);
+            }
         }
     }
 

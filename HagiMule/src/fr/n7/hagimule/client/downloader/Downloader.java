@@ -41,7 +41,6 @@ public class Downloader extends Thread {
         return this.diaryHost;
     }
 
-    /** Retourne true si l'annuaire est connecté, false sinon */
     public boolean IsDiaryConnected() {
         return this.diary != null;
     }
@@ -87,16 +86,16 @@ public class Downloader extends Thread {
             this.diary = (Diary) this.registry.lookup("Diary");
             System.out.println("Downloader: Diary connected");
         } catch (RemoteException | NotBoundException e) {
-            System.err.println("Error when fetching diary: " + e.toString());
+            System.err.println("Downloader: Error when fetching diary: " + e.toString());
         }
     }
 
     public void fetchFileNames() {
         try {
             this.availableFileNames = this.diary.getFileNames().toArray(new String[0]);
-            System.out.println("File names fetched");
+            System.out.println("Downloader: File names fetched");
         } catch (RemoteException e) {
-            System.err.println("Error when fetching fileNames: " + e.toString());
+            System.err.println("Downloader: Error when fetching fileNames: " + e.toString());
         }
     }
 }

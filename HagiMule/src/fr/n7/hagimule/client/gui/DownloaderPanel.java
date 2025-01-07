@@ -56,7 +56,7 @@ public class DownloaderPanel extends JPanel {
      */
     private void reloadAvailableFiles(ActionEvent e) {
         if (!this.downloader.IsDiaryConnected()) {
-            System.out.println("Diary not connected");
+            System.out.println("DownloaderPanel: Diary not connected");
             return;
         }
         this.downloader.fetchFileNames();

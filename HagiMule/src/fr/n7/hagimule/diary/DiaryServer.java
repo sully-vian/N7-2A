@@ -20,7 +20,7 @@ public class DiaryServer {
     public static void main(String[] args) {
         try {
             DiaryImpl diary = new DiaryImpl();
-            addTestHosts(diary);
+            // addTestHosts(diary);
 
             Registry registry = LocateRegistry.createRegistry(PORT);
             registry.rebind("Diary", diary);

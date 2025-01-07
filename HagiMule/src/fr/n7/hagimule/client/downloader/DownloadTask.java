@@ -61,18 +61,19 @@ public class DownloadTask extends Thread {
             this.slaves[i].start();
             // System.out.println("DownloaderSlave started");
         }
-        System.out.println("DownloaderTask started for " + this.fileName + " with " + this.hosts.length + " slaves");
+        System.out.println("DownloadTask: started for " + this.fileName + " with " + this.hosts.length + " slaves");
 
         // wait for all the slaves to finish
         for (Thread slave : slaves) {
             try {
                 slave.join();
             } catch (InterruptedException e) {
-                System.err.println("Erreur lors de l'attente de la fin d'un DownloaderSlave: " + e.toString());
+                System.err.println(
+                        "DownloadTask: Error while waiting for a DownloaderSlave to finish: " + e.toString());
             }
         }
 
-        System.out.println("DownloaderTask finished for " + this.fileName + " with " + this.hosts.length + " slaves");
+        System.out.println("DownloadTask: finished for " + this.fileName + " with " + this.hosts.length + " slaves");
 
         this.joinFragments();
 
@@ -89,7 +90,7 @@ public class DownloadTask extends Thread {
             this.hosts = this.diary.getHosts(this.fileName).toArray(new Host[0]);
         } catch (Exception e) {
             System.err.println(
-                    "Error when fetching the hosts for " + this.fileName + ": " + e.toString());
+                    "DownloadTask: Error when fetching the hosts for " + this.fileName + ": " + e.toString());
         }
     }
 
@@ -100,7 +101,7 @@ public class DownloadTask extends Thread {
         try {
             this.fileSize = this.diary.getFileSize(this.fileName);
         } catch (RemoteException e) {
-            System.err.println("Error when fetching " + this.fileName + "size: " + e.toString());
+            System.err.println("DownloadTask: Error when fetching " + this.fileName + "size: " + e.toString());
         }
     }
 
@@ -120,7 +121,7 @@ public class DownloadTask extends Thread {
 
     private void saveFile() {
         File outputFile = new File(Downloader.STORAGE_PATH + this.fileName);
-        System.out.println("Saving to " + outputFile.getPath());
+        System.out.println("DownloadTask: Saving to " + outputFile.getPath());
 
         try (FileOutputStream fos = new FileOutputStream(outputFile)) {
             fos.write(this.fragments[0]);
