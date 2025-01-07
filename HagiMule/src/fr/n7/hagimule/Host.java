@@ -3,32 +3,32 @@ package fr.n7.hagimule;
 import java.io.Serializable;
 
 /**
- * Classe représentant un hôte (nom et port).
+ * Classe représentant un hôte (adresse et port).
  * <p>
  * Elle est sérialisable pour pouvoir être envoyée par RMI.
  */
 public class Host implements Serializable {
-    private String name;
+    private String address;
     private int port;
 
     /**
      * Crée un hôte.
      *
-     * @param name le nom de l'hôte
-     * @param port le port de l'hôte
+     * @param address l'addresse de l'hôte
+     * @param port    le port de l'hôte
      */
-    public Host(String name, int port) {
-        this.name = name;
+    public Host(String address, int port) {
+        this.address = address;
         this.port = port;
     }
 
     /**
-     * Renvoie le nom de l'hôte.
+     * Renvoie l'adresse de l'hôte.
      *
-     * @return le nom de l'hôte
+     * @return l'adresse de l'hôte
      */
-    public String getName() {
-        return name;
+    public String getAddress() {
+        return address;
     }
 
     /**
@@ -55,28 +55,28 @@ public class Host implements Serializable {
             return false;
         }
         Host otherHost = (Host) other;
-        return port == otherHost.port && java.util.Objects.equals(name, otherHost.name);
+        return port == otherHost.port && java.util.Objects.equals(address, otherHost.address);
     }
 
     /**
      * Renvoie le code de hachage de l'hôte.
      *
-     * @return le code de hachage de l'hôte
+     * @return le code de hachage de l'hôte.
      */
     @Override
     public int hashCode() {
-        int result = name.hashCode();
+        int result = address.hashCode();
         result = 31 * result + port;
         return result;
     }
 
     /**
-     * Renvoie une représentation textuelle de l'hôte de la forme "nom:port".
+     * Renvoie une représentation textuelle de l'hôte de la forme "address:port".
      *
-     * @return une représentation textuelle de l'hôte
+     * @return une représentation textuelle de l'hôte.
      */
     @Override
     public String toString() {
-        return name + ":" + port;
+        return this.address + ":" + this.port;
     }
 }

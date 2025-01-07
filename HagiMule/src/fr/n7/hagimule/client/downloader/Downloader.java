@@ -82,7 +82,7 @@ public class Downloader extends Thread {
      */
     public void fetchDiary(Host diaryHost) {
         try {
-            this.registry = LocateRegistry.getRegistry(diaryHost.getName(), diaryHost.getPort());
+            this.registry = LocateRegistry.getRegistry(diaryHost.getAddress(), diaryHost.getPort());
             this.diary = (Diary) this.registry.lookup("Diary");
             System.out.println("Downloader: Diary connected");
         } catch (RemoteException | NotBoundException e) {

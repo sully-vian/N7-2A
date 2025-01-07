@@ -37,9 +37,10 @@ public class Daemon extends Thread {
     /** Récupère l'annuaire depuis le serveur */
     public void fetchDiary(Host diaryHost) {
         try {
-            Registry reg = LocateRegistry.getRegistry(diaryHost.getName(), diaryHost.getPort());
+            Registry reg = LocateRegistry.getRegistry(diaryHost.getAddress(), diaryHost.getPort());
             this.diary = (Diary) reg.lookup("Diary");
             System.out.println("Daemon: Diary connected");
+            this.diary.removeHost(this.myHost); // remove entries from previous connections
         } catch (RemoteException | NotBoundException e) {
             System.err.println("Daemon: Error when fetching diary: " + e.toString());
         }
@@ -52,17 +53,21 @@ public class Daemon extends Thread {
             return;
         }
         File[] files = new File(STORAGE_PATH).listFiles();
+        int addedFiles = 0;
+
         for (File file : files) {
-            String name = file.getName();
+            String fileName = file.getName();
             long size = file.length();
             try {
-                this.diary.addFile(name, size, this.myHost);
+                this.diary.addFile(fileName, size, this.myHost);
+                addedFiles++;
             } catch (DuplicateFileNameException e) {
-                System.err.println("Daemon: Diary already has \"" + name + "\" with different size.");
+                System.err.println("Daemon: Diary already has \"" + fileName + "\" with different size.");
             } catch (RemoteException e) {
-                System.err.println("Daemon: Could not add \"" + name + "\" to diary.");
+                System.err.println("Daemon: Could not add \"" + fileName + "\" to diary.");
             }
         }
+        System.out.println("Daemon: Posted " + addedFiles + "/" + files.length + " files to diary");
     }
 
     /** Retire l'hôte de l'annuaire */

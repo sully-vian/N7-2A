@@ -128,7 +128,7 @@ public class DownloadTask extends Thread {
             for (int fragmentNumero : fragmentMap.keySet()) {
                 byte[] fragment = fragmentMap.get(fragmentNumero);
                 int start = fragmentNumero * ((int) FRAGMENT_SIZE);
-                System.arraycopy(fragment, 0, this.fileBytes, start, this.fileBytes.length - start);
+                System.arraycopy(fragment, 0, this.fileBytes, start, fragment.length);
             }
         }
     }

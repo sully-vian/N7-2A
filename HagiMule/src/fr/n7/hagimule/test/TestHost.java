@@ -14,8 +14,8 @@ import fr.n7.hagimule.Host;
 
 public class TestHost {
 
-    private String randName1;
-    private String randName2;
+    private String randAddress1;
+    private String randAddress2;
     private int randPort1;
     private int randPort2;
     private Host host1;
@@ -25,18 +25,18 @@ public class TestHost {
     @Before
     public void setUp() {
         random = new Random();
-        randName1 = randomName();
-        randName2 = randomName();
+        randAddress1 = randomName();
+        randAddress2 = randomName();
         randPort1 = randomPort();
         randPort2 = randomPort();
-        host1 = new Host(randName1, randPort1);
-        host2 = new Host(randName2, randPort2);
+        host1 = new Host(randAddress1, randPort1);
+        host2 = new Host(randAddress2, randPort2);
     }
 
     @Test
     public void testGetName() {
-        assertEquals(randName1, this.host1.getName());
-        assertEquals(randName2, this.host2.getName());
+        assertEquals(randAddress1, this.host1.getAddress());
+        assertEquals(randAddress2, this.host2.getAddress());
     }
 
     @Test
@@ -53,9 +53,9 @@ public class TestHost {
         assertFalse(this.host1.equals(this.host2));
         assertFalse(this.host2.equals(this.host1));
 
-        assertTrue(this.host1.equals(new Host(randName1, randPort1)));
-        assertTrue(this.host2.equals(new Host(randName2, randPort2)));
-        assertFalse(this.host1.equals(new Host(randName2, randPort1)));
+        assertTrue(this.host1.equals(new Host(randAddress1, randPort1)));
+        assertTrue(this.host2.equals(new Host(randAddress2, randPort2)));
+        assertFalse(this.host1.equals(new Host(randAddress2, randPort1)));
 
         assertFalse(this.host1.equals(null));
         assertFalse(this.host1.equals(new Object()));
@@ -63,18 +63,18 @@ public class TestHost {
 
     @Test
     public void testToString() {
-        assertEquals(randName1 + ":" + randPort1, this.host1.toString());
-        assertEquals(randName2 + ":" + randPort2, this.host2.toString());
+        assertEquals(randAddress1 + ":" + randPort1, this.host1.toString());
+        assertEquals(randAddress2 + ":" + randPort2, this.host2.toString());
     }
 
     private String randomName() {
         int length = random.nextInt(10) + 1;
         String chars = "abcdefghijklmnopqrstuvwxyz";
-        StringBuilder name = new StringBuilder(length);
+        StringBuilder address = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            name.append(chars.charAt(random.nextInt(chars.length())));
+            address.append(chars.charAt(random.nextInt(chars.length())));
         }
-        return name.toString();
+        return address.toString();
     }
 
     private int randomPort() {

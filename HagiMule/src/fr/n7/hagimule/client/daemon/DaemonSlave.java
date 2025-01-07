@@ -47,7 +47,7 @@ public class DaemonSlave extends Thread {
                     try {
                         sendFragment(oos, ois, raf);
                     } catch (EOFException e) {
-                        // Fin du stream, on sot de la loop
+                        // Fin du stream, on sort de la loop
                         break;
                     }
                 }
@@ -72,12 +72,22 @@ public class DaemonSlave extends Thread {
      */
     private void sendFragment(ObjectOutputStream oos, ObjectInputStream ois, RandomAccessFile raf) throws IOException {
         long start = ois.readLong();
-        System.out.println("DaemonSlave: reading fragment at " + start);
-        byte[] buffer = new byte[(int) DownloadTask.FRAGMENT_SIZE];
-        // lire les octets voulus
-        int bytesRead = raf.read(buffer, (int) start, (int) DownloadTask.FRAGMENT_SIZE);
-        System.out.println("DaemonSlave: " + bytesRead + " bytes read from file");
-        oos.write(buffer);
+
+        // calculer et transmettre la taille du prochain fragment
+        long len = Math.min(DownloadTask.FRAGMENT_SIZE, raf.length() - start);
+        if (len <= 0 || len > DownloadTask.FRAGMENT_SIZE) {
+            throw new IOException("Invalid fragment length: " + len);
+        }
+        oos.writeLong(len);
+        oos.flush();
+
+        raf.seek(start); // positionner le curseur
+        byte[] buffer = new byte[(int) len];
+        int numBytesRead = raf.read(buffer); // lire les octets voulus dans le fichier
+        if (numBytesRead < len) {
+            throw new IOException("Could not read enough bytes from file.");
+        }
+        oos.write(buffer); // écrire les octets dans le flux
         oos.flush();
     }
 }

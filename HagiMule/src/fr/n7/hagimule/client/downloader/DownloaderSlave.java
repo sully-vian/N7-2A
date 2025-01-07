@@ -43,7 +43,7 @@ public class DownloaderSlave extends Thread {
     @Override
     public void run() {
         System.out.println("DownloaderSlave: starting with " + this.fragmentNumeros.size() + " fragments to download.");
-        try (Socket socket = new Socket(this.host.getName(), this.host.getPort());
+        try (Socket socket = new Socket(this.host.getAddress(), this.host.getPort());
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 InputStream is = socket.getInputStream();
@@ -79,15 +79,16 @@ public class DownloaderSlave extends Thread {
     private void fetchFragment(int fragmentNumero, ObjectOutputStream oos, ObjectInputStream ois) throws IOException {
         long start = fragmentNumero * DownloadTask.FRAGMENT_SIZE;
         // envoyer la position du début du fragment
-        System.out.println("DownloaderSlave: requesting fragment " + fragmentNumero + " at " + start);
         oos.writeLong(start);
         oos.flush();
 
-        byte[] buffer = new byte[((int) DownloadTask.FRAGMENT_SIZE)];
-
         // lire les octets envoyés et les écrire dans le buffer
+        long len = ois.readLong();
+        if (len <= 0 || len > DownloadTask.FRAGMENT_SIZE) {
+            throw new IOException("Invalid fragment length: " + len);
+        }
+        byte[] buffer = new byte[(int) len];
         int numBytesRead = ois.read(buffer);
-        System.out.println("DownloaderSlave: " + numBytesRead + " bytes read from stream");
 
         this.fragments.put(fragmentNumero, buffer);
     }
@@ -101,9 +102,9 @@ public class DownloaderSlave extends Thread {
     public Map<Integer, byte[]> getFragments() {
         if (!this.downloadFinished) {
             System.err.println("DownloaderSlave: Error: trying to retrieve the fragments "
-                    // + this.fragmentNumeros
+                    + this.fragmentNumeros
                     + " of " + this.fileName + " before download finished.");
-            return null;
+            System.exit(1);
         }
         return this.fragments;
     }

@@ -44,8 +44,9 @@ public class MainWindow extends JFrame {
             String[] fileNames = diary.getFileNames().toArray(new String[0]);
             Arrays.sort(fileNames);
             for (String fileName : fileNames) {
+                long fileSize = diary.getFileSize(fileName);
                 Set<Host> hosts = diary.getHosts(fileName);
-                contentList.add(fileName + ": " + hosts);
+                contentList.add(fileName + " (" + fileSize + "): " + hosts);
             }
             this.fileListModel.clear();
             for (String file : contentList) {

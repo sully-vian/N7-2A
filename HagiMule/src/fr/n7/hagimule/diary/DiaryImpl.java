@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import fr.n7.hagimule.Host;
 
@@ -70,8 +71,9 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public void removeHost(Host host) throws RemoteException {
-        for (String file : this.hostMap.keySet()) {
+    public synchronized void removeHost(Host host) throws RemoteException {
+        Map<String, HashSet<Host>> hostMapCopy = new HashMap<>(this.hostMap);
+        for (String file : hostMapCopy.keySet()) {
             HashSet<Host> hosts = this.hostMap.get(file);
             hosts.remove(host);
             if (hosts.isEmpty()) {
