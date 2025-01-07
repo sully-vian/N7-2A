@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.file.Files;
 
 /**
@@ -31,8 +32,9 @@ public class DaemonSlave extends Thread {
                 InputStream is = this.clientSocket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is);) {
 
-            System.out.println("DeamonSlave: connected with " + this.clientSocket.getInetAddress().getHostAddress() + ":"
-                    + this.clientSocket.getPort());
+            System.out
+                    .println("DeamonSlave: connected with " + this.clientSocket.getInetAddress().getHostAddress() + ":"
+                            + this.clientSocket.getPort());
 
             // récupérer le nom du fichier
             this.fileName = ois.readUTF();
@@ -44,10 +46,17 @@ public class DaemonSlave extends Thread {
 
             // écris les octets
             byte[] fragment = Files.readAllBytes(file.toPath());
+            System.out.println("DaemonSlave: " + fragment.length + " bytes to send.");
             oos.write(fragment);
+            System.out.println("DaemonSlave: " + fragment.length + " bytes sent.");
             oos.flush();
 
-        } catch (IOException e) {
+        } catch (SocketException e) {
+            System.err.println("DaemonSlave: SocketException while processing request.");
+            e.printStackTrace();
+        }
+         catch (IOException e) {
+            System.err.println("DaemonSlave: Error while processing request.");
             e.printStackTrace();
         }
     }
