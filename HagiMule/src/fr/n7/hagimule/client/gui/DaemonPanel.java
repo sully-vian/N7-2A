@@ -1,7 +1,6 @@
 package fr.n7.hagimule.client.gui;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 

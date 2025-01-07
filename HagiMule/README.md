@@ -1,5 +1,13 @@
 # HagiMule
 
+## Idée
+
+DownloadTask demande les hôtes et coupe le fichier en blocs de 1024 octets (ou plus) et répartit les requêtes de blocs entre les hôtes. On peut donc avoir plusieurs blocs demandés à un même hôte.
+
+Donc un Slave doit - pour chaque fragment - donner la taille et le point de départ.
+
+## Ressources
+
 [site Hagimont](https://sd-160040.dedibox.fr/hagimont/resources-N7/teaching-N7.html)
 
 [sujet](doc/sujet.pdf)

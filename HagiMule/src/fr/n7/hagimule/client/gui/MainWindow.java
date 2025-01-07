@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.Client;
 
 /**
