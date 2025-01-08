@@ -9,25 +9,22 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 
 import fr.n7.hagimule.Host;
-import fr.n7.hagimule.client.daemon.Daemon;
-import fr.n7.hagimule.client.downloader.Downloader;
+import fr.n7.hagimule.client.Client;
 
 /**
  * Panneau d'affichage pour se connecter à un {@link Diary}.
  */
 public class DiaryPanel extends JPanel {
 
-    private Downloader downloader;
-    private Daemon daemon;
+    private Client client;
 
     private JTextField hostAddressField;
     private JTextField hostPortField;
     private JButton connectButton;
 
-    public DiaryPanel(Downloader downloader, Daemon daemon) {
+    public DiaryPanel(Client client) {
         super();
-        this.downloader = downloader;
-        this.daemon = daemon;
+        this.client = client;
         this.updatePanelTitle();
 
         this.hostAddressField = new JTextField("localhost", 10);
@@ -49,14 +46,14 @@ public class DiaryPanel extends JPanel {
     private void connectDiary(ActionEvent e) {
         String address = this.hostAddressField.getText();
         int port = Integer.parseInt(this.hostPortField.getText());
-        this.downloader.fetchDiary(new Host(address, port));
-        this.daemon.fetchDiary(new Host(address, port));
+        this.client.setDiaryHost(new Host(address, port));
+        this.client.fetchDiary();
         this.updatePanelTitle();
     }
 
     private void updatePanelTitle() {
         String connectionStatus = "(disconnected)";
-        if (this.downloader.IsDiaryConnected() && this.daemon.IsDiaryConnected()) {
+        if (this.client.isDiaryConnected()) {
             connectionStatus = "(connected)";
         }
         this.setBorder(BorderFactory.createTitledBorder(connectionStatus));

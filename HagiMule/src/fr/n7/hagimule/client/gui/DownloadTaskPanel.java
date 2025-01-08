@@ -23,48 +23,48 @@ public class DownloadTaskPanel extends JPanel {
     private Downloader downloader;
     private DefaultListModel<String> taskListModel;
     private JList<String> taskList;
-    private Set<String> previousTasks = new HashSet<>();
+    private Set<String> previousTasks;
 
     public DownloadTaskPanel(Downloader downloader) {
         super(new BorderLayout());
         this.downloader = downloader;
         this.taskListModel = new DefaultListModel<>();
         this.taskList = new JList<>(this.taskListModel);
+        this.previousTasks = new HashSet<>();
 
         this.setBorder(BorderFactory.createTitledBorder("Current Downloads"));
 
         this.add(new JScrollPane(this.taskList), BorderLayout.CENTER);
-
-        this.updateTaskList();
 
         Timer refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updateTaskList());
         refreshTimer.start();
     }
 
     /**
-     * Met à jour l'affichage de la liste des tableaux tous les
+     * Met à jour l'affichage de la liste des tâches.
      */
     private void updateTaskList() {
         Set<String> currentTasks = downloader.getCurrentTasks().stream()
                 .map(DownloadTask::toString)
                 .collect(Collectors.toSet());
 
-        // add new tasks
+        // ajouter les nouvelles tâches
         for (String taskName : currentTasks) {
-            // add task if it's not yet in the list
+            // ajouter la tâche si elle n'était pas déjà présente
             if (!this.previousTasks.contains(taskName)) {
                 this.taskListModel.addElement(taskName);
             }
         }
 
+        // retirer les anciennes tâches
         for (String taskName : this.previousTasks) {
-            // remove old task if not in the current tasks
+            // retirer la tâche si elle n'est plus dans la liste actuelles
             if (!currentTasks.contains(taskName)) {
                 taskListModel.removeElement(taskName);
             }
         }
 
+        // remplacer les tâches précédentes par les actuelles
         this.previousTasks = new HashSet<>(currentTasks);
-
     }
 }

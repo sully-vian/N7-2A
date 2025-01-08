@@ -13,29 +13,26 @@ import java.util.concurrent.Callable;
  */
 public class DownloaderSlave implements Callable<FragmentData> {
 
-    private String fileName;
     private Socket socket;
+    private String fileName;
     private byte[] fragment;
     private int fragmentNumero;
 
     /**
-     * Crée un DownloaderSlave
+     * Crée un DownloaderSlave.
      *
+     * @param socket         La socket à utiliser pour la communication avec l'hôte.
      * @param fileName       Le nom du fichier dont on veut un fragment.
-     * @param host           L'hôte hébergeant ce fichier.
      * @param fragmentNumero Le numéro du fragment à télécharger.
      */
-    public DownloaderSlave(String fileName, Socket socket, int fragmentNumero) {
-        this.fileName = fileName;
+    public DownloaderSlave(Socket socket, String fileName, int fragmentNumero) {
         this.socket = socket;
+        this.fileName = fileName;
         this.fragmentNumero = fragmentNumero;
     }
 
     @Override
     public FragmentData call() {
-        if (socket.isClosed()) {
-            System.err.println("DownloaderSlave: Socket is closed.");
-        }
         try (OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 InputStream is = socket.getInputStream();
@@ -45,7 +42,7 @@ public class DownloaderSlave implements Callable<FragmentData> {
             oos.writeUTF(this.fileName);
             oos.flush();
 
-            this.fetchFragment(this.fragmentNumero, oos, ois);
+            this.fetchFragment(oos, ois);
             return new FragmentData(fragmentNumero, this.fragment);
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,12 +53,11 @@ public class DownloaderSlave implements Callable<FragmentData> {
     /**
      * Récupère le fragment de numéro donné par le stream.
      *
-     * @param fragmentNumero Le numéro du fragment à télécharger.
      * @param oos            Le stream à partir duquel écrire la requête.
      * @param ois            Le stream à partir duquel lire le fragment.
      */
-    private void fetchFragment(int fragmentNumero, ObjectOutputStream oos, ObjectInputStream ois) throws IOException {
-        long start = fragmentNumero * DownloadTask.MAX_FRAGMENT_SIZE;
+    private void fetchFragment(ObjectOutputStream oos, ObjectInputStream ois) throws IOException {
+        long start = this.fragmentNumero * DownloadTask.MAX_FRAGMENT_SIZE;
         // envoyer la position du début du fragment
         oos.writeLong(start);
         oos.flush();

@@ -3,6 +3,7 @@ package fr.n7.hagimule.diary;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.HashSet;
+import java.util.List;
 
 import fr.n7.hagimule.Host;
 
@@ -76,4 +77,14 @@ public interface Diary extends Remote {
      * @throws RemoteException
      */
     Long getFileSize(String file) throws RemoteException;
+
+    /**
+     * Renvoie la liste des fichiers répertoriés etleurs informations sous forme de
+     * chaînes.
+     *
+     * @return la liste des fichiers répertoriés et leurs informations sous forme de
+     *         chaînes.
+     * @throws RemoteException
+     */
+    List<String> getContents() throws RemoteException;
 }

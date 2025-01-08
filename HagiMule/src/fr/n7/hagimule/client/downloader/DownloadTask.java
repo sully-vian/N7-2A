@@ -74,7 +74,7 @@ public class DownloadTask extends Thread {
             Host host = this.hosts[fragmentNumero % this.hosts.length];
             try {
                 Socket socket = new Socket(host.getAddress(), host.getPort());
-                Future<FragmentData> future = executor.submit(new DownloaderSlave(fileName, socket, fragmentNumero));
+                Future<FragmentData> future = executor.submit(new DownloaderSlave(socket, fileName, fragmentNumero));
                 futures.add(future);
             } catch (IOException e) {
                 System.err.println("DownloadTask: Error when connecting to " + host + ": " + e.toString());
@@ -92,8 +92,15 @@ public class DownloadTask extends Thread {
         this.downloader.taskFinished(this);
         System.out.println("DownloadTask: Finished writing to file.");
 
-        long endTime = System.nanoTime();
-        System.out.println("DownloadTask: Downloaded in " + (endTime - startTime) / 1e6 + "ms");
+        long duration = System.nanoTime() - startTime;
+        this.printStats(duration);
+    }
+
+    private void printStats(long duration) {
+        double rate = (this.fileSize / (1024.0 * 1024.0)) / (duration / 1e9); // MB/s
+        System.out.println(String.format(
+                "DownloadTask: Downloaded %d bytes in %.2f ms (%.2f MB/s)",
+                this.fileSize, duration / 1e6, rate));
     }
 
     /**

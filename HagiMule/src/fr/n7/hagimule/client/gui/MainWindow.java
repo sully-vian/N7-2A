@@ -28,7 +28,7 @@ public class MainWindow extends JFrame {
 
         this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-        this.diaryPanel = new DiaryPanel(this.client.getDownloader(), this.client.getDaemon());
+        this.diaryPanel = new DiaryPanel(this.client);
         this.downloaderPanel = new DownloaderPanel(this.client.getDownloader());
         this.daemonPanel = new DaemonPanel(this.client.getDaemon());
         this.downloadTaskPanel = new DownloadTaskPanel(this.client.getDownloader());

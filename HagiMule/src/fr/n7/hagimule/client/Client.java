@@ -45,15 +45,26 @@ public class Client {
         return this.diary;
     }
 
-    public void fetchDiary() throws RemoteException {
+    public void setDiaryHost(Host diaryHost) {
+        this.diaryHost = diaryHost;
+    }
+
+    public void fetchDiary() {
         String diaryHostAddress = this.diaryHost.getAddress();
         int diaryHostPort = this.diaryHost.getPort();
-        Registry registry = LocateRegistry.getRegistry(diaryHostAddress, diaryHostPort);
         try {
+            Registry registry = LocateRegistry.getRegistry(diaryHostAddress, diaryHostPort);
             this.diary = (Diary) registry.lookup(DiaryServer.BINDING_NAME);
+            System.out.println("Client: Connected to diary");
         } catch (NotBoundException e) {
             System.err.println("Client: Error when fetching diary: " + e.toString());
+        } catch (RemoteException e) {
+            System.err.println("Client: Error when fetching diary: " + e.toString());
         }
+    }
+
+    public boolean isDiaryConnected() {
+        return this.diary != null;
     }
 
     public static void main(String[] args) throws RemoteException {

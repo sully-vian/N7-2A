@@ -1,8 +1,8 @@
 package fr.n7.hagimule.diary;
 
+import java.awt.BorderLayout;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -10,50 +10,62 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.Timer;
-
-import fr.n7.hagimule.Host;
 
 public class MainWindow extends JFrame {
 
     public static final int REFRESH_DELAY = 100; // ms
     private final Diary diary;
     private DefaultListModel<String> fileListModel;
-    private JList<String> fileJList;
+    private JList<String> fileList;
+    private Set<String> previousFiles;
 
     public MainWindow(Diary diary) {
         super("HagiMule Diary");
         this.diary = diary;
+        this.fileListModel = new DefaultListModel<>();
+        this.fileList = new JList<>(this.fileListModel);
+        this.previousFiles = new HashSet<>();
+
         this.setSize(800, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
 
-        this.fileListModel = new DefaultListModel<>();
-        this.fileJList = new JList<>(this.fileListModel);
+        this.fileList.setBorder(BorderFactory.createTitledBorder("Known Files"));
 
-        this.add(this.fileJList);
+        this.add(new JScrollPane(this.fileList), BorderLayout.CENTER);
 
         Timer refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updateContents());
         refreshTimer.start();
-        this.fileJList.setBorder(BorderFactory.createTitledBorder("Known Files"));
     }
 
+    /** Met à jour l'affichage de la liste des fichiers répertoriés. */
     private void updateContents() {
         try {
-            List<String> contentList = new ArrayList<>();
-            String[] fileNames = diary.getFileNames().toArray(new String[0]);
-            Arrays.sort(fileNames);
-            for (String fileName : fileNames) {
-                long fileSize = diary.getFileSize(fileName);
-                Set<Host> hosts = diary.getHosts(fileName);
-                contentList.add(fileName + " (" + fileSize + "): " + hosts);
+            List<String> currentContents = this.diary.getContents();
+            currentContents.sort(String::compareTo);
+
+            // ajouter les nouveaux fichiers
+            for (String fileString : currentContents) {
+                // ajouter le fichier s'il n'était pas déjà dans la liste
+                if (!this.previousFiles.contains(fileString)) {
+                    this.fileListModel.addElement(fileString);
+                }
             }
-            this.fileListModel.clear();
-            for (String file : contentList) {
-                this.fileListModel.addElement(file);
+
+            // retirer les anciens fichiers
+            for (String fileString : this.previousFiles) {
+                // retirer le fichier s'il n'est plus dans la liste actuelle
+                if (!currentContents.contains(fileString)) {
+                    this.fileListModel.removeElement(fileString);
+                }
             }
+
+            // remplacer les fichiers précédents par les actuels
+            this.previousFiles = new HashSet<>(currentContents);
         } catch (RemoteException e) {
-            System.err.println("Error while fetching diary contents: " + e.getMessage());
+            System.err.println("Diary MainWindow: Error while fetching diary contents: " + e.getMessage());
         }
     }
 }

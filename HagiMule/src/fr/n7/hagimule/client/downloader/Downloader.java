@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.Set;
 
-import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.Client;
 
 /**
@@ -37,10 +36,6 @@ public class Downloader {
         return this.client;
     }
 
-    public boolean IsDiaryConnected() {
-        return this.client.getDiary() != null;
-    }
-
     public String[] getAvailableFileNames() {
         return this.availableFileNames;
     }
@@ -65,19 +60,6 @@ public class Downloader {
 
     public void taskFinished(DownloadTask task) {
         this.currentTasks.remove(task);
-    }
-
-    /**
-     * Récupère l'annuaire depuis le serveur.
-     *
-     * @return true si l'annuaire a été récupéré, false sinon
-     */
-    public void fetchDiary(Host diaryHost) {
-        try {
-            this.client.fetchDiary();
-        } catch (RemoteException e) {
-            System.err.println("Downloader: Error when fetching diary: " + e.toString());
-        }
     }
 
     public void fetchFileNames() {

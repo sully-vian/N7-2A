@@ -2,8 +2,10 @@ package fr.n7.hagimule.diary;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import fr.n7.hagimule.Host;
@@ -84,5 +86,15 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     @Override
     public Long getFileSize(String file) throws RemoteException {
         return this.sizeMap.get(file);
+    }
+
+    public List<String> getContents() {
+        List<String> contentList = new ArrayList<>();
+        for (String fileName : this.hostMap.keySet()) {
+            long fileSize = this.sizeMap.get(fileName);
+            HashSet<Host> hosts = this.hostMap.get(fileName);
+            contentList.add(fileName + " (" + fileSize + "): " + hosts);
+        }
+        return contentList;
     }
 }

@@ -32,15 +32,6 @@ public class Daemon extends Thread {
         this.myHost = new Host("localhost", DAEMON_PORT);
     }
 
-    /** Récupère l'annuaire depuis le serveur */
-    public void fetchDiary(Host diaryHost) {
-        try {
-            this.client.fetchDiary();
-        } catch (RemoteException e) {
-            System.err.println("Daemon: Error when fetching diary: " + e.toString());
-        }
-    }
-
     /** Ajoute les fichiers du dossier de stockage à l'annuaire */
     public void postFiles() {
         if (this.client.getDiary() == null) {
@@ -78,10 +69,6 @@ public class Daemon extends Thread {
         } catch (RemoteException e) {
             System.err.println("Daemon: Could not remove host from diary.");
         }
-    }
-
-    public boolean IsDiaryConnected() {
-        return this.client.getDiary() != null;
     }
 
     @Override
