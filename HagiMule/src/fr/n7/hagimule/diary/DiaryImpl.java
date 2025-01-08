@@ -25,7 +25,6 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         super();
         this.hostMap = new HashMap<>();
         this.sizeMap = new HashMap<>();
-        new MainWindow(this);
     }
 
     @Override

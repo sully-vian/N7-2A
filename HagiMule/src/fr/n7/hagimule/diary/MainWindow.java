@@ -3,10 +3,10 @@ package fr.n7.hagimule.diary;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -18,7 +18,6 @@ public class MainWindow extends JFrame {
 
     public static final int REFRESH_DELAY = 100; // ms
     private final Diary diary;
-    private Timer refreshTimer;
     private DefaultListModel<String> fileListModel;
     private JList<String> fileJList;
 
@@ -34,8 +33,9 @@ public class MainWindow extends JFrame {
 
         this.add(this.fileJList);
 
-        this.refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updateContents());
-        this.refreshTimer.start();
+        Timer refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updateContents());
+        refreshTimer.start();
+        this.fileJList.setBorder(BorderFactory.createTitledBorder("Known Files"));
     }
 
     private void updateContents() {

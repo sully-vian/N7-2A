@@ -24,7 +24,6 @@ public class DownloadTaskPanel extends JPanel {
     private DefaultListModel<String> taskListModel;
     private JList<String> taskList;
     private Set<String> previousTasks = new HashSet<>();
-    private Timer refreshTimer;
 
     public DownloadTaskPanel(Downloader downloader) {
         super(new BorderLayout());
@@ -38,8 +37,8 @@ public class DownloadTaskPanel extends JPanel {
 
         this.updateTaskList();
 
-        this.refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updateTaskList());
-        this.refreshTimer.start();
+        Timer refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updateTaskList());
+        refreshTimer.start();
     }
 
     /**

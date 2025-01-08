@@ -3,7 +3,6 @@ package fr.n7.hagimule.client.gui;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import fr.n7.hagimule.client.Client;
 
@@ -42,20 +41,5 @@ public class MainWindow extends JFrame {
         this.add(topPanel);
 
         this.add(this.downloadTaskPanel);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Client client = new Client();
-                // pas d'interface si arg
-                if (args.length == 0) {
-                    new MainWindow(client).setVisible(true);
-                }
-                client.getDaemon().start();
-                ;
-            }
-        });
     }
 }

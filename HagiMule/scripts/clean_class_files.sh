@@ -3,4 +3,4 @@
 # remove all project's *.class files
 rm -rf bin/*
 
-echo -e "\e[32mClean successful.\e[0m"
+echo -e "\e[32mCleaned .class files successfully.\e[0m"

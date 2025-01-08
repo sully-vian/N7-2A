@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.daemon.Daemon;
@@ -40,6 +41,9 @@ public class DiaryPanel extends JPanel {
         this.connectButton = new JButton("Connect Diary");
         this.connectButton.addActionListener(this::connectDiary);
         this.add(this.connectButton);
+
+        Timer refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updatePanelTitle());
+        refreshTimer.start();
     }
 
     private void connectDiary(ActionEvent e) {

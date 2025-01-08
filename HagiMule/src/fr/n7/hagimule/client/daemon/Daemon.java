@@ -2,16 +2,12 @@ package fr.n7.hagimule.client.daemon;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 import fr.n7.hagimule.Host;
-import fr.n7.hagimule.diary.Diary;
+import fr.n7.hagimule.client.Client;
 import fr.n7.hagimule.diary.DuplicateFileNameException;
 
 /**
@@ -24,31 +20,30 @@ import fr.n7.hagimule.diary.DuplicateFileNameException;
 public class Daemon extends Thread {
 
     public static final String STORAGE_PATH = "storage/uploads/";
+    public static final int DAEMON_PORT = 2048;
 
     private final Host myHost;
     private ServerSocket serverSocket;
-    private Diary diary;
+    private Client client;
 
-    public Daemon(int port) {
+    public Daemon(Client client) {
         super();
-        this.myHost = new Host("localhost", port);
+        this.client = client;
+        this.myHost = new Host("localhost", DAEMON_PORT);
     }
 
     /** Récupère l'annuaire depuis le serveur */
     public void fetchDiary(Host diaryHost) {
         try {
-            Registry reg = LocateRegistry.getRegistry(diaryHost.getAddress(), diaryHost.getPort());
-            this.diary = (Diary) reg.lookup("Diary");
-            System.out.println("Daemon: Diary connected");
-            this.diary.removeHost(this.myHost); // remove entries from previous connections
-        } catch (RemoteException | NotBoundException e) {
+            this.client.fetchDiary();
+        } catch (RemoteException e) {
             System.err.println("Daemon: Error when fetching diary: " + e.toString());
         }
     }
 
     /** Ajoute les fichiers du dossier de stockage à l'annuaire */
     public void postFiles() {
-        if (this.diary == null) {
+        if (this.client.getDiary() == null) {
             System.err.println("Daemon: Diary not connected, cannot add files.");
             return;
         }
@@ -59,10 +54,11 @@ public class Daemon extends Thread {
             String fileName = file.getName();
             long size = file.length();
             try {
-                this.diary.addFile(fileName, size, this.myHost);
+                this.client.getDiary().addFile(fileName, size, this.myHost);
                 addedFiles++;
             } catch (DuplicateFileNameException e) {
-                System.err.println("Daemon: Diary already has \"" + fileName + "\" with different size.");
+                System.err.println("Daemon: Diary already has \""
+                        + fileName + "\" with different size.");
             } catch (RemoteException e) {
                 System.err.println("Daemon: Could not add \"" + fileName + "\" to diary.");
             }
@@ -72,19 +68,20 @@ public class Daemon extends Thread {
 
     /** Retire l'hôte de l'annuaire */
     public void removeHost() {
-        if (this.diary == null) {
+        if (this.client.getDiary() == null) {
             System.err.println("Daemon: Diary not connected, cannot remove host.");
             return;
         }
         try {
-            this.diary.removeHost(myHost);
+            this.client.getDiary().removeHost(myHost);
+            System.out.println("Daemon: Removed host from diary.");
         } catch (RemoteException e) {
             System.err.println("Daemon: Could not remove host from diary.");
         }
     }
 
     public boolean IsDiaryConnected() {
-        return this.diary != null;
+        return this.client.getDiary() != null;
     }
 
     @Override

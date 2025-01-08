@@ -1,12 +1,18 @@
 package fr.n7.hagimule.client;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Set;
 
+import javax.swing.SwingUtilities;
+
+import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.daemon.Daemon;
 import fr.n7.hagimule.client.downloader.Downloader;
+import fr.n7.hagimule.client.gui.MainWindow;
 import fr.n7.hagimule.diary.Diary;
+import fr.n7.hagimule.diary.DiaryServer;
 
 /**
  * Client principal.
@@ -14,10 +20,17 @@ import fr.n7.hagimule.diary.Diary;
 public class Client {
     private Downloader downloader;
     private Daemon daemon;
+    private Host diaryHost;
+    private Diary diary;
 
-    public Client() {
-        this.downloader = new Downloader();
-        this.daemon = new Daemon(2048);
+    private static final String USAGE = "\n\tUsage: java -cp bin fr.n7.hagimule.client.Client <diary_ip> (optional)\n\n"
+            + "\tIf no argument is provided, " +
+            "the client will run in GUI mode in which you\n\tcan provide an IO address to connect to the diary server.\n";
+
+    public Client(Host diaryHost) {
+        this.downloader = new Downloader(this);
+        this.daemon = new Daemon(this);
+        this.diaryHost = diaryHost;
     }
 
     public Downloader getDownloader() {
@@ -28,38 +41,46 @@ public class Client {
         return this.daemon;
     }
 
+    public Diary getDiary() {
+        return this.diary;
+    }
 
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            System.out.println("Usage: java Client [0|1]");
-            return;
-        }
-
-        if (Integer.parseInt(args[0]) == 0) {
-            Daemon daemon = new Daemon(8080);
-            daemon.start();
-            System.out.println("Daemon started");
-        } else if (Integer.parseInt(args[0]) == 1) {
-            Downloader downloader = new Downloader();
-            downloader.start();
-            System.out.println("Downloader started");
-        } else {
-            System.out.println("Usage: java Client [0|1]");
+    public void fetchDiary() throws RemoteException {
+        String diaryHostAddress = this.diaryHost.getAddress();
+        int diaryHostPort = this.diaryHost.getPort();
+        Registry registry = LocateRegistry.getRegistry(diaryHostAddress, diaryHostPort);
+        try {
+            this.diary = (Diary) registry.lookup(DiaryServer.BINDING_NAME);
+        } catch (NotBoundException e) {
+            System.err.println("Client: Error when fetching diary: " + e.toString());
         }
     }
 
-    public static void main2(String[] args) {
-        try {
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-            System.out.println("got registry");
+    public static void main(String[] args) throws RemoteException {
+        Host diaryHost;
 
-            Diary stub = (Diary) registry.lookup("Diary");
-            System.out.println("got stub");
+        if (args.length == 0) {
+            diaryHost = new Host("localhost", DiaryServer.PORT);
+        } else if (args.length == 1) {
+            diaryHost = new Host(args[0], DiaryServer.PORT);
+        } else {
+            System.err.println(USAGE);
+            System.exit(1);
+            return;
+        }
+        final Client client = new Client(diaryHost);
 
-            Set<String> files = stub.getFileNames();
-            System.out.println(files);
-        } catch (Exception e) {
-            System.err.println("Client exception: " + e.toString());
+        if (args.length == 1) {
+            // en mode serveur, on ne peut que servir des fichiers
+            client.fetchDiary();
+            client.daemon.start();
+        } else {
+            // en mode avec interface graphique
+            client.daemon.start();
+            SwingUtilities.invokeLater(() -> {
+                MainWindow window = new MainWindow(client);
+                window.setVisible(true);
+            });
         }
     }
 }

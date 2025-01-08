@@ -89,6 +89,10 @@ public class DownloaderSlave extends Thread {
         }
         byte[] buffer = new byte[(int) len];
         int numBytesRead = ois.read(buffer);
+        if (numBytesRead != len) {
+            System.out.println("DownloaderSlave: Warning: expected " + len +
+                    " bytes, but read " + numBytesRead + " bytes.");
+        }
 
         this.fragments.put(fragmentNumero, buffer);
     }

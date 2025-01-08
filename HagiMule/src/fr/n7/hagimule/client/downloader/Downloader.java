@@ -1,14 +1,11 @@
 package fr.n7.hagimule.client.downloader;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.HashSet;
 import java.util.Set;
 
 import fr.n7.hagimule.Host;
-import fr.n7.hagimule.diary.Diary;
+import fr.n7.hagimule.client.Client;
 
 /**
  * Sur les clients.
@@ -16,7 +13,7 @@ import fr.n7.hagimule.diary.Diary;
  * Permet de télécharger en parallèle des fichiers en créant des
  * {@link DownloadTask} pour chaque fichier.
  */
-public class Downloader extends Thread {
+public class Downloader {
 
     public static final String STORAGE_PATH = "storage/downloads/";
 
@@ -24,33 +21,24 @@ public class Downloader extends Thread {
     private String[] availableFileNames = new String[0];
     private Set<DownloadTask> currentTasks = new HashSet<>();
 
-    private Registry registry;
-    private Host diaryHost;
-    private Diary diary;
+    private Client client;
 
     /**
      * Crée un nouveau téléchargeur.
      */
-    public Downloader() {
+    public Downloader(Client client) {
         super();
+        this.client = client;
         this.availableFileNames = new String[0];
         this.currentTasks = new HashSet<>();
     }
 
-    public Host getDiaryHost() {
-        return this.diaryHost;
-    }
-
     public boolean IsDiaryConnected() {
-        return this.diary != null;
+        return this.client.getDiary() != null;
     }
 
     public String[] getAvailableFileNames() {
         return this.availableFileNames;
-    }
-
-    public Diary getDiary() {
-        return this.diary;
     }
 
     public Set<DownloadTask> getCurrentTasks() {
@@ -66,7 +54,7 @@ public class Downloader extends Thread {
         if (this.currentTasks.stream().anyMatch(task -> task.getFileName().equals(fileName))) {
             return;
         }
-        DownloadTask task = new DownloadTask(this, diary, fileName);
+        DownloadTask task = new DownloadTask(this, this.client.getDiary(), fileName);
         task.start();
         this.currentTasks.add(task);
     }
@@ -82,17 +70,15 @@ public class Downloader extends Thread {
      */
     public void fetchDiary(Host diaryHost) {
         try {
-            this.registry = LocateRegistry.getRegistry(diaryHost.getAddress(), diaryHost.getPort());
-            this.diary = (Diary) this.registry.lookup("Diary");
-            System.out.println("Downloader: Diary connected");
-        } catch (RemoteException | NotBoundException e) {
+            this.client.fetchDiary();
+        } catch (RemoteException e) {
             System.err.println("Downloader: Error when fetching diary: " + e.toString());
         }
     }
 
     public void fetchFileNames() {
         try {
-            this.availableFileNames = this.diary.getFileNames().toArray(new String[0]);
+            this.availableFileNames = this.client.getDiary().getFileNames().toArray(new String[0]);
             System.out.println("Downloader: File names fetched");
         } catch (RemoteException e) {
             System.err.println("Downloader: Error when fetching fileNames: " + e.toString());
