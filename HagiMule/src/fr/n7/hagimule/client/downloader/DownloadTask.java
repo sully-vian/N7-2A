@@ -3,6 +3,7 @@ package fr.n7.hagimule.client.downloader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,11 +70,15 @@ public class DownloadTask extends Thread {
         System.out.println("DownloadTask: " + numFragments + " fragments to download");
 
         List<Future<FragmentData>> futures = new LinkedList<>();
-
         for (int fragmentNumero = 0; fragmentNumero < numFragments; fragmentNumero++) {
             Host host = this.hosts[fragmentNumero % this.hosts.length];
-            Future<FragmentData> future = executor.submit(new DownloaderSlave(fileName, host, fragmentNumero));
-            futures.add(future);
+            try {
+                Socket socket = new Socket(host.getAddress(), host.getPort());
+                Future<FragmentData> future = executor.submit(new DownloaderSlave(fileName, socket, fragmentNumero));
+                futures.add(future);
+            } catch (IOException e) {
+                System.err.println("DownloadTask: Error when connecting to " + host + ": " + e.toString());
+            }
         }
 
         // Attendre que tous les fragments soient téléchargés
