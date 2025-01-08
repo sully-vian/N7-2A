@@ -1,0 +1,4 @@
+psahtek with 1 local host and prints (4*1024): 8259ms
+psahtek with 1 local host w/o prints (4*1024): 8188ms
+psahtek with 1 local host w/o prints (10*2024): 3306ms
+psahtek with 1 local host w/o prints (16*2024): 2082ms

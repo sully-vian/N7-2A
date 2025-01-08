@@ -61,11 +61,10 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         HashSet<Host> hosts = this.hostMap.get(file);
         if (hosts != null) {
             hosts.remove(host);
-        }
-
-        if (hosts.isEmpty()) {
-            this.hostMap.remove(file);
-            this.sizeMap.remove(file);
+            if (hosts.isEmpty()) {
+                this.hostMap.remove(file);
+                this.sizeMap.remove(file);
+            }
         }
     }
 

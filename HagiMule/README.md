@@ -4,7 +4,9 @@
 
 DownloadTask demande les hôtes et coupe le fichier en blocs de 1024 octets (ou plus) et répartit les requêtes de blocs entre les hôtes. On peut donc avoir plusieurs blocs demandés à un même hôte.
 
-Donc un Slave doit - pour chaque fragment - donner la taille et le point de départ.
+L'idéal serait que les fragments ne soient pas répartis initialement, mais qu'on les donne au fure et à mesure que lmes tâches se terminent.
+
+Pour ce genre de concurrence, il faut utiliser un ThreadPoolExecutor.
 
 ## Ressources
 

@@ -6,67 +6,51 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.Callable;
 
 import fr.n7.hagimule.Host;
 
 /**
- * Traite le téléchargement des fragments demandés.
+ * Traite le téléchargement d'un fragment d'un fichier.
  */
-public class DownloaderSlave extends Thread {
+public class DownloaderSlave implements Callable<FragmentData> {
 
     private String fileName;
     private Host host;
-    private List<Integer> fragmentNumeros;
-    private Map<Integer, byte[]> fragments;
-    private boolean downloadFinished;
+    private byte[] fragment;
+    private int fragmentNumero;
 
     /**
      * Crée un DownloaderSlave
      *
-     * @param fileName        Le nom du fichier dont on veut un fragment.
-     * @param host            L'hôte hébergeant ce fichier.
-     * @param fragmentNumeros Les numéros des fragments à télécharger.
+     * @param fileName       Le nom du fichier dont on veut un fragment.
+     * @param host           L'hôte hébergeant ce fichier.
+     * @param fragmentNumero Le numéro du fragment à télécharger.
      */
-    public DownloaderSlave(String fileName, Host host) {
-        super("Downloading " + fileName + " from " + host);
+    public DownloaderSlave(String fileName, Host host, int fragmentNumero) {
         this.fileName = fileName;
         this.host = host;
-        this.fragmentNumeros = new ArrayList<>();
-        this.fragments = new HashMap<>();
-        this.downloadFinished = false;
+        this.fragmentNumero = fragmentNumero;
     }
 
     @Override
-    public void run() {
-        System.out.println("DownloaderSlave: starting with " + this.fragmentNumeros.size() + " fragments to download.");
+    public FragmentData call() {
         try (Socket socket = new Socket(this.host.getAddress(), this.host.getPort());
                 OutputStream os = socket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 InputStream is = socket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is);) {
 
-            System.out.println("DownloaderSlave: connected with " + this.host);
-
             // écrire le nom du fichier
             oos.writeUTF(this.fileName);
             oos.flush();
 
-            for (int fragmentNumero : this.fragmentNumeros) {
-                this.fetchFragment(fragmentNumero, oos, ois);
-            }
-
-            this.downloadFinished = true;
+            this.fetchFragment(this.fragmentNumero, oos, ois);
+            return new FragmentData(fragmentNumero, this.fragment);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
-    }
-
-    public void addFragmentNumero(int fragmentNumero) {
-        this.fragmentNumeros.add(fragmentNumero);
     }
 
     /**
@@ -77,39 +61,24 @@ public class DownloaderSlave extends Thread {
      * @param ois            Le stream à partir duquel lire le fragment.
      */
     private void fetchFragment(int fragmentNumero, ObjectOutputStream oos, ObjectInputStream ois) throws IOException {
-        long start = fragmentNumero * DownloadTask.FRAGMENT_SIZE;
+        long start = fragmentNumero * DownloadTask.MAX_FRAGMENT_SIZE;
         // envoyer la position du début du fragment
         oos.writeLong(start);
         oos.flush();
 
         // lire les octets envoyés et les écrire dans le buffer
         long len = ois.readLong();
-        if (len <= 0 || len > DownloadTask.FRAGMENT_SIZE) {
+        if (len <= 0 || len > DownloadTask.MAX_FRAGMENT_SIZE) {
             throw new IOException("Invalid fragment length: " + len);
         }
         byte[] buffer = new byte[(int) len];
-        int numBytesRead = ois.read(buffer);
+        // int numBytesRead = ois.read(buffer);
+        int numBytesRead = (int) len;
+        ois.readFully(buffer);
         if (numBytesRead != len) {
             System.out.println("DownloaderSlave: Warning: expected " + len +
                     " bytes, but read " + numBytesRead + " bytes.");
         }
-
-        this.fragments.put(fragmentNumero, buffer);
-    }
-
-    /**
-     * Renvoie les fragments téléchargés.
-     *
-     * @return Les fragments téléchargés. null si le téléchargement n'est pas
-     *         terminé.
-     */
-    public Map<Integer, byte[]> getFragments() {
-        if (!this.downloadFinished) {
-            System.err.println("DownloaderSlave: Error: trying to retrieve the fragments "
-                    + this.fragmentNumeros
-                    + " of " + this.fileName + " before download finished.");
-            System.exit(1);
-        }
-        return this.fragments;
+        this.fragment = buffer;
     }
 }

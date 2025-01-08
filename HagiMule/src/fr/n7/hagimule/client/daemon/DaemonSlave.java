@@ -1,6 +1,5 @@
 package fr.n7.hagimule.client.daemon;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,24 +32,13 @@ public class DaemonSlave extends Thread {
                 InputStream is = this.clientSocket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is)) {
 
-            System.out.println("DeamonSlave: connected with " +
-                    this.clientSocket.getInetAddress().getHostAddress() +
-                    ":" + this.clientSocket.getPort());
-
             // récupérer le nom du fichier
             this.fileName = ois.readUTF();
             File file = new File(Daemon.STORAGE_PATH + this.fileName);
 
             // créer un flux de lecture
             try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
-                while (true) {
-                    try {
-                        sendFragment(oos, ois, raf);
-                    } catch (EOFException e) {
-                        // Fin du stream, on sort de la loop
-                        break;
-                    }
-                }
+                sendFragment(oos, ois, raf);
             }
 
         } catch (SocketException e) {
@@ -74,8 +62,8 @@ public class DaemonSlave extends Thread {
         long start = ois.readLong();
 
         // calculer et transmettre la taille du prochain fragment
-        long len = Math.min(DownloadTask.FRAGMENT_SIZE, raf.length() - start);
-        if (len <= 0 || len > DownloadTask.FRAGMENT_SIZE) {
+        long len = Math.min(DownloadTask.MAX_FRAGMENT_SIZE, raf.length() - start);
+        if (len <= 0 || len > DownloadTask.MAX_FRAGMENT_SIZE) {
             throw new IOException("Invalid fragment length: " + len);
         }
         oos.writeLong(len);
@@ -87,7 +75,7 @@ public class DaemonSlave extends Thread {
         if (numBytesRead < len) {
             throw new IOException("Could not read enough bytes from file.");
         }
-        oos.write(buffer); // écrire les octets dans le flux
+        oos.write(buffer, 0, numBytesRead); // écrire les octets dans le flux
         oos.flush();
     }
 }

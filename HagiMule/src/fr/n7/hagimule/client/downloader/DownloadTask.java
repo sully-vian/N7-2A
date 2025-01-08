@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import fr.n7.hagimule.Host;
 import fr.n7.hagimule.diary.Diary;
@@ -16,32 +20,36 @@ import fr.n7.hagimule.diary.Diary;
  */
 public class DownloadTask extends Thread {
 
-    public static final long FRAGMENT_SIZE = 1024; // bytes
+    /**
+     * La taille maximale d'un fragment. Tous les fragments font exactement cette
+     * taille, excepté le dernier, qui est plus petit si le fichier n'est pas un
+     * multiple de cette taille.
+     */
+    public static final long MAX_FRAGMENT_SIZE = 1024 * 16; // bytes
 
     private Downloader downloader;
-    private final Diary diary;
     private final String fileName;
     private long fileSize;
     private byte[] fileBytes;
 
     private Host[] hosts;
-    private DownloaderSlave[] slaves;
+
+    private final ExecutorService executor;
 
     /**
      * Crée une nouvelle tâche de téléchargement. et récupère les hôtes ayant le
      * fichier donné.
      *
      * @param downloader le téléchargeur à notifier quand la tâche est terminée.
-     * @param diary      l'annuaire.
      * @param fileName   le nom du fichier à télécharger.
      */
-    public DownloadTask(Downloader downloader, Diary diary, String fileName) {
+    public DownloadTask(Downloader downloader, String fileName) {
         super("Downloading " + fileName);
         this.downloader = downloader;
-        this.diary = diary;
         this.fileName = fileName;
         this.fetchHosts();
         this.fetchSize();
+        this.executor = Executors.newFixedThreadPool(this.hosts.length);
     }
 
     /**
@@ -55,46 +63,32 @@ public class DownloadTask extends Thread {
 
     @Override
     public void run() {
-        this.slaves = new DownloaderSlave[this.hosts.length];
+        long startTime = System.nanoTime();
 
-        // create the slaves
-        for (int i = 0; i < this.hosts.length; i++) {
-            this.slaves[i] = new DownloaderSlave(this.fileName, this.hosts[i]);
-        }
-        System.out.println("DownloadTask: started for " +
-                this.fileName + " with " + this.hosts.length + " slaves");
-
-        // Attribuer les fragments aux esclaves
-        int numFragments = (this.fileSize % FRAGMENT_SIZE == 0)
-                ? (int) (this.fileSize / FRAGMENT_SIZE)
-                : (int) (this.fileSize / FRAGMENT_SIZE) + 1;
+        int numFragments = (int) ((this.fileSize + MAX_FRAGMENT_SIZE - 1) / (MAX_FRAGMENT_SIZE));
         System.out.println("DownloadTask: " + numFragments + " fragments to download");
-        for (int i = 0; i < numFragments; i++) {
-            this.slaves[i % this.hosts.length].addFragmentNumero(i);
+
+        List<Future<FragmentData>> futures = new LinkedList<>();
+
+        for (int fragmentNumero = 0; fragmentNumero < numFragments; fragmentNumero++) {
+            Host host = this.hosts[fragmentNumero % this.hosts.length];
+            Future<FragmentData> future = executor.submit(new DownloaderSlave(fileName, host, fragmentNumero));
+            futures.add(future);
         }
 
-        // lancer les threads
-        for (Thread slave : slaves) {
-            slave.start();
+        // Attendre que tous les fragments soient téléchargés
+        executor.shutdown();
+        while (!executor.isTerminated()) {
         }
+        System.out.println("DownloadTask: All slaves completed.");
 
-        // wait for all the slaves to finish
-        for (Thread slave : slaves) {
-            try {
-                slave.join();
-            } catch (InterruptedException e) {
-                System.err.println(
-                        "DownloadTask: Error while waiting for a DownloaderSlave to finish: "
-                                + e.toString());
-            }
-        }
-
-        System.out.println("DownloadTask: finished for "
-                + this.fileName + " with " + this.hosts.length + " slaves");
-
-        this.joinFragments();
+        this.joinFragments(futures);
         this.writeToFile();
         this.downloader.taskFinished(this);
+        System.out.println("DownloadTask: Finished writing to file.");
+
+        long endTime = System.nanoTime();
+        System.out.println("DownloadTask: Downloaded in " + (endTime - startTime) / 1e6 + "ms");
     }
 
     /**
@@ -102,7 +96,8 @@ public class DownloadTask extends Thread {
      */
     public void fetchHosts() {
         try {
-            this.hosts = this.diary.getHosts(this.fileName).toArray(new Host[0]);
+            Diary diary = this.downloader.getClient().getDiary();
+            this.hosts = diary.getHosts(this.fileName).toArray(new Host[0]);
         } catch (Exception e) {
             System.err.println("DownloadTask: Error when fetching the hosts for "
                     + this.fileName + ": " + e.toString());
@@ -114,21 +109,24 @@ public class DownloadTask extends Thread {
      */
     public void fetchSize() {
         try {
-            this.fileSize = this.diary.getFileSize(this.fileName);
+            Diary diary = this.downloader.getClient().getDiary();
+            this.fileSize = diary.getFileSize(this.fileName);
         } catch (RemoteException e) {
             System.err.println("DownloadTask: Error when fetching "
                     + this.fileName + "size: " + e.toString());
         }
     }
 
-    private void joinFragments() {
+    private void joinFragments(List<Future<FragmentData>> futures) {
         this.fileBytes = new byte[(int) this.fileSize];
-        for (DownloaderSlave slave : slaves) {
-            Map<Integer, byte[]> fragmentMap = slave.getFragments();
-            for (int fragmentNumero : fragmentMap.keySet()) {
-                byte[] fragment = fragmentMap.get(fragmentNumero);
-                int start = fragmentNumero * ((int) FRAGMENT_SIZE);
+        for (Future<FragmentData> future : futures) {
+            try {
+                int fragmentNumero = future.get().getNumero();
+                byte[] fragment = future.get().getData();
+                int start = fragmentNumero * (int) MAX_FRAGMENT_SIZE;
                 System.arraycopy(fragment, 0, this.fileBytes, start, fragment.length);
+            } catch (Exception e) {
+                System.err.println("DownloadTask: Error when joining fragments: " + e.toString());
             }
         }
     }

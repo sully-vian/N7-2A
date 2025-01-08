@@ -33,6 +33,10 @@ public class Downloader {
         this.currentTasks = new HashSet<>();
     }
 
+    public Client getClient() {
+        return this.client;
+    }
+
     public boolean IsDiaryConnected() {
         return this.client.getDiary() != null;
     }
@@ -54,7 +58,7 @@ public class Downloader {
         if (this.currentTasks.stream().anyMatch(task -> task.getFileName().equals(fileName))) {
             return;
         }
-        DownloadTask task = new DownloadTask(this, this.client.getDiary(), fileName);
+        DownloadTask task = new DownloadTask(this, fileName);
         task.start();
         this.currentTasks.add(task);
     }

@@ -92,11 +92,11 @@ public class Daemon extends Thread {
 
             while (true) {
                 Socket clientSocket = this.serverSocket.accept();
-                System.out.println("Daemon: socket connected, starting slave");
                 Thread slave = new DaemonSlave(clientSocket);
                 slave.start();
             }
         } catch (IOException e) {
+            System.err.println("Daemon: Error in server socket.");
             e.printStackTrace();
         }
     }
