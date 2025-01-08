@@ -57,8 +57,8 @@ function newton(f::Function, gradf::Function, hessf::Function, x0::Union{Real, V
 		xk = xs[end]
 		grad_f = gradf(xk)
 		h_f = hessf(xk)
-		dk = - h_f \ grad_f
-    	xk1 = xk + dk
+		dk = -h_f \ grad_f
+		xk1 = xk + dk
 		xs = vcat(xs, [xk1])
 		nb_iters += 1
 
