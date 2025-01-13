@@ -81,6 +81,7 @@ public class Client {
             Registry registry = LocateRegistry.getRegistry(diaryHostAddress, diaryHostPort);
             this.diary = (Diary) registry.lookup(DiaryServer.BINDING_NAME);
             System.out.println("Client: Connected to diary");
+            this.daemon.syncFiles();
         } catch (NotBoundException e) {
             System.err.println("Client: Error when fetching diary: " + e.toString());
         } catch (RemoteException e) {

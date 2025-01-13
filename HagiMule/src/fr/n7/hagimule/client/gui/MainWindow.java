@@ -17,7 +17,6 @@ public class MainWindow extends JFrame {
     private DiaryPanel diaryPanel;
     private DownloaderPanel downloaderPanel;
     private DownloadTaskPanel downloadTaskPanel;
-    private DaemonPanel daemonPanel;
 
     public MainWindow(Client client) {
         super("HagiMule Client");
@@ -30,13 +29,11 @@ public class MainWindow extends JFrame {
 
         this.diaryPanel = new DiaryPanel(this.client);
         this.downloaderPanel = new DownloaderPanel(this.client.getDownloader());
-        this.daemonPanel = new DaemonPanel(this.client.getDaemon());
         this.downloadTaskPanel = new DownloadTaskPanel(this.client.getDownloader());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(this.diaryPanel);
-        topPanel.add(this.daemonPanel);
         topPanel.add(this.downloaderPanel);
         this.add(topPanel);
 

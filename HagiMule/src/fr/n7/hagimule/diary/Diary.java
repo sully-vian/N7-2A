@@ -70,4 +70,21 @@ public interface Diary extends Remote {
      * @throws RemoteException
      */
     Map<String, FileInfo> getContents() throws RemoteException;
+
+    /**
+     * Réinitialise le compte à rebours de l'hôte donné à {@value #DEATH_DELAY}
+     *
+     * @param host l'hôte dont le timer doit être réinitialisé.
+     * @throws RemoteException
+     */
+    void resetHostTimer(Host host) throws RemoteException;
+
+    /**
+     * Met à jour le compte à rebours de tous les hôtes (décrémente de 1).
+     * <p>
+     * À appeler chaque seoconde.
+     *
+     * @throws RemoteException
+     */
+    void updateHostTimers() throws RemoteException;
 }

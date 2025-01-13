@@ -94,8 +94,15 @@ public class DiaryServer {
                     window.setVisible(true);
                 });
             }
+
+            while (true) {
+                Thread.sleep(1000);
+                diary.updateHostTimers();
+            }
         } catch (RemoteException e) {
             System.err.println("DiaryServer: Error when creating the server: " + e.toString());
+        } catch (InterruptedException e) {
+            System.err.println("DiaryServer: Error when sleeping: " + e.toString());
         }
     }
 }

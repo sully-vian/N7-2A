@@ -16,12 +16,6 @@ public class FileInfo implements Serializable {
     private long size; // en octets
     private Set<Host> hosts;
 
-    public FileInfo(File file) {
-        this.name = file.getName();
-        this.size = file.length();
-        this.hosts = new HashSet<>();
-    }
-
     public FileInfo(String name, long size) {
         this.name = name;
         this.size = size;
@@ -29,10 +23,12 @@ public class FileInfo implements Serializable {
     }
 
     public FileInfo(String name, long size, Host host) {
-        this.name = name;
-        this.size = size;
-        this.hosts = new HashSet<>();
+        this(name, size);
         this.hosts.add(host);
+    }
+
+    public FileInfo(File file) {
+        this(file.getName(), file.length());
     }
 
     public String getName() {

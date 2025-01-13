@@ -14,11 +14,15 @@ import fr.n7.hagimule.Host;
  */
 public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
+    private static final int DEATH_DELAY = 3; // 3 secondes
+
     private Map<String, FileInfo> infoMap;
+    private Map<Host, Integer> hostTimers;
 
     public DiaryImpl() throws RemoteException {
         super();
         this.infoMap = new HashMap<>();
+        this.hostTimers = new HashMap<>();
     }
 
     @Override
@@ -33,6 +37,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
             this.infoMap.put(fileName, fileInfo);
         }
         this.infoMap.get(fileName).addHost(host);
+        this.resetHostTimer(host);
     }
 
     @Override
@@ -46,7 +51,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
         }
     }
 
-    @Override
+    @Override // TODO: à retirer
     public synchronized void removeHost(Host host) throws RemoteException {
         Map<String, FileInfo> infoMapCopy = this.getContents();
         for (FileInfo fileInfo : infoMapCopy.values()) {
@@ -65,6 +70,25 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     @Override
     public Map<String, FileInfo> getContents() throws RemoteException {
         return new HashMap<>(this.infoMap);
+    }
+
+    @Override
+    public void resetHostTimer(Host host) throws RemoteException {
+        this.hostTimers.put(host, DEATH_DELAY);
+    }
+
+    @Override
+    public void updateHostTimers() throws RemoteException {
+        for (Host host : this.hostTimers.keySet()) {
+            int timeLeft = this.hostTimers.get(host);
+            if (timeLeft == 0) {
+                this.hostTimers.remove(host);
+                this.removeHost(host);
+                System.out.println("Diary: Lost host " + host);
+            } else {
+                this.hostTimers.put(host, timeLeft - 1);
+            }
+        }
     }
 
 }

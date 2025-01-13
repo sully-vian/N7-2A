@@ -10,6 +10,7 @@ import javax.swing.Timer;
 
 import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.Client;
+import fr.n7.hagimule.diary.DiaryServer;
 
 /**
  * Panneau d'affichage pour se connecter à un {@link Diary}.
@@ -19,7 +20,6 @@ public class DiaryPanel extends JPanel {
     private Client client;
 
     private JTextField hostAddressField;
-    private JTextField hostPortField;
     private JButton connectButton;
 
     public DiaryPanel(Client client) {
@@ -31,9 +31,7 @@ public class DiaryPanel extends JPanel {
         this.add(this.hostAddressField);
 
         this.add(new JLabel(":"));
-
-        this.hostPortField = new JTextField(this.client.getDiaryHost().getPort() + "", 4);
-        this.add(this.hostPortField);
+        this.add(new JLabel(DiaryServer.PORT + ""));
 
         this.connectButton = new JButton("Connect Diary");
         this.connectButton.addActionListener(this::connectDiary);
@@ -45,8 +43,7 @@ public class DiaryPanel extends JPanel {
 
     private void connectDiary(ActionEvent e) {
         String address = this.hostAddressField.getText();
-        int port = Integer.parseInt(this.hostPortField.getText());
-        this.client.setDiaryHost(new Host(address, port));
+        this.client.setDiaryHost(new Host(address, DiaryServer.PORT));
         this.client.fetchDiary();
         this.updatePanelTitle();
     }

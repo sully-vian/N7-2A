@@ -4,6 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.rmi.RemoteException;
 
 import fr.n7.hagimule.Host;
@@ -70,8 +77,37 @@ public class Daemon extends Thread {
         }
     }
 
+    public void syncFiles() {
+        if (this.client.getDiary() == null) {
+            System.err.println("Daemon: Diary not connected, cannot sync files.");
+            return;
+        }
+
+        try {
+            // retirer tous les fichiers que je serv(ai)s
+            this.client.getDiary().removeHost(myHost);
+
+            File[] localFiles = new File(STORAGE_PATH).listFiles();
+            int numSyncedFiles = 0;
+
+            // ajouter tous les fichiers que j'héberge
+            for (File file : localFiles) {
+                FileInfo fileInfo = new FileInfo(file);
+                this.client.getDiary().addFileInfo(fileInfo, myHost);
+                numSyncedFiles++;
+            }
+            System.out.println("Daemon: Synced " + numSyncedFiles + " files.");
+        } catch (Exception e) {
+
+            System.err.println("Daemon: Could not sync files with diary.");
+        }
+    }
+
     @Override
     public void run() {
+        this.syncFiles();
+        new Thread(this::watchFiles).start();
+        new Thread(this::notifyDiary).start();
         try {
             this.serverSocket = new ServerSocket(this.myHost.getPort());
             System.out.println("Daemon: started on port " + this.myHost.getPort());
@@ -79,11 +115,54 @@ public class Daemon extends Thread {
             while (true) {
                 Socket clientSocket = this.serverSocket.accept();
                 Thread slave = new DaemonSlave(clientSocket);
+                System.out.println("Daemon: Accepted connection from " + clientSocket.getRemoteSocketAddress());
                 slave.start();
             }
         } catch (IOException e) {
             System.err.println("Daemon: Error in server socket.");
             e.printStackTrace();
+        }
+    }
+
+    private void notifyDiary() {
+        try {
+            while (true) {
+                Thread.sleep(1000);
+                this.client.getDiary().resetHostTimer(myHost);
+            }
+        } catch (InterruptedException e) {
+            System.err.println("Daemon: Error when sleeping.");
+        } catch (RemoteException e) {
+            System.err.println("Daemon: Error when updating host timer.");
+        }
+    }
+
+    private void watchFiles() {
+        try {
+            WatchService watcher = FileSystems.getDefault().newWatchService();
+
+            Path pathToWatch = Paths.get(STORAGE_PATH);
+            pathToWatch.register(watcher,
+                    StandardWatchEventKinds.ENTRY_CREATE,
+                    StandardWatchEventKinds.ENTRY_DELETE,
+                    StandardWatchEventKinds.ENTRY_MODIFY);
+
+            while (true) {
+                WatchKey key = watcher.take();
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    if (event.kind() == StandardWatchEventKinds.OVERFLOW) {
+                        continue;
+                    }
+                    this.syncFiles();
+                    WatchEvent.Kind<?> kind = event.kind();
+                    Path path = (Path) event.context();
+                    System.out.println("Daemon: " + kind + " " + path);
+                }
+                key.reset();
+            }
+        } catch (Exception e) {
+
+            System.err.println("Daemon: Error when watching uploads directory.");
         }
     }
 }
