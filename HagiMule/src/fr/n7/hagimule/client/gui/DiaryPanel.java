@@ -27,12 +27,12 @@ public class DiaryPanel extends JPanel {
         this.client = client;
         this.updatePanelTitle();
 
-        this.hostAddressField = new JTextField("localhost", 10);
+        this.hostAddressField = new JTextField(this.client.getDiaryHost().getAddress(), 12);
         this.add(this.hostAddressField);
 
         this.add(new JLabel(":"));
 
-        this.hostPortField = new JTextField("1099");
+        this.hostPortField = new JTextField(this.client.getDiaryHost().getPort() + "", 4);
         this.add(this.hostPortField);
 
         this.connectButton = new JButton("Connect Diary");

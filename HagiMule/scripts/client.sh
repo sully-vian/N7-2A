@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # passer tous les arguments
-java -cp bin fr.n7.hagimule.client.Client "$@"
+java -cp bin:lib/* fr.n7.hagimule.client.Client "$@"

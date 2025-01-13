@@ -24,7 +24,7 @@ GITLAB_REPO="https://git.inpt.fr/hervyv/hagimule.git"
 
 USERNAME="vhy9665"
 
-# Prompt for SSH pssword
+# Prompt for SSH password
 read -sp "Enter SSH password for $USERNAME: " PASSWORD
 
 # function to test connection to a host

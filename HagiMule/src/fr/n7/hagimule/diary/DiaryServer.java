@@ -1,14 +1,20 @@
 package fr.n7.hagimule.diary;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Enumeration;
 
 import javax.swing.SwingUtilities;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
+import fr.n7.hagimule.Utils;
 
 /**
  * Serveur RMI pour l'annuaire.
@@ -16,38 +22,15 @@ import javax.swing.SwingUtilities;
 public class DiaryServer {
 
     /** Port du serveur RMI */
-    public static final int PORT = 1234;
+    public static final int PORT = 1099;
 
     /** Nom pour le binding de l'annuaire */
     public static final String BINDING_NAME = "Diary";
 
-    public static final String IP_ADDRESS = getLocalIPAddress();
+    /** Adresse IP du serveur */
+    public static final String IP_ADDRESS = Utils.getLocalIPAddress();
 
-    private static final String USAGE = "\n\tUsage: java -cp bin fr.n7.hagimule.diary.DiaryServer [-gui]\n\n"
-            + "\tIf the -gui option is provided, the server will run in GUI mode.\n";
-
-    private static String getLocalIPAddress() {
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface iface = interfaces.nextElement();
-                if (iface.isLoopback() || !iface.isUp()) {
-                    continue;
-                }
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    String address = addresses.nextElement().getHostAddress();
-                    if (address.contains(":")) {
-                        continue; // skip IPv6
-                    }
-                    return address;
-                }
-            }
-        } catch (SocketException e) {
-            System.err.println("DiaryServer: Error when getting local IP address: " + e.toString());
-        }
-        return "localhost";
-    }
+    public static final String USAGE = "./scripts/diary [--gui]";
 
     private static void registerDiary(Diary diary) throws RemoteException {
         Registry registry = LocateRegistry.createRegistry(PORT);
@@ -57,18 +40,49 @@ public class DiaryServer {
 
     /**
      * Crée un serveur RMI pour l'annuaire.
+     * <p>
+     * Le binding de l'annuaire est fait avec le nom {@value #BINDING_NAME}.
+     * <p>
+     * Le port du serveur est {@value #PORT}.
      *
-     * @param args arguments de la ligne de commande (non utilisés)
+     * @param args -gui pour lancer le serveur avec une interface graphique
      */
     public static void main(String[] args) {
+
+        Options options = new Options();
+        options.addOption(Option.builder("g")
+                .longOpt("gui")
+                .hasArg(false)
+                .desc("Run the server with a GUI")
+                .build());
+        options.addOption(Option.builder("h")
+                .longOpt("help")
+                .hasArg(false)
+                .desc("Print this message")
+                .build());
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd = null;
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+            formatter.printHelp(USAGE, options);
+            System.exit(1);
+            return;
+        }
+
+        if (cmd.hasOption("h")) {
+            formatter.printHelp(USAGE, options);
+            System.exit(0);
+            return;
+        }
+
         boolean guiMode = false;
-        if (args.length > 0) {
-            if (args[0].equals("-gui")) {
-                guiMode = true;
-            } else {
-                System.err.println(USAGE);
-                System.exit(1);
-            }
+        if (cmd.hasOption("gui")) {
+            guiMode = true;
         }
 
         try {

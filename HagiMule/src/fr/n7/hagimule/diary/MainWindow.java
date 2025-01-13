@@ -43,8 +43,9 @@ public class MainWindow extends JFrame {
     /** Met à jour l'affichage de la liste des fichiers répertoriés. */
     private void updateContents() {
         try {
-            List<String> currentContents = this.diary.getContents();
-            currentContents.sort(String::compareTo);
+            // la liste crée est immutable, donc pas de tri possible
+            final List<String> currentContents = this.diary.getContents().values()
+                    .stream().map(FileInfo::toString).toList();
 
             // ajouter les nouveaux fichiers
             for (String fileString : currentContents) {

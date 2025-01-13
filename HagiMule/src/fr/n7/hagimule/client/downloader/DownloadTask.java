@@ -109,7 +109,7 @@ public class DownloadTask extends Thread {
     public void fetchHosts() {
         try {
             Diary diary = this.downloader.getClient().getDiary();
-            this.hosts = diary.getHosts(this.fileName).toArray(new Host[0]);
+            this.hosts = diary.getFileInfo(this.fileName).getHosts().toArray(new Host[0]);
         } catch (Exception e) {
             System.err.println("DownloadTask: Error when fetching the hosts for "
                     + this.fileName + ": " + e.toString());
@@ -122,7 +122,7 @@ public class DownloadTask extends Thread {
     public void fetchSize() {
         try {
             Diary diary = this.downloader.getClient().getDiary();
-            this.fileSize = diary.getFileSize(this.fileName);
+            this.fileSize = diary.getFileInfo(this.fileName).getSize();
         } catch (RemoteException e) {
             System.err.println("DownloadTask: Error when fetching "
                     + this.fileName + "size: " + e.toString());

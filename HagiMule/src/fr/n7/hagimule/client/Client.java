@@ -7,6 +7,14 @@ import java.rmi.registry.Registry;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.daemon.Daemon;
 import fr.n7.hagimule.client.downloader.Downloader;
@@ -18,19 +26,32 @@ import fr.n7.hagimule.diary.DiaryServer;
  * Client principal.
  */
 public class Client {
+
+    private static final int DEFAULT_DAEMON_PORT = 6881;
+
+    private static final String USAGE = "Client [-p <daemon port>] [-d <diary server IP>]";
+
+    private Host diaryHost;
+    private int daemonPort;
+    private Diary diary;
     private Downloader downloader;
     private Daemon daemon;
-    private Host diaryHost;
-    private Diary diary;
 
-    private static final String USAGE = "\n\tUsage: java -cp bin fr.n7.hagimule.client.Client <diary_ip> (optional)\n\n"
-            + "\tIf no argument is provided, " +
-            "the client will run in GUI mode in which you\n\tcan provide an IO address to connect to the diary server.\n";
-
-    public Client(Host diaryHost) {
+    /**
+     * Crée un client, son téléchargeur et son démon sur le port spécifié.
+     *
+     * @param diaryHost
+     * @param daemonPort
+     */
+    public Client(Host diaryHost, int daemonPort) {
+        this.diaryHost = diaryHost;
+        this.daemonPort = daemonPort;
         this.downloader = new Downloader(this);
         this.daemon = new Daemon(this);
-        this.diaryHost = diaryHost;
+    }
+
+    public Host getDiaryHost() {
+        return this.diaryHost;
     }
 
     public Downloader getDownloader() {
@@ -43,6 +64,10 @@ public class Client {
 
     public Diary getDiary() {
         return this.diary;
+    }
+
+    public int getDaemonPort() {
+        return this.daemonPort;
     }
 
     public void setDiaryHost(Host diaryHost) {
@@ -68,30 +93,70 @@ public class Client {
     }
 
     public static void main(String[] args) throws RemoteException {
-        Host diaryHost;
 
-        if (args.length == 0) {
-            diaryHost = new Host("localhost", DiaryServer.PORT);
-        } else if (args.length == 1) {
-            diaryHost = new Host(args[0], DiaryServer.PORT);
-        } else {
-            System.err.println(USAGE);
+        Options options = new Options();
+        options.addOption(Option.builder("p")
+                .longOpt("port")
+                .numberOfArgs(1)
+                .type(Integer.class)
+                .desc("Port number for the daemon")
+                .build());
+        options.addOption(Option.builder("d")
+                .longOpt("diary")
+                .numberOfArgs(1)
+                .type(String.class)
+                .desc("IP address of the diary server")
+                .build());
+        options.addOption(Option.builder("h")
+                .longOpt("help")
+                .hasArg(false)
+                .desc("Show help")
+                .build());
+
+        CommandLineParser parser = new DefaultParser();
+        HelpFormatter formatter = new HelpFormatter();
+        CommandLine cmd = null;
+
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+            formatter.printHelp(USAGE, options);
             System.exit(1);
             return;
         }
-        final Client client = new Client(diaryHost);
 
-        if (args.length == 1) {
-            // en mode serveur, on ne peut que servir des fichiers
-            client.fetchDiary();
-            client.daemon.start();
-        } else {
-            // en mode avec interface graphique
-            client.daemon.start();
-            SwingUtilities.invokeLater(() -> {
-                MainWindow window = new MainWindow(client);
-                window.setVisible(true);
-            });
+        if (cmd.hasOption("h")) {
+            formatter.printHelp(USAGE, options);
+            System.exit(0);
+            return;
         }
+
+        int daemonPort = DEFAULT_DAEMON_PORT;
+        if (cmd.hasOption("p")) {
+            try {
+                daemonPort = cmd.getParsedOptionValue("p");
+            } catch (ParseException e) {
+                System.err.println("Invalid port number: " + cmd.getOptionValue("p"));
+                formatter.printHelp(USAGE, options);
+                System.exit(1);
+            }
+        }
+
+        Host diaryHost = new Host("localhost", DiaryServer.PORT);
+        if (cmd.hasOption("d")) {
+            String diaryIP = cmd.getOptionValue("d");
+            diaryHost = new Host(diaryIP, DiaryServer.PORT);
+        }
+
+        final Client client = new Client(diaryHost, daemonPort);
+        System.out.println("Client: port is " + client.getDaemonPort());
+        client.fetchDiary();
+        client.daemon.start();
+        // dans tous les cas on ouvre l'interface graphique
+        SwingUtilities.invokeLater(() -> {
+            MainWindow window = new MainWindow(client);
+            window.setVisible(true);
+        });
     }
 }

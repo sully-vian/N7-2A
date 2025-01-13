@@ -7,8 +7,9 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 
 import fr.n7.hagimule.Host;
+import fr.n7.hagimule.Utils;
 import fr.n7.hagimule.client.Client;
-import fr.n7.hagimule.diary.DuplicateFileNameException;
+import fr.n7.hagimule.diary.FileInfo;
 
 /**
  * Sur chaque client.
@@ -20,7 +21,6 @@ import fr.n7.hagimule.diary.DuplicateFileNameException;
 public class Daemon extends Thread {
 
     public static final String STORAGE_PATH = "storage/uploads/";
-    public static final int DAEMON_PORT = 2048;
 
     private final Host myHost;
     private ServerSocket serverSocket;
@@ -29,7 +29,8 @@ public class Daemon extends Thread {
     public Daemon(Client client) {
         super();
         this.client = client;
-        this.myHost = new Host("localhost", DAEMON_PORT);
+        this.myHost = new Host(Utils.getLocalIPAddress(), client.getDaemonPort());
+        System.out.println("Daemon: Created on " + this.myHost);
     }
 
     /** Ajoute les fichiers du dossier de stockage à l'annuaire */
@@ -45,11 +46,9 @@ public class Daemon extends Thread {
             String fileName = file.getName();
             long size = file.length();
             try {
-                this.client.getDiary().addFile(fileName, size, this.myHost);
+                FileInfo fileInfo = new FileInfo(fileName, size, this.myHost);
+                this.client.getDiary().addFileInfo(fileInfo, myHost);
                 addedFiles++;
-            } catch (DuplicateFileNameException e) {
-                System.err.println("Daemon: Diary already has \""
-                        + fileName + "\" with different size.");
             } catch (RemoteException e) {
                 System.err.println("Daemon: Could not add \"" + fileName + "\" to diary.");
             }
