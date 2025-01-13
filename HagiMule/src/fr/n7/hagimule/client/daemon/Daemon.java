@@ -37,7 +37,6 @@ public class Daemon extends Thread {
         super();
         this.client = client;
         this.myHost = new Host(Utils.getLocalIPAddress(), client.getDaemonPort());
-        System.out.println("Daemon: Created on " + this.myHost);
     }
 
     /** Ajoute les fichiers du dossier de stockage à l'annuaire */
@@ -105,13 +104,15 @@ public class Daemon extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Daemon: started on " + this.myHost);
+
+        // setup avec l'annuaire
         this.syncFiles();
         new Thread(this::watchFiles).start();
         new Thread(this::notifyDiary).start();
+
         try {
             this.serverSocket = new ServerSocket(this.myHost.getPort());
-            System.out.println("Daemon: started on port " + this.myHost.getPort());
-
             while (true) {
                 Socket clientSocket = this.serverSocket.accept();
                 Thread slave = new DaemonSlave(clientSocket);
@@ -128,7 +129,9 @@ public class Daemon extends Thread {
         try {
             while (true) {
                 Thread.sleep(1000);
-                this.client.getDiary().resetHostTimer(myHost);
+                if (this.client.isDiaryConnected()) {
+                    this.client.getDiary().resetHostTimer(myHost);
+                }
             }
         } catch (InterruptedException e) {
             System.err.println("Daemon: Error when sleeping.");

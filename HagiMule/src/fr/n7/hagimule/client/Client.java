@@ -1,5 +1,6 @@
 package fr.n7.hagimule.client;
 
+import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -82,15 +83,25 @@ public class Client {
             this.diary = (Diary) registry.lookup(DiaryServer.BINDING_NAME);
             System.out.println("Client: Connected to diary");
             this.daemon.syncFiles();
-        } catch (NotBoundException e) {
-            System.err.println("Client: Error when fetching diary: " + e.toString());
+        } catch (ConnectException e) {
+            System.err.println("Client: Could not connect to diary at " + diaryHostAddress + ":" + diaryHostPort);
         } catch (RemoteException e) {
+            System.err.println("Client: Error when fetching diary: " + e.toString());
+        } catch (NotBoundException e) {
             System.err.println("Client: Error when fetching diary: " + e.toString());
         }
     }
 
     public boolean isDiaryConnected() {
-        return this.diary != null;
+        if (this.diary == null) {
+            return false;
+        }
+        try {
+            this.diary.getContents();
+            return true;
+        } catch (RemoteException e) {
+            return false;
+        }
     }
 
     public static void main(String[] args) throws RemoteException {
@@ -107,6 +118,11 @@ public class Client {
                 .numberOfArgs(1)
                 .type(String.class)
                 .desc("IP address of the diary server")
+                .build());
+        options.addOption(Option.builder("g")
+                .longOpt("gui")
+                .hasArg(false)
+                .desc("Run the client with a GUI")
                 .build());
         options.addOption(Option.builder("h")
                 .longOpt("help")
@@ -150,14 +166,30 @@ public class Client {
             diaryHost = new Host(diaryIP, DiaryServer.PORT);
         }
 
+        boolean guiMode = false;
+        if (cmd.hasOption("gui")) {
+            guiMode = true;
+        }
+
         final Client client = new Client(diaryHost, daemonPort);
         System.out.println("Client: port is " + client.getDaemonPort());
-        client.fetchDiary();
+        new Thread(() -> {
+            while (!client.isDiaryConnected()) {
+                System.out.println("Client: Diary not connected, retrying in 10 seconds.");
+                try {
+                    Thread.sleep(10_000);
+                    client.fetchDiary();
+                } catch (InterruptedException e) {
+                    System.err.println("Client: Interrupted while waiting for diary to connect");
+                }
+            }
+        }).start();
         client.daemon.start();
-        // dans tous les cas on ouvre l'interface graphique
-        SwingUtilities.invokeLater(() -> {
-            MainWindow window = new MainWindow(client);
-            window.setVisible(true);
-        });
+        if (guiMode) {
+            SwingUtilities.invokeLater(() -> {
+                MainWindow window = new MainWindow(client);
+                window.setVisible(true);
+            });
+        }
     }
 }
