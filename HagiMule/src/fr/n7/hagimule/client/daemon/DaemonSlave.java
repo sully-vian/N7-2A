@@ -10,12 +10,12 @@ import java.io.RandomAccessFile;
 import java.net.Socket;
 import java.net.SocketException;
 
-import fr.n7.hagimule.client.downloader.DownloadTask;
-
 /**
  * Traite une requête de téléchargement d'un fragment.
  */
 public class DaemonSlave extends Thread {
+
+    public static final int MAX_BUFFER_SIZE = 1024 * 16; // bytes
 
     private Socket clientSocket;
     private String fileName;
@@ -32,13 +32,33 @@ public class DaemonSlave extends Thread {
                 InputStream is = this.clientSocket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is)) {
 
-            // récupérer le nom du fichier
+            // lire le nom du fichier
             this.fileName = ois.readUTF();
             File file = new File(Daemon.STORAGE_PATH + this.fileName);
+            // puis le début du fragment
+            int fragmentStart = ois.readInt();
+            // et enfin la longueur du fragment
+            int fragmentLength = ois.readInt();
 
             // créer un flux de lecture
             try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
-                sendFragment(oos, ois, raf);
+                // envoyer le fichier par morceaux d'au plus MAX_BUFFER_SIZE octets
+                raf.seek(fragmentStart); // positionner le curseur
+                int totalBytesRead = 0;
+                // lire les morceaux
+                while (totalBytesRead < fragmentLength) {
+                    int remainingBytes = fragmentLength - totalBytesRead;
+                    int toReadNow = Math.min(remainingBytes, MAX_BUFFER_SIZE);
+                    byte[] buffer = new byte[toReadNow];
+                    int numBytesRead = raf.read(buffer); // lire dans le fichier
+                    if (numBytesRead < 0) {
+                        throw new IOException("Could not read enough bytes from file.");
+                    }
+                    oos.write(buffer, 0, numBytesRead); // écrire dans le flux
+                    oos.flush();
+                    totalBytesRead += numBytesRead;
+                }
+                System.out.println("DaemonSlave: finished writing");
             }
 
         } catch (SocketException e) {
@@ -48,34 +68,5 @@ public class DaemonSlave extends Thread {
             System.err.println("DaemonSlave: Error while processing request.");
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Envoie un fragment du fichier demandé.
-     *
-     * @param oos le flux de sortie.
-     * @param ois le flux d'entrée.
-     * @param raf le fichier à lire.
-     * @throws IOException
-     */
-    private void sendFragment(ObjectOutputStream oos, ObjectInputStream ois, RandomAccessFile raf) throws IOException {
-        long start = ois.readLong();
-
-        // calculer et transmettre la taille du prochain fragment
-        long len = Math.min(DownloadTask.MAX_FRAGMENT_SIZE, raf.length() - start);
-        if (len <= 0 || len > DownloadTask.MAX_FRAGMENT_SIZE) {
-            throw new IOException("Invalid fragment length: " + len);
-        }
-        oos.writeLong(len);
-        oos.flush();
-
-        raf.seek(start); // positionner le curseur
-        byte[] buffer = new byte[(int) len];
-        int numBytesRead = raf.read(buffer); // lire les octets voulus dans le fichier
-        if (numBytesRead < len) {
-            throw new IOException("Could not read enough bytes from file.");
-        }
-        oos.write(buffer, 0, numBytesRead); // écrire les octets dans le flux
-        oos.flush();
     }
 }
