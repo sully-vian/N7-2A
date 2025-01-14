@@ -80,19 +80,17 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
 
     @Override
     public synchronized void updateHostTimers() throws RemoteException {
-        // synchronized (this.hostTimers) {
-            Set<Host> hosts = new HashSet<>(this.hostTimers.keySet());
-            for (Host host : hosts) {
-                int timeLeft = this.hostTimers.get(host);
-                if (timeLeft == 0) {
-                    this.hostTimers.remove(host);
-                    this.removeHost(host);
-                    System.out.println("Diary: Lost host " + host);
-                } else {
-                    this.hostTimers.put(host, timeLeft - 1);
-                }
+        Set<Host> hosts = new HashSet<>(this.hostTimers.keySet());
+        for (Host host : hosts) {
+            int timeLeft = this.hostTimers.get(host);
+            if (timeLeft == 0) {
+                this.hostTimers.remove(host);
+                this.removeHost(host);
+                System.out.println("Diary: Lost host " + host);
+            } else {
+                this.hostTimers.put(host, timeLeft - 1);
             }
-        // }
+        }
     }
 
 }
