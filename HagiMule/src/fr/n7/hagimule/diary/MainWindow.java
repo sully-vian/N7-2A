@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -45,7 +46,8 @@ public class MainWindow extends JFrame {
         try {
             // la liste crée est immutable, donc pas de tri possible
             final List<String> currentContents = this.diary.getContents().values()
-                    .stream().map(FileInfo::toString).toList();
+                    // collect parce que toList est depuis Java 16
+                    .stream().map(FileInfo::toString).collect(Collectors.toList());
 
             // ajouter les nouveaux fichiers
             for (String fileString : currentContents) {
