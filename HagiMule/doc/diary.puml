@@ -1,0 +1,32 @@
+@startuml diary
+
+skinparam ClassBackgroundColor BUSINESS
+skinparam ClassBorderColor DarkRed
+skinparam ClassBorderThickness 2
+skinparam ArrowColor DarkRed
+skinparam RoundCorner 0
+skinparam Shadowing true
+skinparam ArrowFontStyle italic
+
+package hagimule {
+    package diary {
+        interface Diary {
+            **getContents**() : Map<String, FileInfo>
+        }
+        interface ServerDiary extends Diary {
+            **updateHostTimers**() : void
+        }
+        class DiaryImpl implements ServerDiary, hagimule.client.ClientDiary
+    }
+
+    package client {
+        interface ClientDiary extends hagimule.diary.Diary {
+            **addFileInfo**(FileInfo, Host) : void
+            **removeHost**(Host) : void
+            **getFileInfo**(String) : FileInfo
+            **resetHostTimer**(Host) : void
+        }
+    }
+}
+
+@enduml
