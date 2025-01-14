@@ -9,3 +9,9 @@ if [ $? -ne 0 ]; then
 fi
 
 echo -e "\e[32mBuild successful.\e[0m"
+
+mkdir -p storage/downloads
+mkdir -p storage/uploads
+
+echo -e "\e[32mCreated storage directories.\e[0m"
+

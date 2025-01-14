@@ -174,6 +174,7 @@ public class Client {
         final Client client = new Client(diaryHost, daemonPort);
         System.out.println("Client: port is " + client.getDaemonPort());
         new Thread(() -> {
+            client.fetchDiary();
             while (!client.isDiaryConnected()) {
                 System.out.println("Client: Diary not connected, retrying in 10 seconds.");
                 try {

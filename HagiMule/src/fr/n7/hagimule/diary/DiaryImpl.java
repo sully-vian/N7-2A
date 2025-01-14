@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,7 +27,7 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public Set<String> getFileNames() throws RemoteException {
+    public synchronized Set<String> getFileNames() throws RemoteException {
         return new HashSet<>(this.infoMap.keySet());
     }
 
@@ -63,32 +64,35 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public FileInfo getFileInfo(String fileName) throws RemoteException {
+    public synchronized FileInfo getFileInfo(String fileName) throws RemoteException {
         return this.infoMap.get(fileName);
     }
 
     @Override
-    public Map<String, FileInfo> getContents() throws RemoteException {
+    public synchronized Map<String, FileInfo> getContents() throws RemoteException {
         return new HashMap<>(this.infoMap);
     }
 
     @Override
-    public void resetHostTimer(Host host) throws RemoteException {
+    public synchronized void resetHostTimer(Host host) throws RemoteException {
         this.hostTimers.put(host, DEATH_DELAY);
     }
 
     @Override
-    public void updateHostTimers() throws RemoteException {
-        for (Host host : this.hostTimers.keySet()) {
-            int timeLeft = this.hostTimers.get(host);
-            if (timeLeft == 0) {
-                this.hostTimers.remove(host);
-                this.removeHost(host);
-                System.out.println("Diary: Lost host " + host);
-            } else {
-                this.hostTimers.put(host, timeLeft - 1);
+    public synchronized void updateHostTimers() throws RemoteException {
+        // synchronized (this.hostTimers) {
+            Set<Host> hosts = new HashSet<>(this.hostTimers.keySet());
+            for (Host host : hosts) {
+                int timeLeft = this.hostTimers.get(host);
+                if (timeLeft == 0) {
+                    this.hostTimers.remove(host);
+                    this.removeHost(host);
+                    System.out.println("Diary: Lost host " + host);
+                } else {
+                    this.hostTimers.put(host, timeLeft - 1);
+                }
             }
-        }
+        // }
     }
 
 }

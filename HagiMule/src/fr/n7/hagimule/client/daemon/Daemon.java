@@ -107,7 +107,6 @@ public class Daemon extends Thread {
         System.out.println("Daemon: started on " + this.myHost);
 
         // setup avec l'annuaire
-        this.syncFiles();
         new Thread(this::watchFiles).start();
         new Thread(this::notifyDiary).start();
 
