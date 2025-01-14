@@ -13,7 +13,7 @@ import fr.n7.hagimule.client.Client;
 import fr.n7.hagimule.diary.DiaryServer;
 
 /**
- * Panneau d'affichage pour se connecter à un {@link Diary}.
+ * Panneau d'affichage pour se connecter à un {@link ServerDiary}.
  */
 public class DiaryPanel extends JPanel {
 

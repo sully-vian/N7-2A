@@ -17,12 +17,12 @@ import javax.swing.Timer;
 public class MainWindow extends JFrame {
 
     public static final int REFRESH_DELAY = 100; // ms
-    private final Diary diary;
+    private final ServerDiary diary;
     private DefaultListModel<String> fileListModel;
     private JList<String> fileList;
     private Set<String> previousFiles;
 
-    public MainWindow(Diary diary) {
+    public MainWindow(ServerDiary diary) {
         super("HagiMule Diary");
         this.diary = diary;
         this.fileListModel = new DefaultListModel<>();

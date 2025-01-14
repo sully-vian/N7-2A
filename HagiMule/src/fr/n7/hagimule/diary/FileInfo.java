@@ -52,7 +52,7 @@ public class FileInfo implements Serializable {
     }
 
     public String toString() {
-        return this.name + " (" + this.size / 1024 + " Ko):"
-                + this.hosts.size() + " hosts.";
+        return this.name + " (" + this.size / 1024 + " Ko) : "
+                + this.hosts.size() + (this.hosts.size() > 1 ? " hosts" : " host");
     }
 }

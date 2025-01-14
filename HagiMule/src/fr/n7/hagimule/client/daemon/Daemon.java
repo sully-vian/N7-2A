@@ -39,43 +39,6 @@ public class Daemon extends Thread {
         this.myHost = new Host(Utils.getLocalIPAddress(), client.getDaemonPort());
     }
 
-    /** Ajoute les fichiers du dossier de stockage à l'annuaire */
-    public void postFiles() {
-        if (this.client.getDiary() == null) {
-            System.err.println("Daemon: Diary not connected, cannot add files.");
-            return;
-        }
-        File[] files = new File(STORAGE_PATH).listFiles();
-        int addedFiles = 0;
-
-        for (File file : files) {
-            String fileName = file.getName();
-            long size = file.length();
-            try {
-                FileInfo fileInfo = new FileInfo(fileName, size, this.myHost);
-                this.client.getDiary().addFileInfo(fileInfo, myHost);
-                addedFiles++;
-            } catch (RemoteException e) {
-                System.err.println("Daemon: Could not add \"" + fileName + "\" to diary.");
-            }
-        }
-        System.out.println("Daemon: Posted " + addedFiles + "/" + files.length + " files to diary");
-    }
-
-    /** Retire l'hôte de l'annuaire */
-    public void removeHost() {
-        if (this.client.getDiary() == null) {
-            System.err.println("Daemon: Diary not connected, cannot remove host.");
-            return;
-        }
-        try {
-            this.client.getDiary().removeHost(myHost);
-            System.out.println("Daemon: Removed host from diary.");
-        } catch (RemoteException e) {
-            System.err.println("Daemon: Could not remove host from diary.");
-        }
-    }
-
     public void syncFiles() {
         if (this.client.getDiary() == null) {
             System.err.println("Daemon: Diary not connected, cannot sync files.");
@@ -110,20 +73,26 @@ public class Daemon extends Thread {
         new Thread(this::watchFiles).start();
         new Thread(this::notifyDiary).start();
 
+        int acceptedConnections = 0;
+
         try {
             this.serverSocket = new ServerSocket(this.myHost.getPort());
             while (true) {
                 Socket clientSocket = this.serverSocket.accept();
+                acceptedConnections++;
                 Thread slave = new DaemonSlave(clientSocket);
-                System.out.println("Daemon: Accepted connection from " + clientSocket.getRemoteSocketAddress());
+                System.out.println("Daemon: Accepted connection #" + acceptedConnections);
                 slave.start();
             }
         } catch (IOException e) {
-            System.err.println("Daemon: Error in server socket.");
+            System.err.println("Daemon: Error in server socket in connection #" + acceptedConnections);
             e.printStackTrace();
         }
     }
 
+    /**
+     * Notifie l'annuaire pour signaler que le démon est toujours actif.
+     */
     private void notifyDiary() {
         try {
             while (true) {
@@ -139,6 +108,10 @@ public class Daemon extends Thread {
         }
     }
 
+    /**
+     * Surveille les fichiers du répertoire {@link #STORAGE_PATH} pour les
+     * synchroniser avec l'annuaire en cas de modification.
+     */
     private void watchFiles() {
         try {
             WatchService watcher = FileSystems.getDefault().newWatchService();

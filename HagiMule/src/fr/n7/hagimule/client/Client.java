@@ -20,7 +20,6 @@ import fr.n7.hagimule.Host;
 import fr.n7.hagimule.client.daemon.Daemon;
 import fr.n7.hagimule.client.downloader.Downloader;
 import fr.n7.hagimule.client.gui.MainWindow;
-import fr.n7.hagimule.diary.Diary;
 import fr.n7.hagimule.diary.DiaryServer;
 
 /**
@@ -34,7 +33,7 @@ public class Client {
 
     private Host diaryHost;
     private int daemonPort;
-    private Diary diary;
+    private ClientDiary diary;
     private Downloader downloader;
     private Daemon daemon;
 
@@ -63,7 +62,7 @@ public class Client {
         return this.daemon;
     }
 
-    public Diary getDiary() {
+    public ClientDiary getDiary() {
         return this.diary;
     }
 
@@ -80,7 +79,7 @@ public class Client {
         int diaryHostPort = this.diaryHost.getPort();
         try {
             Registry registry = LocateRegistry.getRegistry(diaryHostAddress, diaryHostPort);
-            this.diary = (Diary) registry.lookup(DiaryServer.BINDING_NAME);
+            this.diary = (ClientDiary) registry.lookup(DiaryServer.BINDING_NAME);
             System.out.println("Client: Connected to diary");
             this.daemon.syncFiles();
         } catch (ConnectException e) {

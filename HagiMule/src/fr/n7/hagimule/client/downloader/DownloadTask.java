@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import fr.n7.hagimule.Host;
-import fr.n7.hagimule.diary.Diary;
+import fr.n7.hagimule.client.ClientDiary;
 
 /**
  * Classe responsable du téléchargement d'un fichier.
@@ -108,7 +108,7 @@ public class DownloadTask extends Thread {
      */
     public void fetchHosts() {
         try {
-            Diary diary = this.downloader.getClient().getDiary();
+            ClientDiary diary = this.downloader.getClient().getDiary();
             this.hosts = diary.getFileInfo(this.fileName).getHosts().toArray(new Host[0]);
         } catch (Exception e) {
             System.err.println("DownloadTask: Error when fetching the hosts for "
@@ -121,7 +121,7 @@ public class DownloadTask extends Thread {
      */
     public void fetchSize() {
         try {
-            Diary diary = this.downloader.getClient().getDiary();
+            ClientDiary diary = this.downloader.getClient().getDiary();
             this.fileSize = diary.getFileInfo(this.fileName).getSize();
         } catch (RemoteException e) {
             System.err.println("DownloadTask: Error when fetching "

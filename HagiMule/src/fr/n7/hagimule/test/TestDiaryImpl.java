@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import fr.n7.hagimule.Host;
 import fr.n7.hagimule.diary.DiaryImpl;
-import fr.n7.hagimule.diary.DuplicateFileNameException;
 
 public class TestDiaryImpl {
 

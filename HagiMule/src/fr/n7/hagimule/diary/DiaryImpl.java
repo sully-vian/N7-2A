@@ -4,18 +4,25 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import fr.n7.hagimule.Host;
+import fr.n7.hagimule.client.ClientDiary;
 
 /**
- * Implémentation de l'annuaire.
+ * Implémentation commune de l'annuaire.
+ * <p>
+ * Ses méthodes sont spécifiées et documentées dans les interfaces
+ * {@link ClientDiary} et {@link ServerDiary} en fonction de leur usage (client
+ * ou serveur).
  */
-public class DiaryImpl extends UnicastRemoteObject implements Diary {
+public class DiaryImpl extends UnicastRemoteObject implements ServerDiary, ClientDiary {
 
-    private static final int DEATH_DELAY = 3; // 3 secondes
+    /**
+     * Durée de vie d'un hôte sans nouvelles (en secondes).
+     */
+    private static final int DEATH_DELAY = 3;
 
     private Map<String, FileInfo> infoMap;
     private Map<Host, Integer> hostTimers;
@@ -42,17 +49,6 @@ public class DiaryImpl extends UnicastRemoteObject implements Diary {
     }
 
     @Override
-    public synchronized void removeHost(String fileName, Host host) throws RemoteException {
-        FileInfo fileInfo = this.infoMap.get(fileName);
-        if (fileInfo != null) {
-            fileInfo.removeHost(host);
-            if (fileInfo.getHosts().isEmpty()) {
-                this.infoMap.remove(fileName);
-            }
-        }
-    }
-
-    @Override // TODO: à retirer
     public synchronized void removeHost(Host host) throws RemoteException {
         Map<String, FileInfo> infoMapCopy = this.getContents();
         for (FileInfo fileInfo : infoMapCopy.values()) {

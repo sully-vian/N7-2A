@@ -86,7 +86,7 @@ public class DiaryServer {
         }
 
         try {
-            DiaryImpl diary = new DiaryImpl();
+            ServerDiary diary = new DiaryImpl();
             registerDiary(diary);
             if (guiMode) {
                 SwingUtilities.invokeLater(() -> {
