@@ -1,4 +1,4 @@
-@startuml fr.n7.hagimule
+@startuml archi
 
 skinparam ClassBackgroundColor BUSINESS
 skinparam ClassBorderColor DarkRed
@@ -8,7 +8,7 @@ skinparam RoundCorner 0
 skinparam Shadowing true
 skinparam ArrowFontStyle italic
 
-' left to right direction
+left to right direction
 
 package hagimule {
 

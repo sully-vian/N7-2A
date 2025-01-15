@@ -27,9 +27,11 @@ public class DownloaderSlave extends Thread {
     /**
      * Crée un DownloaderSlave.
      *
-     * @param socket        La socket à utiliser pour la communication avec l'hôte.
-     * @param fileName      Le nom du fichier dont on veut un fragment.
-     * @param fragmentStart Le début du fragment à télécharger.
+     * @param task           La tâche de téléchargement associée.
+     * @param host           L'hôte sur lequel télécharger le fragment.
+     * @param fileName       Le nom du fichier dont on veut un fragment.
+     * @param fragmentStart  Le début du fragment à télécharger.
+     * @param fragmentLength La longueur du fragment à télécharger (en octets).
      */
     public DownloaderSlave(DownloadTask task, Host host, String fileName, int fragmentStart, int fragmentLength) {
         super("DownloaderSlave");
