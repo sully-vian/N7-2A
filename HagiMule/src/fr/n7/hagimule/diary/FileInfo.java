@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import fr.n7.hagimule.Host;
+import fr.n7.hagimule.Utils;
 
 /**
  * Représente un fichier.
@@ -13,29 +14,29 @@ import fr.n7.hagimule.Host;
 public class FileInfo implements Serializable {
 
     private String name;
-    private long size; // en octets
+    private int size; // en octets
     private Set<Host> hosts;
 
-    public FileInfo(String name, long size) {
+    public FileInfo(String name, int size) {
         this.name = name;
         this.size = size;
         this.hosts = new HashSet<>();
     }
 
-    public FileInfo(String name, long size, Host host) {
+    public FileInfo(String name, int size, Host host) {
         this(name, size);
         this.hosts.add(host);
     }
 
     public FileInfo(File file) {
-        this(file.getName(), file.length());
+        this(file.getName(), (int) file.length());
     }
 
     public String getName() {
         return name;
     }
 
-    public long getSize() {
+    public int getSize() {
         return size;
     }
 
@@ -52,7 +53,7 @@ public class FileInfo implements Serializable {
     }
 
     public String toString() {
-        return this.name + " (" + this.size / 1024 + " Ko) : "
-                + this.hosts.size() + (this.hosts.size() > 1 ? " hosts" : " host");
+        return this.name + " (" + Utils.byteToUnit(size) + ") : " +
+                this.hosts.size() + (this.hosts.size() > 1 ? " hosts" : " host");
     }
 }

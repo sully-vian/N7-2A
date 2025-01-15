@@ -11,20 +11,21 @@ skinparam ArrowFontStyle italic
 package hagimule {
     package diary {
         interface Diary {
-            **getContents**() : Map<String, FileInfo>
+            getContents() : Map<String, FileInfo>
         }
         interface ServerDiary extends Diary {
-            **updateHostTimers**() : void
+            updateHostTimers() : void
         }
         class DiaryImpl implements ServerDiary, hagimule.client.ClientDiary
     }
 
     package client {
         interface ClientDiary extends hagimule.diary.Diary {
-            **addFileInfo**(FileInfo, Host) : void
-            **removeHost**(Host) : void
-            **getFileInfo**(String) : FileInfo
-            **resetHostTimer**(Host) : void
+            getFileNames() : Set<String>
+            addFileInfo(FileInfo, Host) : void
+            removeHost(Host) : void
+            getFileInfo(String) : FileInfo
+            resetHostTimer(Host) : void
         }
     }
 }

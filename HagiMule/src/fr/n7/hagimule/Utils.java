@@ -5,14 +5,37 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+/**
+ * Classe utilitaire.
+ */
 public class Utils {
+
+    /**
+     * Convertit un nombre d'octets en une chaîne de caractères plus lisible.
+     *
+     * @param bytes le nombre d'octets
+     * @return une chaîne de caractères représentant la taille en bytes, KB, MB ou
+     *         GB.
+     */
+    public static String byteToUnit(int bytes) {
+        if (bytes < 1024) {
+            return bytes + " B";
+        } else if (bytes < 1024 * 1024) {
+            return String.format("%.2f KB", bytes / 1024.0);
+        } else if (bytes < 1024 * 1024 * 1024) {
+            return String.format("%.2f MB", bytes / (1024.0 * 1024));
+        } else {
+            return String.format("%.2f GB", bytes / (1024.0 * 1024 * 1024));
+        }
+    }
 
     /**
      * Récupère l'adresse IP locale de la machine.
      * <p>
      * Cette méthode itère sur les interfaces réseau de la machine et leur IP
      * associée pour trouver la première adresse IPv4 non loopback.
-     * Si aucune telle adresse n'est trouvée, la méthode retourne <code>localhost</code>.
+     * Si aucune telle adresse n'est trouvée, la méthode retourne
+     * <code>localhost</code>.
      * </p>
      *
      * @return l'adresse IP locale de la machine.

@@ -8,6 +8,12 @@ L'idéal serait que les fragments ne soient pas répartis initialement, mais qu'
 
 Pour ce genre de concurrence, il faut utiliser un ThreadPoolExecutor.
 
+## Idée 2
+
+DownloadTask demande les hôtes et coupe le fichier en autant de blocs qu'il y a d'hôtes. Chaque bloc est demandé à un hôte différent.
+
+Chaque DownloaderSlave est un thread qui demande le fragment par bouts de 1024 octets (ou plus).
+
 ## Ressources
 
 [site Hagimont](https://sd-160040.dedibox.fr/hagimont/resources-N7/teaching-N7.html)

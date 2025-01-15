@@ -73,20 +73,16 @@ public class Daemon extends Thread {
         new Thread(this::watchFiles).start();
         new Thread(this::notifyDiary).start();
 
-        int acceptedConnections = 0;
-
         try {
             this.serverSocket = new ServerSocket(this.myHost.getPort());
             while (true) {
                 Socket clientSocket = this.serverSocket.accept();
-                acceptedConnections++;
                 Thread slave = new DaemonSlave(clientSocket);
-                System.out.println("Daemon: Accepted connection #" + acceptedConnections);
+                System.out.println("Daemon: Accepted connection from " + clientSocket.getInetAddress());
                 slave.start();
             }
         } catch (IOException e) {
-            System.err.println("Daemon: Error in server socket in connection #" + acceptedConnections);
-            e.printStackTrace();
+            System.err.println("Daemon: Error when accepting connections.");
         }
     }
 

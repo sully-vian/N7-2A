@@ -3,3 +3,16 @@ bin/
 *.vscode
 *.ser
 storage/
+
+*.tar.gz
+
+# LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.nlo
