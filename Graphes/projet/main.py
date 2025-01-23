@@ -206,7 +206,9 @@ def plotConnectedComponents(points:list, reach:int):
 
 points = readCSV("./topology_low.csv")
 
-plotConnectedComponents(points, 20_000)
-plotConnectedComponents(points, 40_000)
-plotConnectedComponents(points, 60_000)
+plotCliques(points, 20_000)
+print(len(getCliques(points, 20000)))
+# plotConnectedComponents(points, 20_000)
+# plotConnectedComponents(points, 40_000)
+# plotConnectedComponents(points, 60_000)
 plt.show()
