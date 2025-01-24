@@ -2,6 +2,7 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+from itertools import combinations
 
 def readCSV(filename: str):
     with open(filename, newline='') as csvfile:
@@ -106,17 +107,19 @@ def plotClusteringDegreeHist(points:list, reach:int):
 
 def getCliques(points: list, reach: int):
     G = getGraph(points, reach)
-    allCliques = list(nx.find_cliques(G))
-    return allCliques
+    return list(nx.find_cliques(G))
+
+def getNumberCliques(points: list, reach: int):
+    G = getGraph(points, reach)
+    return sum(1 for c in nx.find_cliques(G))
 
 def plotCliques(points:list, reach:int):
     G = getGraph(points, reach)
     pos=nx.get_node_attributes(G, 'pos')
-    #plotGraph(points, reach)
-
     cliques = getCliques(points, reach)
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
+
     # colormap that streatches from 0 to len(cliques)
     colors = plt.get_cmap('hsv', len(cliques))
     for k in range(len(cliques)):
@@ -124,27 +127,57 @@ def plotCliques(points:list, reach:int):
         if len(clique) == 1:
             continue
         elif len(clique) == 2:
-            
-
-        for i in clique:
-            for j in clique:
-                if (i==j):
-                    continue
-                xi = points[i][0]
-                yi = points[i][1]
-                zi = points[i][2]
-                xj = points[j][0]
-                yj = points[j][1]
-                zj = points[j][2]
-                ax.plot([xi, xj], [yi, yj], [zi, zj], color=colors(k))
+            edge_xyz = np.array([pos[clique[0]], pos[clique[1]]])
+            ax.plot(*edge_xyz.T, color=colors(k))
+        else:
+            combinaison = combinations(clique, 2)
+            edge_xyz = np.array([(pos[u], pos[v]) for u,v in combinaison])
+            for vizedge in edge_xyz:
+                ax.plot(*vizedge.T, color=colors(k))
+        
     xs = [point[0] for point in points]
     ys = [point[1] for point in points]
     zs = [point[2] for point in points]
     ax.scatter(xs, ys, zs, c='gray')
 
-points = readCSV("./topology_low.csv")
-plotCliques(points, 20_000)
-plotGraph(points, 20000)
-print(getCliques(points, 20_000))
+def getConnectedComponents(points: list, reach: int):
+    G = getGraph(points, reach)
+    return nx.connected_components(G)
 
+def getNumberConnectedCompononets(points: list, reach: int):
+    G = getGraph(points, reach)
+    return nx.number_connected_components(G)
+
+def plotConnectedCompotents(points: list, reach: int):
+    G = getGraph(points, reach)
+    pos=nx.get_node_attributes(G, 'pos')
+    connectedComponents = getConnectedComponents(points, reach)
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    # colormap that streatches from 0 to len(cliques)
+    colors = plt.get_cmap('hsv', getNumberConnectedCompononets(points, reach))
+    k=0
+    for component in connectedComponents:
+        if len(component) == 1:
+            continue
+        else:
+            combinaison = combinations(component, 2)
+            edge_xyz = np.array([(pos[u], pos[v]) for u,v in combinaison if (u,v) in G.edges()])
+            for vizedge in edge_xyz:
+                ax.plot(*vizedge.T, color=colors(k))
+        k += 1
+    print ("k =", k)
+    xs = [point[0] for point in points]
+    ys = [point[1] for point in points]
+    zs = [point[2] for point in points]
+    ax.scatter(xs, ys, zs, c='gray')
+
+# def getShortestPath(points: list, reach:int):
+#     G = getGraph(points, reach)
+#     return 
+
+points = readCSV("./topology_low.csv")
+print(getNumberConnectedCompononets(points, 20_000))
+plotConnectedCompotents(points, 20_000)
 plt.show()
