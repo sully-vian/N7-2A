@@ -2,6 +2,7 @@ import networkx as nx
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import random
 from itertools import combinations
 
 def readCSV(filename: str):
@@ -25,7 +26,7 @@ def plotPoints(points: list):
     ax.scatter(xs, ys, zs)
 
 
-def getGraph(points: list, reach: int):
+def getGraph(points: list, reach: int) -> nx.Graph:
     G = nx.Graph()
     for i in range(len(points)):
         xi = points[i][0]
@@ -43,8 +44,7 @@ def getGraph(points: list, reach: int):
                 G.add_edge(i,j)
     return G
 
-def plotGraph(points: list, reach: int):
-    G = getGraph(points, reach)
+def plotGraph(G : nx.Graph):
     pos=nx.get_node_attributes(G, 'pos')
     node_xyz = np.array([pos[n] for n in G.nodes()])
     edge_xyz = np.array([(pos[u], pos[v]) for u,v in G.edges()])
@@ -59,18 +59,16 @@ def plotGraph(points: list, reach: int):
         ax.plot(*vizedge.T, color="tab:gray")
 
 
-def getDegrees(points:list, reach:int):
-    G = getGraph(points, reach)
+def getDegrees(G : nx.Graph) -> list:
     degreesPerNode=list(G.degree([i for i in range(len(G.nodes))]))
     return [v for _,v in degreesPerNode]
 
-def getAvgDegree(points:list, reach:int):
-    degrees = getDegrees(points,reach)
-
+def getAvgDegree(G : nx.Graph) -> int:
+    degrees = getDegrees(G)
     return sum(degrees) / len(degrees)
 
-def plotDegrees(points:list, reach:int):
-    degrees = getDegrees(points, reach)
+def plotDegrees(G : nx.Graph):
+    degrees = getDegrees(G)
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     xs = [point[0] for point in points]
@@ -78,20 +76,19 @@ def plotDegrees(points:list, reach:int):
     zs = [point[2] for point in points]
     ax.scatter(xs, ys, zs, c=degrees, cmap='jet')
 
-def plotDegreeHist(points:list, reach:int):
-    degrees = getDegrees(points, reach)
+def plotDegreeHist(G : nx.Graph):
+    degrees = getDegrees(G)
     n_bins = 10
     plt.figure()
     plt.hist(degrees, bins=n_bins)
 
-def getLocalClusteringDegrees(points:list, reach: int):
-    G = getGraph(points, reach)
-    d = getDegrees(points, reach)
+def getLocalClusteringDegrees(G : nx.Graph) -> list:
+    d = getDegrees(G)
     numTriangles = nx.triangles(G)
     return [numTriangles[i] / (d[i]*(d[i]-1) / 2) if d[i] > 1 else 0 for i in range(len(G.nodes()))]
 
-def plotClusteringDegrees(points:list, reach:int):
-    clustDeg = getLocalClusteringDegrees(points, reach)
+def plotClusteringDegrees(G : nx.Graph):
+    clustDeg = getLocalClusteringDegrees(G)
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     xs = [point[0] for point in points]
@@ -99,39 +96,68 @@ def plotClusteringDegrees(points:list, reach:int):
     zs = [point[2] for point in points]
     ax.scatter(xs, ys, zs, c=clustDeg, cmap='jet')
 
-def plotClusteringDegreeHist(points:list, reach:int):
-    clusteringDegrees = getLocalClusteringDegrees(points, reach)
+def plotClusteringDegreeHist(G : nx.Graph):
+    clusteringDegrees = getLocalClusteringDegrees(G)
     n_bins = 10
     plt.figure()
     plt.hist(clusteringDegrees, bins=n_bins)
 
-def getCliques(points: list, reach: int):
-    G = getGraph(points, reach)
+def getCliques(G : nx.Graph) -> list:
     return list(nx.find_cliques(G))
 
-def getNumberCliques(points: list, reach: int):
-    G = getGraph(points, reach)
-    return sum(1 for c in nx.find_cliques(G))
+def getNumberCliques(G : nx.Graph) -> int:
+    return len(getCliques(G))
 
-def plotCliques(points:list, reach:int):
-    G = getGraph(points, reach)
+def plotCliques(G : nx.Graph):
     pos=nx.get_node_attributes(G, 'pos')
-    cliques = getCliques(points, reach)
+    cliques = getCliques(G)
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
-
+    nbCliques = getNumberCliques(G)
     # colormap that streatches from 0 to len(cliques)
     colors = plt.get_cmap('hsv', len(cliques))
-    for k in range(len(cliques)):
+    colorsRandom = [colors(k) for k in range(nbCliques)]
+    random.shuffle(colorsRandom)
+    for k in range(nbCliques):
         clique = cliques[k]
         if len(clique) == 1:
             continue
         elif len(clique) == 2:
             edge_xyz = np.array([pos[clique[0]], pos[clique[1]]])
-            ax.plot(*edge_xyz.T, color=colors(k))
+            ax.plot(*edge_xyz.T, color=colorsRandom[k])
         else:
             combinaison = combinations(clique, 2)
-            edge_xyz = np.array([(pos[u], pos[v]) for u,v in combinaison])
+            edge_xyz = np.array([(pos[u], pos[v]) for u,v in combinaison  if (u,v) in G.edges()])
+            for vizedge in edge_xyz:
+                ax.plot(*vizedge.T, color=colorsRandom[k])
+    print(k)
+    xs = [point[0] for point in points]
+    ys = [point[1] for point in points]
+    zs = [point[2] for point in points]
+    ax.scatter(xs, ys, zs, c='gray')
+
+def getConnectedComponents(G : nx.Graph) -> list:
+    return list(nx.connected_components(G))
+
+def getNumberConnectedComponents(G : nx.Graph) -> int:
+    return nx.number_connected_components(G)
+
+def plotConnectedComponents(G : nx.Graph):
+    pos=nx.get_node_attributes(G, 'pos')
+    connectedComponents = getConnectedComponents(G)
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    # colormap that streatches from 0 to len(cliques)
+    colors = plt.get_cmap('hsv', getNumberConnectedComponents(G))
+    k=0
+    for component in connectedComponents:
+        k += 1
+        if len(component) == 1:
+            continue
+        else:
+            combinaison = combinations(component, 2)
+            edge_xyz = np.array([(pos[u], pos[v]) for u,v in combinaison if (u,v) in G.edges()])
             for vizedge in edge_xyz:
                 ax.plot(*vizedge.T, color=colors(k))
         
@@ -140,44 +166,14 @@ def plotCliques(points:list, reach:int):
     zs = [point[2] for point in points]
     ax.scatter(xs, ys, zs, c='gray')
 
-def getConnectedComponents(points: list, reach: int):
-    G = getGraph(points, reach)
-    return nx.connected_components(G)
+def getShortestPath(G : nx.Graph) -> dict:
+    return dict(nx.all_pairs_shortest_path(G))
 
-def getNumberConnectedCompononets(points: list, reach: int):
-    G = getGraph(points, reach)
-    return nx.number_connected_components(G)
-
-def plotConnectedCompotents(points: list, reach: int):
-    G = getGraph(points, reach)
-    pos=nx.get_node_attributes(G, 'pos')
-    connectedComponents = getConnectedComponents(points, reach)
-    fig = plt.figure()
-    ax = fig.add_subplot(projection='3d')
-
-    # colormap that streatches from 0 to len(cliques)
-    colors = plt.get_cmap('hsv', getNumberConnectedCompononets(points, reach))
-    k=0
-    for component in connectedComponents:
-        if len(component) == 1:
-            continue
-        else:
-            combinaison = combinations(component, 2)
-            edge_xyz = np.array([(pos[u], pos[v]) for u,v in combinaison if (u,v) in G.edges()])
-            for vizedge in edge_xyz:
-                ax.plot(*vizedge.T, color=colors(k))
-        k += 1
-    print ("k =", k)
-    xs = [point[0] for point in points]
-    ys = [point[1] for point in points]
-    zs = [point[2] for point in points]
-    ax.scatter(xs, ys, zs, c='gray')
-
-# def getShortestPath(points: list, reach:int):
-#     G = getGraph(points, reach)
-#     return 
 
 points = readCSV("./topology_low.csv")
-print(getNumberConnectedCompononets(points, 20_000))
-plotConnectedCompotents(points, 20_000)
+G = getGraph(points, 20_000)
+
+print(getShortestPath(G))
+#plotConnectedComponents(G)
+#plotConnectedCompotents(points, 20_000)
 plt.show()
