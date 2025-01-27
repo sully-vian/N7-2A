@@ -130,7 +130,6 @@ def plotCliques(G : nx.Graph):
             edge_xyz = np.array([(pos[u], pos[v]) for u,v in combinaison  if (u,v) in G.edges()])
             for vizedge in edge_xyz:
                 ax.plot(*vizedge.T, color=colorsRandom[k])
-    print(k)
     xs = [point[0] for point in points]
     ys = [point[1] for point in points]
     zs = [point[2] for point in points]
@@ -166,14 +165,60 @@ def plotConnectedComponents(G : nx.Graph):
     zs = [point[2] for point in points]
     ax.scatter(xs, ys, zs, c='gray')
 
+# un dictionnaire dont les cles est le point d'origine et l'élément est un dictionnaire dont les cles sont les points d'arrivés et la valeur est le plus court chemin entre ces deux points.
 def getShortestPath(G : nx.Graph) -> dict:
     return dict(nx.all_pairs_shortest_path(G))
 
+# un dictionnaire dont les cles est le point d'origine et l'élément est un dictionnaire dont les cles sont les points d'arrivés et la valeur est la longueur entre chaque couple de points
+def getLengthShortestPathDict(G : nx.Graph) -> dict:
+    return dict(nx.all_pairs_shortest_path_length(G))
+
+# une liste avec l'ensemble des longueurs des plus courts chemins
+def getLengthShortestPathList(G : nx.Graph) -> list:
+    shortestPathLength = getLengthShortestPathDict(G)
+    listShortestPathLength = []
+    for _, dict in shortestPathLength.items():
+        for _, length in dict.items():
+            listShortestPathLength.append(length)
+    return listShortestPathLength
+
+def plotShortestPathHist(G : nx.Graph):
+    listShortestPathLength = getLengthShortestPathList(G)
+    n_bins = 10
+    plt.figure()
+    plt.hist(listShortestPathLength, bins=n_bins)
+
+def getNumberShortestPath(G : nx.Graph) -> int:
+    return len(getLengthShortestPathList(G))
+
+def plotShortestPath(G : nx.Graph):
+    pos=nx.get_node_attributes(G, 'pos')
+    shortestPath = getShortestPath(G)
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+
+    maxLength =  max(getLengthShortestPathList(G))
+    colors = plt.get_cmap('hsv', maxLength)
+    for _,dict in shortestPath.items():
+        for _, path in dict.items():
+            length = len(path)
+            if length <= 1:
+                continue
+            else:
+                edge = np.array([(pos[path[k]], pos[path[k+1]]) for k in range(length-1)])
+                for vizedge in edge:
+                    ax.plot(*vizedge.T, color = colors(length))
+    xs = [point[0] for point in points]
+    ys = [point[1] for point in points]
+    zs = [point[2] for point in points]
+    ax.scatter(xs, ys, zs, c='gray')
 
 points = readCSV("./topology_low.csv")
 G = getGraph(points, 20_000)
 
-print(getShortestPath(G))
-#plotConnectedComponents(G)
+
+#print(getShortestPath(G)[2])
+
+plotShortestPath(G)
 #plotConnectedCompotents(points, 20_000)
 plt.show()
