@@ -1,2 +1,9 @@
 .venv/
 
+# LaTeX
+*.aux
+*.log
+*.nlo
+*.out
+*.synctex.gz
+*.toc
