@@ -10,3 +10,14 @@ _build/
 # python
 __pycache__/
 .pytest_cache/
+
+# LaTeX
+*.aux
+*.dvi
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.nlo
