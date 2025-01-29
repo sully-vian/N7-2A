@@ -283,7 +283,7 @@ def plotShortestPath(G: nx.Graph) -> None:
                 for vizedge in edge:
                     ax.plot(*vizedge.T, color=colors(length))
 
-    pos = nx.get_node_attributes(G, 'pos')
+    #pos = nx.get_node_attributes(G, 'pos')
     node_xyz = np.array([pos[n] for n in G.nodes()])
     ax.scatter(*node_xyz.T, c='gray')
     # retirer les labels
@@ -291,6 +291,86 @@ def plotShortestPath(G: nx.Graph) -> None:
     ax.set_yticklabels([])
     ax.set_zticklabels([])
 
+# partie 3
+
+def getWeightedGraph(points: list, reach: int) -> nx.Graph:
+    G = nx.Graph()
+    for i in range(len(points)):
+        xi = points[i][0]
+        yi = points[i][1]
+        zi = points[i][2]
+        G.add_node(i, pos=(xi, yi, zi))
+        for j in range(len(points)):
+            if i == j:
+                continue
+            xj = points[j][0]
+            yj = points[j][1]
+            zj = points[j][2]
+            dist2 = (xi-xj)**2 + (yi-yj)**2 + (zi-zj)**2
+            if dist2 <= reach**2:
+                G.add_edge(i, j, weight=dist2)
+    return G
+
+def getShortestWeightedPath(G: nx.Graph) -> dict:
+    """Un dictionnaire dont les cles est le point d'origine et l'élément est un dictionnaire dont les cles sont les points d'arrivés et la valeur est le plus court chemin entre ces deux points.
+    """
+    return dict(nx.all_pairs_dijkstra_path(G))
+
+
+def getLengthShortestWeightedPathDict(G: nx.Graph) -> dict:
+    """Un dictionnaire dont les cles est le point d'origine et l'élément est un dictionnaire dont les cles sont les points d'arrivés et la valeur est la longueur entre chaque couple de points
+    """
+    return dict(nx.all_pairs_dijkstra_path_length(G))
+
+
+def getLengthShortestWeightedPathList(G: nx.Graph) -> list:
+    """Une liste avec l'ensemble des longueurs des plus courts chemins"""
+    shortestPathLength = getLengthShortestWeightedPathDict(G)
+    listShortestPathLength = []
+    for _, dict in shortestPathLength.items():
+        for _, length in dict.items():
+            listShortestPathLength.append(length)
+    return listShortestPathLength
+
+
+def plotShortestWeightedPathHist(G: nx.Graph) -> None:
+    listShortestPathLength = getLengthShortestWeightedPathList(G)
+    n_bins = 10
+    fig = plt.figure()
+    # fig.suptitle("Distribution des longueurs des plus courts chemins")
+    plt.hist(listShortestPathLength, bins=n_bins)
+
+
+# def plotShortestWeightedPath(G: nx.Graph) -> None:
+#     pos = nx.get_node_attributes(G, 'pos')
+#     labels = nx.get_edge_attributes(G, 'weight')
+#     print(labels)
+#     shortestPath = getShortestWeightedPath(G)
+#     fig = plt.figure()
+#     # fig.suptitle("Plus courts chemins de satellites")
+#     ax = fig.add_subplot(projection='3d')
+#     ax.view_init(elev=40, azim=-130)
+
+#     # maxLength = max(getLengthShortestWeightedPathList(G))
+#     # colors = plt.get_cmap('hsv', maxLength)
+#     for _, dict in shortestPath.items():
+#         for _, path in dict.items():
+#             length = len(path)
+#             if length <= 1:
+#                 continue
+#             else:
+#                 label_edge = np.array()
+#                 edge = np.array([(pos[path[k]], pos[path[k+1]])
+#                                 for k in range(length-1)])
+#                 for vizedge in edge:
+#                     ax.plot(*vizedge.T, label="")
+
+#     node_xyz = np.array([pos[n] for n in G.nodes()])
+#     ax.scatter(*node_xyz.T, c='gray')
+#     # retirer les labels
+#     ax.set_xticklabels([])
+#     ax.set_yticklabels([])
+#     ax.set_zticklabels([])
 
 DATA_FOLDER: str = "./data/"
 IMG_FOLDER: str = "./doc/img/"
