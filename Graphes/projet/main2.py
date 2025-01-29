@@ -1,9 +1,13 @@
+import csv
+import os
+import random
+import time
+from itertools import combinations
+
+import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-import matplotlib.pyplot as plt
-import csv
-import random
-from itertools import combinations
+import argparse
 
 
 def readCSV(filename: str) -> list[list[float]]:
@@ -21,12 +25,18 @@ def readCSV(filename: str) -> list[list[float]]:
 
 def plotPoints(points: list[list[float]]) -> None:
     fig = plt.figure()
-    fig.suptitle("Positions des satellites")
+    # fig.suptitle("Positions des satellites")
     ax = fig.add_subplot(projection='3d')
+    ax = fig.add_subplot(projection='3d')
+    ax.view_init(elev=40, azim=-130)
     xs = [point[0] for point in points]
     ys = [point[1] for point in points]
     zs = [point[2] for point in points]
     ax.scatter(xs, ys, zs)
+    # retirer les labels
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_zticklabels([])
 
 
 def getGraph(points: list, reach: int) -> nx.Graph:
@@ -53,15 +63,20 @@ def plotGraph(G: nx.Graph) -> None:
     node_xyz = np.array([pos[n] for n in G.nodes()])
     edge_xyz = np.array([(pos[u], pos[v]) for u, v in G.edges()])
 
-    # Create the 3D figure
+    # Create the'3D'figure
     fig = plt.figure()
-    fig.suptitle("Graphe des satellites")
-    ax = fig.add_subplot(projection="3d")
+    # fig.suptitle("Graphe des satellites")
+    ax = fig.add_subplot(projection='3d')
+    ax = fig.add_subplot(projection='3d')
+    ax.view_init(elev=40, azim=-130)
     ax.scatter(*node_xyz.T)
-
     # Plot the edges
     for vizedge in edge_xyz:
         ax.plot(*vizedge.T, color="tab:gray")
+    # retirer les labels
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_zticklabels([])
 
 
 def getDegrees(G: nx.Graph) -> list:
@@ -77,19 +92,23 @@ def getAvgDegree(G: nx.Graph) -> int:
 def plotDegrees(G: nx.Graph) -> None:
     degrees = getDegrees(G)
     fig = plt.figure()
-    fig.suptitle("Degrés des satellites")
+    # fig.suptitle("Degrés des satellites")
     ax = fig.add_subplot(projection='3d')
-    xs = [point[0] for point in points]
-    ys = [point[1] for point in points]
-    zs = [point[2] for point in points]
-    ax.scatter(xs, ys, zs, c=degrees, cmap='jet')
+    ax.view_init(elev=40, azim=-130)
+    pos = nx.get_node_attributes(G, 'pos')
+    node_xyz = np.array([pos[n] for n in G.nodes()])
+    ax.scatter(*node_xyz.T, c=degrees, cmap='jet')
+    # retirer les labels
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_zticklabels([])
 
 
 def plotDegreeHist(G: nx.Graph) -> None:
     degrees = getDegrees(G)
     n_bins = 10
     fig = plt.figure()
-    fig.suptitle("Distribution du degré")
+    # fig.suptitle("Distribution du degré")
     plt.hist(degrees, bins=n_bins)
 
 
@@ -99,22 +118,32 @@ def getLocalClusteringDegrees(G: nx.Graph) -> list:
     return [numTriangles[i] / (d[i]*(d[i]-1) / 2) if d[i] > 1 else 0 for i in range(len(G.nodes()))]
 
 
+def getAvgClusteringDegree(G: nx.Graph) -> int:
+    clustDeg = getLocalClusteringDegrees(G)
+    return sum(clustDeg) / len(clustDeg)
+
+
 def plotClusteringDegrees(G: nx.Graph) -> None:
     clustDeg = getLocalClusteringDegrees(G)
     fig = plt.figure()
-    fig.suptitle("Degrés de clustering des satellites")
+    # fig.suptitle("Degrés de clustering des satellites")
     ax = fig.add_subplot(projection='3d')
-    xs = [point[0] for point in points]
-    ys = [point[1] for point in points]
-    zs = [point[2] for point in points]
-    ax.scatter(xs, ys, zs, c=clustDeg, cmap='jet')
+    ax.view_init(elev=40, azim=-130)
+
+    pos = nx.get_node_attributes(G, 'pos')
+    node_xyz = np.array([pos[n] for n in G.nodes()])
+    ax.scatter(*node_xyz.T, c=clustDeg, cmap='jet')
+    # retirer les labels
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_zticklabels([])
 
 
 def plotClusteringDegreeHist(G: nx.Graph) -> None:
     clusteringDegrees = getLocalClusteringDegrees(G)
     n_bins = 10
     fig = plt.figure()
-    fig.suptitle("Distribution du degré de clustering")
+    # fig.suptitle("Distribution du degré de clustering")
     plt.hist(clusteringDegrees, bins=n_bins)
 
 
@@ -130,8 +159,9 @@ def plotCliques(G: nx.Graph) -> None:
     pos = nx.get_node_attributes(G, 'pos')
     cliques = getCliques(G)
     fig = plt.figure()
-    fig.suptitle("Cliques de satellites")
+    # fig.suptitle("Cliques de satellites")
     ax = fig.add_subplot(projection='3d')
+    ax.view_init(elev=40, azim=-130)
     nbCliques = getNumberCliques(G)
     # colormap that streatches from 0 to len(cliques)
     colors = plt.get_cmap('hsv', len(cliques))
@@ -150,10 +180,13 @@ def plotCliques(G: nx.Graph) -> None:
                                 for u, v in combinaison if (u, v) in G.edges()])
             for vizedge in edge_xyz:
                 ax.plot(*vizedge.T, color=colorsRandom[k])
-    xs = [point[0] for point in points]
-    ys = [point[1] for point in points]
-    zs = [point[2] for point in points]
-    ax.scatter(xs, ys, zs, c='gray')
+    pos = nx.get_node_attributes(G, 'pos')
+    node_xyz = np.array([pos[n] for n in G.nodes()])
+    ax.scatter(*node_xyz.T, c='gray')
+    # retirer les labels
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_zticklabels([])
 
 
 def getConnectedComponents(G: nx.Graph) -> list:
@@ -168,8 +201,9 @@ def plotConnectedComponents(G: nx.Graph) -> None:
     pos = nx.get_node_attributes(G, 'pos')
     connectedComponents = getConnectedComponents(G)
     fig = plt.figure()
-    fig.suptitle("Composantes connexes de satellites")
+    # fig.suptitle("Composantes connexes de satellites")
     ax = fig.add_subplot(projection='3d')
+    ax.view_init(elev=40, azim=-130)
 
     # colormap that streatches from 0 to len(cliques)
     colors = plt.get_cmap('hsv', getNumberConnectedComponents(G))
@@ -185,10 +219,13 @@ def plotConnectedComponents(G: nx.Graph) -> None:
             for vizedge in edge_xyz:
                 ax.plot(*vizedge.T, color=colors(k))
 
-    xs = [point[0] for point in points]
-    ys = [point[1] for point in points]
-    zs = [point[2] for point in points]
-    ax.scatter(xs, ys, zs, c='gray')
+    pos = nx.get_node_attributes(G, 'pos')
+    node_xyz = np.array([pos[n] for n in G.nodes()])
+    ax.scatter(*node_xyz.T, c='gray')
+    # retirer les labels
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_zticklabels([])
 
 
 def getShortestPath(G: nx.Graph) -> dict:
@@ -217,7 +254,7 @@ def plotShortestPathHist(G: nx.Graph) -> None:
     listShortestPathLength = getLengthShortestPathList(G)
     n_bins = 10
     fig = plt.figure()
-    fig.suptitle("Distribution des longueurs des plus courts chemins")
+    # fig.suptitle("Distribution des longueurs des plus courts chemins")
     plt.hist(listShortestPathLength, bins=n_bins)
 
 
@@ -229,8 +266,9 @@ def plotShortestPath(G: nx.Graph) -> None:
     pos = nx.get_node_attributes(G, 'pos')
     shortestPath = getShortestPath(G)
     fig = plt.figure()
-    fig.suptitle("Plus courts chemins de satellites")
+    # fig.suptitle("Plus courts chemins de satellites")
     ax = fig.add_subplot(projection='3d')
+    ax.view_init(elev=40, azim=-130)
 
     maxLength = max(getLengthShortestPathList(G))
     colors = plt.get_cmap('hsv', maxLength)
@@ -244,10 +282,14 @@ def plotShortestPath(G: nx.Graph) -> None:
                                 for k in range(length-1)])
                 for vizedge in edge:
                     ax.plot(*vizedge.T, color=colors(length))
-    xs = [point[0] for point in points]
-    ys = [point[1] for point in points]
-    zs = [point[2] for point in points]
-    ax.scatter(xs, ys, zs, c='gray')
+
+    pos = nx.get_node_attributes(G, 'pos')
+    node_xyz = np.array([pos[n] for n in G.nodes()])
+    ax.scatter(*node_xyz.T, c='gray')
+    # retirer les labels
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_zticklabels([])
 
 
 DATA_FOLDER: str = "./data/"
@@ -256,32 +298,80 @@ IMG_FOLDER: str = "./doc/img/"
 REACHES: list[int] = [20_000, 40_000, 60_000]  # en km
 DENSITIES: list[str] = ["low", "avg", "high"]
 
-FUNCTIONS: list[callable, str] = [[plotGraph, "graph"],
-                                  [plotDegrees, "degrees"],
-                                  [plotDegreeHist, "degree-dist"],
-                                  [plotClusteringDegrees, "clustering-degrees"],
-                                  [plotClusteringDegreeHist,
-                                      "clustering-degree-hist"],
-                                  [plotCliques, "cliques"],
-                                  [plotConnectedComponents,
-                                      "connected-domponents"],
-                                  [plotShortestPath, "shortest-path"]]
+PLOT_FUNCTIONS: list[callable, str] = [
+    [plotGraph, "graph"],
+    [plotDegrees, "degrees"],
+    [plotDegreeHist, "degree-hist"],
+    [plotClusteringDegrees, "clustering-degrees"],
+    [plotClusteringDegreeHist, "clustering-degree-hist"],
+    [plotCliques, "cliques"],
+    [plotConnectedComponents, "connected-components"],
+    [plotShortestPathHist, "shortest-path-hist"],
+    [plotShortestPath, "shortest-path"]
+]
+
+CALCULATIONS: list[callable, str] = [
+    [getAvgDegree, "average degree"],
+    [getAvgClusteringDegree, "average clustering degree"],
+    [getNumberCliques, "number of cliques"],
+    [getNumberConnectedComponents, "number of connected components"],
+    [getNumberShortestPath, "number of shortest paths"]]
 
 
-def main():
+def plots():
+    debutTime = time.time()
+    numToPlot = len(DENSITIES) * len(REACHES) * len(PLOT_FUNCTIONS)
+    numPlotted = 0
+    os.system(f"mkdir {IMG_FOLDER}")
     for density in DENSITIES:
-        print(f"Processing density {density}")
+        print(f"Processing {density} density")
+        # remove and create the directory
+        os.system(f"rm -rf {IMG_FOLDER}/{density}")
+        os.system(f"mkdir {IMG_FOLDER}/{density}")
         filename: str = f"{DATA_FOLDER}topology_{density}.csv"
         points = readCSV(filename)
+        plotPoints(points)
+        plt.savefig(f"{IMG_FOLDER}/{density}/points.png", bbox_inches='tight')
+        plt.close()
         for reach in REACHES:
             path: str = f"{IMG_FOLDER}/{density}"
             G: nx.Graph = getGraph(points, reach)
-            for function, name in FUNCTIONS:
+            for function, name in PLOT_FUNCTIONS:
                 function(G)
-                plt.savefig(f"{path}/{name}_{reach}.svg")
+                plt.savefig(f"{path}/{name}_{reach}.png", bbox_inches='tight')
                 plt.close()
-        print(f"Done processing density {density}")
+                numPlotted += 1
+                print(f"{(numPlotted / numToPlot) * 100:.2f}% plots done")
+        print(f"Done processing {density} density")
     print("Done processing all densities")
+    endTime = time.time()
+    print(f"Execution time: {endTime - debutTime:.2f} seconds")
+
+
+def calculations():
+    for density in DENSITIES:
+        print(f"{density} density")
+        filename: str = f"{DATA_FOLDER}topology_{density}.csv"
+        points = readCSV(filename)
+        for reach in REACHES:
+            print(f"| {reach}km")
+            G: nx.Graph = getGraph(points, reach)
+            for function, name in CALCULATIONS:
+                print(f"| | {name}: {function(G):.2f}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Process some graphs.")
+    parser.add_argument(
+        'action',
+        choices=['p', 'c'],
+        help="Action to perform: 'p' to generate plots or 'c' to perform calculations")
+    args = parser.parse_args()
+
+    if args.action == 'p':
+        plots()
+    elif args.action == 'c':
+        calculations()
 
 
 if __name__ == "__main__":

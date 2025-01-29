@@ -1,0 +1,57 @@
+low density
+| 20000km
+| | average degree: 1.80
+| | average clustering degree: 0.23
+| | number of cliques: 77.00
+| | number of connected components: 39.00
+| | number of shortest paths: 1274.00
+| 40000km
+| | average degree: 11.42
+| | average clustering degree: 0.52
+| | number of cliques: 147.00
+| | number of connected components: 8.00
+| | number of shortest paths: 8296.00
+| 60000km
+| | average degree: 29.42
+| | average clustering degree: 0.67
+| | number of cliques: 301.00
+| | number of connected components: 4.00
+| | number of shortest paths: 9222.00
+avg density
+| 20000km
+| | average degree: 3.46
+| | average clustering degree: 0.36
+| | number of cliques: 83.00
+| | number of connected components: 22.00
+| | number of shortest paths: 4116.00
+| 40000km
+| | average degree: 16.84
+| | average clustering degree: 0.64
+| | number of cliques: 171.00
+| | number of connected components: 4.00
+| | number of shortest paths: 9412.00
+| 60000km
+| | average degree: 35.64
+| | average clustering degree: 0.73
+| | number of cliques: 258.00
+| | number of connected components: 2.00
+| | number of shortest paths: 9802.00
+high density
+| 20000km
+| | average degree: 3.72
+| | average clustering degree: 0.40
+| | number of cliques: 85.00
+| | number of connected components: 23.00
+| | number of shortest paths: 3850.00
+| 40000km
+| | average degree: 18.68
+| | average clustering degree: 0.67
+| | number of cliques: 139.00
+| | number of connected components: 4.00
+| | number of shortest paths: 9222.00
+| 60000km
+| | average degree: 37.40
+| | average clustering degree: 0.73
+| | number of cliques: 200.00
+| | number of connected components: 2.00
+| | number of shortest paths: 9608.00
