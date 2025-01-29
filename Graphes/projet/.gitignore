@@ -2,6 +2,7 @@
 
 # LaTeX
 *.aux
+*.lof
 *.log
 *.nlo
 *.out

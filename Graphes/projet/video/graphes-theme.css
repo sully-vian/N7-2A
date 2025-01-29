@@ -1,0 +1,19 @@
+/* @theme graphes-theme */
+
+@import "default";
+
+section {
+    background-image: linear-gradient(40deg, #e2bee2ad 0%, #a7e1e7ad 100%);
+    width: 1200px;
+    height: 900px;
+}
+
+.grid-container {
+    display: flex;
+    flex-direction: row;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}

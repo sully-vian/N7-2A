@@ -17,7 +17,7 @@
 
 \section*{Avant-propos}
 
-Les figures \ref{fig:points} et \ref{fig:graph} montrent déjà la densité d'informations contenues dans ces graphes, leurs représentations graphiques risquent donc d'être peu lisibles. C'est pourquoi nous ne les avons pas toutes incluses dans ce rapport. Cepandant, elles sont toutes disponibles dans le dossier \texttt{doc/img} de ce projet.
+Les figures \ref{fig:points} et \ref{fig:graph} montrent déjà la densité d'informations contenues dans ces graphes, leurs représentations graphiques risquent donc d'être peu lisibles. C'est pourquoi nous en avons exclu certaines de ce rapport. Cependant, elles sont toutes disponibles dans le dossier \texttt{doc/img} de ce projet.
 
 \section{Partie 1 : Modélisation sous forme de graphe}
 
@@ -310,28 +310,47 @@ La figure \ref{fig:connected-components} montre les composantes connexes des gra
 
 \subsection{Plus courts chemins}
 
-Ces figures sont les plus intéressantes, On remarque que l'augmen
+\begin{figure}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        portée      & faible densité & moyenne densité & haute densité \\
+        \hline\hline
+        $20 000$ km & $3.50$         & $5.04$          & $3.99$        \\
+        \hline
+        $40 000$ km & $2.86$         & $2.74$          & $2.78$        \\
+        \hline
+        $60 000$ km & $1.90$         & $1.90$          & $1.96$        \\
+        \hline
+    \end{tabular}
+    \caption{Moyennes des longueurs des plus courts chemins}
+    \label{tab:shortest-path-mean}
+\end{figure}
+
+Les histogrammes de la répartition des longueurs des plus courts chemins (figure \ref{fig:shortest-path-hist}) sont très pertinents. On y voit que l'augmentation de la portée fait "disparaitre" certaines valeurs. Comme si les "distances"\footnote{Ici, la longueur d'un chemin vaut le nombre d'arêtes parcourues.} étaient contenues dans des intervalles. On suppose que les trajets de longueur semblables se ressemblent et ont des portions communes. C'est une forme primitive d'optimisation, des "autoroutes"(portions de chemin "arrangeantes") se créent.
+
+Il pourrait être pertinent de tracer le graphe en attribuant une couleur différente aux arêtes en fonction du nombre de plus court chemins qui les empruntent.
 
 \begin{figure}[ht]
     \centering
     \begin{tabular}{|c|c|c|c|}
         \hline
-        portée                                                                        &
-        faible densité                                                                &
-        moyenne densité                                                               &
-        haute densité                                                                   \\
+        portée                                                                      &
+        faible densité                                                              &
+        moyenne densité                                                             &
+        haute densité                                                                 \\
         \hline\hline
-        $20 000$ km                                                                   &
+        $20 000$ km                                                                 &
         \includegraphics[width=0.2\textwidth]{img/low/shortest-path-hist_20000.png} &
         \includegraphics[width=0.2\textwidth]{img/avg/shortest-path-hist_20000.png} &
         \includegraphics[width=0.2\textwidth]{img/high/shortest-path-hist_20000.png}  \\
         \hline
-        $40 000$ km                                                                   &
+        $40 000$ km                                                                 &
         \includegraphics[width=0.2\textwidth]{img/low/shortest-path-hist_40000.png} &
         \includegraphics[width=0.2\textwidth]{img/avg/shortest-path-hist_40000.png} &
         \includegraphics[width=0.2\textwidth]{img/high/shortest-path-hist_40000.png}  \\
         \hline
-        $60 000$ km                                                                   &
+        $60 000$ km                                                                 &
         \includegraphics[width=0.2\textwidth]{img/low/shortest-path-hist_60000.png} &
         \includegraphics[width=0.2\textwidth]{img/avg/shortest-path-hist_60000.png} &
         \includegraphics[width=0.2\textwidth]{img/high/shortest-path-hist_60000.png}  \\
