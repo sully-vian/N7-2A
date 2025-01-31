@@ -1,0 +1,22 @@
+---- MODULE MC ----
+EXTENDS mc, TLC
+
+\* CONSTANT definitions @modelParameterConstants:0numCan
+const_173832073928920000 == 
+3
+----
+
+\* CONSTANT definitions @modelParameterConstants:1numMiss
+const_173832073928921000 == 
+3
+----
+
+\* PROPERTY definition @modelCorrectnessProperties:0
+prop_173832073929022000 ==
+/\ Solution
+/\ NombreOK
+/\ ToujoursOK
+----
+=============================================================================
+\* Modification History
+\* Created Fri Jan 31 11:52:19 CET 2025 by vhy9665

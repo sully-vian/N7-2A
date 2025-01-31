@@ -1,0 +1,75 @@
+strict digraph DiskGraph {
+edge [colorscheme="paired12"]
+nodesep=0.35;
+subgraph cluster_graph {
+color="white";
+4180529148579740525 [label="/\\ barque = \"G\"\n/\\ missD = 0\n/\\ missG = 3\n/\\ canD = 0\n/\\ canG = 3",style = filled]
+4180529148579740525 -> -2914097382667593444 [label="",color="2",fontcolor="2"];
+-2914097382667593444 [label="/\\ barque = \"D\"\n/\\ missD = 0\n/\\ missG = 3\n/\\ canD = 1\n/\\ canG = 2"];
+4180529148579740525 -> -4409717791051793122 [label="",color="3",fontcolor="3"];
+-4409717791051793122 [label="/\\ barque = \"D\"\n/\\ missD = 0\n/\\ missG = 3\n/\\ canD = 2\n/\\ canG = 1"];
+4180529148579740525 -> -6882694062482486400 [label="",color="4",fontcolor="4"];
+-6882694062482486400 [label="/\\ barque = \"D\"\n/\\ missD = 1\n/\\ missG = 2\n/\\ canD = 1\n/\\ canG = 2"];
+-4409717791051793122 -> 3946763706776246419 [label="",color="5",fontcolor="5"];
+3946763706776246419 [label="/\\ barque = \"G\"\n/\\ missD = 0\n/\\ missG = 3\n/\\ canD = 1\n/\\ canG = 2"];
+-4409717791051793122 -> 4180529148579740525 [label="",color="6",fontcolor="6"];
+-6882694062482486400 -> 3946763706776246419 [label="",color="7",fontcolor="7"];
+-6882694062482486400 -> 4180529148579740525 [label="",color="8",fontcolor="8"];
+3946763706776246419 -> -6882694062482486400 [label="",color="9",fontcolor="9"];
+3946763706776246419 -> -4409717791051793122 [label="",color="2",fontcolor="2"];
+3946763706776246419 -> -3599492406544916768 [label="",color="3",fontcolor="3"];
+-3599492406544916768 [label="/\\ barque = \"D\"\n/\\ missD = 0\n/\\ missG = 3\n/\\ canD = 3\n/\\ canG = 0"];
+-3599492406544916768 -> 2560079204202691729 [label="",color="5",fontcolor="5"];
+2560079204202691729 [label="/\\ barque = \"G\"\n/\\ missD = 0\n/\\ missG = 3\n/\\ canD = 2\n/\\ canG = 1"];
+-3599492406544916768 -> 3946763706776246419 [label="",color="6",fontcolor="6"];
+2560079204202691729 -> 3252754361634363430 [label="",color="10",fontcolor="10"];
+3252754361634363430 [label="/\\ barque = \"D\"\n/\\ missD = 2\n/\\ missG = 1\n/\\ canD = 2\n/\\ canG = 1"];
+2560079204202691729 -> -3599492406544916768 [label="",color="2",fontcolor="2"];
+3252754361634363430 -> 2560079204202691729 [label="",color="11",fontcolor="11"];
+3252754361634363430 -> 4697660439703849487 [label="",color="8",fontcolor="8"];
+4697660439703849487 [label="/\\ barque = \"G\"\n/\\ missD = 1\n/\\ missG = 2\n/\\ canD = 1\n/\\ canG = 2"];
+4697660439703849487 -> 5733735317814914744 [label="",color="10",fontcolor="10"];
+5733735317814914744 [label="/\\ barque = \"D\"\n/\\ missD = 3\n/\\ missG = 0\n/\\ canD = 1\n/\\ canG = 2"];
+4697660439703849487 -> 3252754361634363430 [label="",color="4",fontcolor="4"];
+5733735317814914744 -> 4697660439703849487 [label="",color="11",fontcolor="11"];
+5733735317814914744 -> -6766267948860896055 [label="",color="5",fontcolor="5"];
+-6766267948860896055 [label="/\\ barque = \"G\"\n/\\ missD = 3\n/\\ missG = 0\n/\\ canD = 0\n/\\ canG = 3"];
+-6766267948860896055 -> 5733735317814914744 [label="",color="2",fontcolor="2"];
+-6766267948860896055 -> 6543962471611812538 [label="",color="3",fontcolor="3"];
+6543962471611812538 [label="/\\ barque = \"D\"\n/\\ missD = 3\n/\\ missG = 0\n/\\ canD = 2\n/\\ canG = 1"];
+6543962471611812538 -> -3715846090072843863 [label="",color="7",fontcolor="7"];
+-3715846090072843863 [label="/\\ barque = \"G\"\n/\\ missD = 2\n/\\ missG = 1\n/\\ canD = 2\n/\\ canG = 1"];
+-2914097382667593444 -> 4180529148579740525 [label="",color="5",fontcolor="5"];
+-3715846090072843863 -> 6543962471611812538 [label="",color="9",fontcolor="9"];
+6543962471611812538 -> -5847674990362185929 [label="",color="5",fontcolor="5"];
+-5847674990362185929 [label="/\\ barque = \"G\"\n/\\ missD = 3\n/\\ missG = 0\n/\\ canD = 1\n/\\ canG = 2"];
+-3715846090072843863 -> 6201828871699392836 [label="",color="4",fontcolor="4"];
+6201828871699392836 [label="/\\ barque = \"D\"\n/\\ missD = 3\n/\\ missG = 0\n/\\ canD = 3\n/\\ canG = 0"];
+6543962471611812538 -> -6766267948860896055 [label="",color="6",fontcolor="6"];
+-5847674990362185929 -> 6543962471611812538 [label="",color="2",fontcolor="2"];
+-5847674990362185929 -> 6201828871699392836 [label="",color="3",fontcolor="3"];
+{rank = same; 4180529148579740525;}
+{rank = same; -6882694062482486400;-4409717791051793122;-2914097382667593444;}
+{rank = same; 3946763706776246419;}
+{rank = same; -3599492406544916768;}
+{rank = same; 2560079204202691729;}
+{rank = same; 3252754361634363430;}
+{rank = same; 4697660439703849487;}
+{rank = same; 5733735317814914744;}
+{rank = same; -6766267948860896055;}
+{rank = same; 6543962471611812538;}
+{rank = same; -3715846090072843863;-5847674990362185929;}
+}
+subgraph cluster_legend {graph[style=bold];label = "Next State Actions" style="solid"
+node [ labeljust="l",colorscheme="paired12",style=filled,shape=record ]
+bougerC_GD [label="bougerC_GD",fillcolor=2]
+bougerCC_GD [label="bougerCC_GD",fillcolor=3]
+bougerM_GD [label="bougerM_GD",fillcolor=9]
+bougerMM_GD [label="bougerMM_GD",fillcolor=10]
+bougerCC_DG [label="bougerCC_DG",fillcolor=6]
+bougerMC_GD [label="bougerMC_GD",fillcolor=4]
+bougerMM_DG [label="bougerMM_DG",fillcolor=11]
+bougerM_DG [label="bougerM_DG",fillcolor=7]
+bougerC_DG [label="bougerC_DG",fillcolor=5]
+bougerMC_DG [label="bougerMC_DG",fillcolor=8]
+}}
