@@ -1,6 +1,0 @@
-{
-    "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "/home/vhy9665/Desktop/N7-2A/web/lib/apache-tomcat-11.0.1/lib/*.jar"
-    ]
-}
