@@ -1,0 +1,9 @@
+let r = ref 10 in
+let incr = (fun x ->
+    r := (!r) + x;
+    (!r))
+in
+while (((incr) -1) != 0) do
+    r := !r
+done;
+!r

@@ -1,0 +1,16 @@
+letrec mod = (fun a ->
+    (fun b ->
+        if (a >= b) then
+            ((mod) (a-b)) b
+        else a
+))
+in letrec syracuse = (fun n ->
+    if (n=1) then
+        n
+    else (
+        if ((((mod) n) 2) = 0) then
+            (syracuse) (n/2)
+        else
+            (syracuse) ((3*n) + 1))
+) in
+(syracuse) 10
