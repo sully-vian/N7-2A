@@ -9,20 +9,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/Calc")
+@WebServlet("/Serv")
 public class Serv extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String s1 = request.getParameter("nb1");
-        int nb1 = Integer.parseInt(s1);
         String s2 = request.getParameter("nb2");
-        int nb2 = Integer.parseInt(s2);
-        int res = nb1 + nb2;
-        PrintWriter out = response.getWriter();
-        String stringRes = String.format("La somme de %d et %d est %d", nb1, nb2, res);
-        out.println(stringRes);
+        if (s1 != null && s2 != null) {
+            int nb1 = Integer.parseInt(s1);
+            int nb2 = Integer.parseInt(s2);
+            int res = nb1 + nb2;
+            request.setAttribute("result", res);
+        }
+        request.getRequestDispatcher("/Calc.jsp").forward(request, response);
     }
 
     @Override

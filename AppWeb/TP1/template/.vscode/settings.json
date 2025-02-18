@@ -3,7 +3,7 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": {
         "include": [
-            "/home/sully_vian/tomcat/lib/*.jar"
-        ],
+            "/home/sully_vian/.local/java/lib/apache-tomcat-11.0.1/lib/*",
+        ]
     }
 }
