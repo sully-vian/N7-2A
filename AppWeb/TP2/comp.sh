@@ -4,3 +4,6 @@ cp -r $1/lib tmp/WEB-INF/.
 cp -r $1/src/webcontent/* tmp/.
 jar cf $1.war -C tmp .
 rm -rf tmp
+
+# copier le fichier vers tomcat pour le déployer
+cp $1.war $TOMCAT_HOME/webapps
