@@ -6,7 +6,6 @@ _build/
 *.zip
 *.ipynb_checkpoints
 *.DS_Store
-lib/
 
 # python
 __pycache__/
