@@ -7,6 +7,12 @@ _build/
 *.ipynb_checkpoints
 *.DS_Store
 
+# C / C++
+*.o
+
+#OpenMP
+OpenMP/TP/main
+
 # python
 __pycache__/
 .pytest_cache/

@@ -121,6 +121,6 @@ void trace_dump(char *fname) {
     fprintf(pFile, "</svg>\n");
 
     fclose(pFile);
-    fsync(fileno);
+    fsync(pFile->_fileno);
   }
 }

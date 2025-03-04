@@ -1,0 +1,26 @@
+# OpenMP exercise: Cholesky factorization
+
+Cannot parallelize everything in the loop, because the result of the previous iteration is needed in the next iteration.
+
+"j" loop is in blue, "i" loop is in red.
+
+## Part 1: simple loop parallelization
+
+[`chol_par_loop_simple.c`](chol_par_loop_simple.c) can be optimized by parallelizing the inner "j" loop. This is because all the iterations of the "j" loop are independent of each other, and the result of the previous iteration is not needed in the next iteration.
+
+![trace_par_loop_simple.svg](./trace_par_loop_simple.svg)
+
+The image clearly shows that the blue operations are parallelized. However, the red operations are not and are acattered all around.
+
+## Part 2: improved loop parallelization
+
+[`chol_par_loop_improved.c`](chol_par_loop_improved.c) is optimized by taking out the "j" loop and parallelizing it. This allows us to parallelize the "i" loop as well.
+
+The `private` clause is necessary to ensure that j isn't shared between threads.
+The `collapse` clause is not necessary, but it is used to extand the parallelization to both for loops.
+
+![trace_par_loop_improved.svg](./trace_par_loop_improved.svg)
+
+The image clearly shows that the blue operations are still parallelized and even batched together (in their own for loop). The red operations are also parallelized, saving much time.
+
+## Part 3: A complex, efficient DAG based parallelization

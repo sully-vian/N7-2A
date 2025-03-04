@@ -10,9 +10,14 @@ void chol_par_loop_improved(matrix_t A) {
     /* reduce the diagonal block */
     potrf(A.blocks[k][k]);
 
+    #pragma omp parallel for
     for (i = k + 1; i < A.NB; i++) {
       /* compute the A[i][k] sub-diagonal block */
       trsm(A.blocks[k][k], A.blocks[i][k]);
+    }
+
+    #pragma omp parallel for private(j) collapse(2)
+    for (i = k + 1; i < A.NB; i++) {
       for (j = k + 1; j <= i; j++) {
         /* update the A[i][j] block in the trailing submatrix */
         gemm(A.blocks[i][k], A.blocks[j][k], A.blocks[i][j]);
