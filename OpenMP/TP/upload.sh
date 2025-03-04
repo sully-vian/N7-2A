@@ -4,7 +4,7 @@ make clean
 
 rm -f dosub.sh
 
-cat <<EOF >> dosub.sh
+cat <<EOF >>dosub.sh
 #!/usr/bin/bash
 
 #Job name
@@ -34,4 +34,3 @@ cd \${SLURM_SUBMIT_DIR}
 EOF
 
 rsync --rsh='ssh -F none' -r ../TP_Chol_corr ${1}@turpanlogin.calmip.univ-toulouse.fr:${USER}/
-

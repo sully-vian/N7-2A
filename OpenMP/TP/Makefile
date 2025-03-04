@@ -1,17 +1,20 @@
+USER := $(shell whoami)
+
 ifeq ($(ARCH),arm)
 # on Turpan
 	CC       = armclang
 	FC       = armflang
 	LBLAS    = -L/usr/local/arm/armpl-22.1.0_AArch64_RHEL-8_arm-linux-compiler_aarch64-linux/lib/ -larmpl_lp64
+else ifeq ($(USER),sully_vian)
+# on my laptop
+	CC       = gcc
+	FC       = gfortran
+	LBLAS    = -lopenblas
 else
 # on TP-rooms
 	CC       = /mnt/n7fs/ens/tp_abuttari/gcc-14.2.0/bin/gcc
 	FC       = /mnt/n7fs/ens/tp_abuttari/gcc-14.2.0/bin/gfortran
 	LBLAS    = /mnt/n7fs/ens/tp_abuttari/acml-4.4.0/gfortran64/lib/libacml.a -lm
-# on my laptop
-# CC       = gcc
-# FC       = gfortran
-# LBLAS    = -lopenblas
 endif
 
 LINK     = $(FC)

@@ -1,8 +1,20 @@
 # OpenMP exercise: Cholesky factorization
 
+To compile, run and benchmark the code:
+
+```bash
+make && clear && ./main 100 40
+```
+
+## Issue
+
 Cannot parallelize everything in the loop, because the result of the previous iteration is needed in the next iteration.
 
 "j" loop is in blue, "i" loop is in red.
+
+The naive sequential implementation is shown in [`chol_seq.c`](chol_seq.c).
+
+![trace_seq.svg](./trace_seq.svg)
 
 ## Part 1: simple loop parallelization
 
@@ -10,7 +22,7 @@ Cannot parallelize everything in the loop, because the result of the previous it
 
 ![trace_par_loop_simple.svg](./trace_par_loop_simple.svg)
 
-The image clearly shows that the blue operations are parallelized. However, the red operations are not and are acattered all around.
+The image clearly shows that the blue operations are parallelized. However, the red operations are not and are scattered all around.
 
 ## Part 2: improved loop parallelization
 

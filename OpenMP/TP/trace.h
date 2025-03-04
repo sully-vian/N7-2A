@@ -7,8 +7,8 @@
 long usecs();
 
 typedef struct event_struct {
-  int type;
-  long t_start, t_stop;
+    int type;
+    long t_start, t_stop;
 } Event;
 
 void trace_init();

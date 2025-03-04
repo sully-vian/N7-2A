@@ -1,16 +1,16 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 
 typedef struct Block {
-  int B;      // The size of block-columns
-  int r, c;   // the row and column index of the block within the matrix
-  double *a;  // the block coefficients
+    int B;      // The size of block-columns
+    int r, c;   // the row and column index of the block within the matrix
+    double *a;  // the block coefficients
 } block_t;
 
 typedef struct Matrix {
-  int N;  // The matrix size
-  int B;
-  int NB;  // The size in block-columns/rows
-  block_t **blocks;
+    int N;  // The matrix size
+    int B;
+    int NB;  // The size in block-columns/rows
+    block_t **blocks;
 } matrix_t;
 
 typedef enum { POTRF = 0, TRSM, GEMM } Type;
