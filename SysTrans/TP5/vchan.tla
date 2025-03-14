@@ -42,10 +42,10 @@ VARIABLES
   (* history variables (for modelling and properties) *)
   Sent,
   Got,
-  
+
   (* The remaining data that has not yet been added to the buffer: *)
   msg,
-  
+
   (* status of the endpoints. *)
   SenderLive,   \* init true, cleared by sender
   ReceiverLive, \* init true, cleared by receiver
@@ -62,7 +62,7 @@ VARIABLES
 
   (* Buffer represents the data in transit from the sender to the receiver. *)
   Buffer,
-  
+
   (* NotifyRead is a shared flag that indicates that the sender wants to know when some data
      has been read and removed from the buffer (and, therefore, that more space is now available).
      If the receiver sees that this is set after removing data from the buffer,
@@ -117,22 +117,45 @@ SenderIdle2 == /\ SenderLive
                /\ SenderState' = Writing
                /\ UNCHANGED << Got, SenderLive, ReceiverLive, ReceiverState, Buffer, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
-\* Transition Writing -> AfterWriting. Some prefix of msg is added to the buffer (without overrunning it) 
-SenderWrite1 == UNCHANGED vars
+\* Transition Writing -> AfterWriting. Some prefix of msg is added to the buffer (without overrunning it)
+SenderWrite1 == /\ SenderLive
+                /\ SenderState = Writing
+                /\ \E k \in 1..Min(Len(msg), MaxWriteLen) :
+                \* k = nb d'octets dans msg
+                    /\ k <= BufferSize - Len(Buffer) \* on n'écrit pas plus que la place dispo
+                    /\ msg' = Drop(msg, k)
+                    /\ Buffer' = Buffer \o Take(msg, k)
+                /\ SenderState' = AfterWriting
+                /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Writing -> Blocked. The buffer is full.
-SenderWrite2 == UNCHANGED vars
-                   
+SenderWrite2 == /\ SenderLive
+                /\ SenderState = Writing
+                /\ Len(Buffer) = BufferSize
+                /\ SenderState' = Blocked
+                /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
+
 \* Transition AfterWriting -> Idle. msg is empty, all bytes have been sent. Set ReceiverIT if requested.
-SenderWriteNext1 == UNCHANGED vars
+SenderWriteNext1 == /\ SenderLive
+                    /\ SenderState = AfterWriting
+                    /\ Len(msg) = 0
+                    /\ SenderState' = Idle
+                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition AfterWriting -> Blocked. msg is not empty, waiting to send more. Set ReceiverIT if requested.
-SenderWriteNext2 == UNCHANGED vars
+SenderWriteNext2 == /\ SenderLive
+                    /\ SenderState = AfterWriting
+                    /\ Len(msg) /= 0
+                    /\ SenderState' = Blocked
+                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Blocked -> Writing.
 \* initial version: no condition (non-deterministic)
 \* final version: IT received while receiver is live.
-SenderUnblock1 == UNCHANGED vars
+SenderUnblock1 == /\ SenderLive
+                  /\ SenderState = Blocked
+                  /\ SenderState' = Writing
+                  /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Blocked -> Done.
 \* initial version: no condition (non-deterministic)
@@ -154,21 +177,37 @@ ReceiverIdle1 == /\ ReceiverLive
                  /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Idle -> Reading. Buffer is not empty.
-ReceiverIdle2 == UNCHANGED vars
+ReceiverIdle2 == /\ ReceiverLive
+                 /\ ReceiverState = Idle
+                 /\ Len(Buffer) /= 0
+                 /\ ReceiverState' = Reading
+                 /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Idle -> Done. Sender is dead and buffer is empty.
 ReceiverIdle3 == UNCHANGED vars
 
 \* Transition Reading -> AfterReading. Extract some bytes from buffer.
-ReceiverRead ==  UNCHANGED vars
+ReceiverRead == /\ ReceiverLive
+                /\ ReceiverState = Reading
+                /\ \E k  \in 1..Min(Len(Buffer), MaxReadLen) :
+                    /\ Got' = Got \o Take(Buffer, k) \* copier le début du buffer
+                    /\ Buffer' = Drop(Buffer, k) \* vider le buffer des k premiers
+                /\ ReceiverState' = AfterReading
+                /\ UNCHANGED << Sent, SenderLive, ReceiverLive, SenderState, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition AfterReading -> Idle. Back to Idle. Set SenderIT if requested.
-ReceiverReadNext == UNCHANGED vars
+ReceiverReadNext == /\ ReceiverLive
+                    /\ ReceiverState = AfterReading
+                    /\ ReceiverState' = Idle
+                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Blocked -> Idle.
 \* initial version: no condition (non-deterministic)
 \* final version: IT received.
-ReceiverUnblock == UNCHANGED vars
+ReceiverUnblock == /\ ReceiverLive
+                   /\ ReceiverState = Blocked
+                   /\ ReceiverState' = Idle
+                   /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition any state -> Done. Receiver is no longer live.
 ReceiverEnd == UNCHANGED vars
@@ -223,7 +262,7 @@ TypeOk ==
 
 (* Whatever we receive is the same as what was sent (i.e. `Got' is a prefix of `Sent') *)
 Integrity == (Take(Sent, Len(Got)) = Got)
-  
+
 (* Any data that the write function reports has been sent successfully (i.e.
    data in Sent when it is back at "ready") will eventually be received (if
    the receiver doesn't close the connection). In particular, this says that
