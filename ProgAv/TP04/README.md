@@ -1,3 +1,7 @@
+---
+geometry: margin=2cm
+---
+
 # TP4 - Programmation par Aspect
 
 Ne pas modifier le code fourni !
@@ -13,6 +17,7 @@ Ne pas modifier le code fourni !
 5. **Mécanisme d'introduction:** Mécanisme d'extension permettant d'introduire de nouveaux éléments structuraux au code d'une application.
 6. **Tissage (weaving):** Processus qui prend en entrée un ensemble d'aspects et une application de base et fournit en sortie une application dont le comportement et la structure sont étendus par les aspects.
 
+<!-- 
 ### Exercice 2: Comprendre un exemple
 
 ## 2 La programmation par aspect avec AspectJ
@@ -25,4 +30,4 @@ Ne pas modifier le code fourni !
 
 ## 3 Programmation par aspect et patron Visiteur
 
-### Exercice 6: Opération sur une structure de données (expressions arithmétiques)
+### Exercice 6: Opération sur une structure de données (expressions arithmétiques) -->
