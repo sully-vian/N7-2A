@@ -1,13 +1,13 @@
 #include <omp.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <sys/time.h>
 #include <stdlib.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 int rnd_int();
 void rand_fill(int *x, int n);
-long usecs ();
-double secs ();
+long usecs();
+double secs();
 void do_stuff(double sec);
 int compute_one(double sec);
 int f_a();
