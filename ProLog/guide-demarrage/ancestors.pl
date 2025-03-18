@@ -8,4 +8,6 @@ parent(franck, john).
 /* Definition of ancestor/2 */
 /****************************/
 ancestor(X, Y) :- parent(X, Y).
-ancestor(X, Y) :- ancestor(X, Z), parent(Z, Y).
+% ancestor(X, Y) :- ancestor(X, Z), parent(Z, Y).
+ancestor(X, Y) :- parent(Z, Y), ancestor(X, Z).
+% mettre "parent" en premier pour éviter récursivité à gauche.
