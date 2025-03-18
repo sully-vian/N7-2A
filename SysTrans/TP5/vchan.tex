@@ -1179,10 +1179,11 @@
 \@x{ SenderIdle1 \.{\defeq} \.{\land} SenderLive}%
 \@x{\@s{71.04} \.{\land} SenderState \.{=} Idle}%
 \@x{\@s{71.04} \.{\land} {\lnot} ReceiverLive}%
+\@x{\@s{71.04} \.{\land} SenderLive \.{'} \.{=} {\FALSE}}%
 \@x{\@s{71.04} \.{\land} SenderState \.{'} \.{=} Done}%
- \@x{\@s{71.04} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
- ,\, ReceiverLive ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
- ReceiverIT ,\, NotifyRead ,\, SenderIT {\rangle}}%
+ \@x{\@s{71.04} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, ReceiverLive
+ ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\, ReceiverIT ,\,
+ NotifyRead ,\, SenderIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1212,12 +1213,12 @@
  MaxWriteLen ) \.{:}}%
 \@x{\@s{79.60}}%
 \@y{\@s{0}%
- \ensuremath{k \.{=} nb} d\mbox{'}octets dans \ensuremath{msg
+ \ensuremath{k \.{=} nb} of bytes in \ensuremath{msg
 }}%
 \@xx{}%
 \@x{\@s{96.00} \.{\land} k \.{\leq} BufferSize \.{-} Len ( Buffer )}%
 \@y{\@s{0}%
- on \ensuremath{n\.{'}}écrit pas plus que la place dispo
+ don\mbox{'}t write more than available space
 }%
 \@xx{}%
 \@x{\@s{96.00} \.{\land} msg \.{'} \.{=} Drop ( msg ,\, k )}%
@@ -1236,10 +1237,15 @@
 \@x{ SenderWrite2 \.{\defeq} \.{\land} SenderLive}%
 \@x{\@s{79.60} \.{\land} SenderState\@s{0.45} \.{=} Writing}%
 \@x{\@s{79.60} \.{\land} Len ( Buffer ) \.{=} BufferSize}%
+\@x{\@s{79.60} \.{\land} NotifyRead \.{'}\@s{1.17} \.{=} {\TRUE}}%
+\@y{\@s{0}%
+ sender wants to know when space is available
+}%
+\@xx{}%
 \@x{\@s{79.60} \.{\land} SenderState \.{'} \.{=} Blocked}%
  \@x{\@s{79.60} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
  ,\, ReceiverLive ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
- ReceiverIT ,\, NotifyRead ,\, SenderIT {\rangle}}%
+ ReceiverIT ,\, SenderIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1251,9 +1257,18 @@
 \@x{\@s{99.79} \.{\land} SenderState \.{=} AfterWriting}%
 \@x{\@s{99.79} \.{\land} Len ( msg ) \.{=} 0}%
 \@x{\@s{99.79} \.{\land} SenderState \.{'} \.{=} Idle}%
+\@x{\@s{99.79} \.{\land} {\IF} NotifyWrite \.{\THEN}}%
+\@y{\@s{0}%
+ receiver wants to know when data has been written to buffer
+}%
+\@xx{}%
+ \@x{\@s{115.00} NotifyWrite \.{'} \.{=} {\FALSE} \.{\land} ReceiverIT \.{'}
+ \.{=} {\TRUE}}%
+ \@x{\@s{115.00} \.{\ELSE} {\UNCHANGED} {\langle} NotifyWrite ,\, ReceiverIT
+ {\rangle}}%
  \@x{\@s{99.79} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
- ,\, ReceiverLive ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
- ReceiverIT ,\, NotifyRead ,\, SenderIT {\rangle}}%
+ ,\, ReceiverLive ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyRead ,\,
+ SenderIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1266,9 +1281,23 @@
 \@x{\@s{99.79} \.{\land} SenderState \.{=} AfterWriting}%
 \@x{\@s{99.79} \.{\land} Len ( msg ) \.{\neq} 0}%
 \@x{\@s{99.79} \.{\land} SenderState \.{'} \.{=} Blocked}%
+\@x{\@s{99.79} \.{\land} NotifyRead \.{'} \.{=} {\TRUE}}%
+\@y{\@s{0}%
+ sender wants to know when space is available
+}%
+\@xx{}%
+\@x{\@s{99.79} \.{\land} {\IF} NotifyWrite \.{\THEN}}%
+\@y{\@s{0}%
+ receiver wants to know when data has been written to buffer
+}%
+\@xx{}%
+ \@x{\@s{115.00} NotifyWrite \.{'} \.{=} {\FALSE} \.{\land} ReceiverIT \.{'}
+ \.{=} {\TRUE}}%
+ \@x{\@s{115.00} \.{\ELSE} {\UNCHANGED} {\langle} NotifyWrite ,\, ReceiverIT
+ {\rangle}}%
  \@x{\@s{99.79} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
- ,\, ReceiverLive ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
- ReceiverIT ,\, NotifyRead ,\, SenderIT {\rangle}}%
+ ,\, ReceiverLive ,\, ReceiverState ,\, Buffer ,\, msg ,\, SenderIT
+ {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1287,10 +1316,17 @@
 \@xx{}%
 \@x{ SenderUnblock1 \.{\defeq} \.{\land} SenderLive}%
 \@x{\@s{88.74} \.{\land} SenderState \.{=} Blocked}%
+\@x{\@s{88.74} \.{\land} ReceiverLive}%
+\@x{\@s{88.74} \.{\land} SenderIT}%
+\@x{\@s{88.74} \.{\land} SenderIT \.{'} \.{=} {\FALSE}}%
+\@y{\@s{0}%
+ clear the flag (I\mbox{'}m writing)
+}%
+\@xx{}%
 \@x{\@s{88.74} \.{\land} SenderState \.{'} \.{=} Writing}%
  \@x{\@s{88.74} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
  ,\, ReceiverLive ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
- ReceiverIT ,\, NotifyRead ,\, SenderIT {\rangle}}%
+ ReceiverIT ,\, NotifyRead {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1307,7 +1343,16 @@
  final version: IT received while receiver is dead.
 }%
 \@xx{}%
-\@x{ SenderUnblock2 \.{\defeq} {\UNCHANGED} vars}%
+\@x{ SenderUnblock2 \.{\defeq} \.{\land} SenderLive}%
+\@x{\@s{88.74} \.{\land} SenderState \.{=} Blocked}%
+\@x{\@s{88.74} \.{\land} {\lnot} ReceiverLive}%
+\@x{\@s{88.74} \.{\land} SenderIT}%
+\@x{\@s{88.74} \.{\land} SenderIT \.{'} \.{=} {\FALSE}}%
+\@x{\@s{88.74} \.{\land} SenderLive \.{'} \.{=} {\FALSE}}%
+\@x{\@s{88.74} \.{\land} SenderState \.{'} \.{=} Done}%
+ \@x{\@s{88.74} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, ReceiverLive
+ ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\, ReceiverIT ,\,
+ NotifyRead {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1315,7 +1360,11 @@
  live.
 }%
 \@xx{}%
-\@x{ SenderEnd \.{\defeq} {\UNCHANGED} vars}%
+\@x{ SenderEnd \.{\defeq} \.{\land} SenderLive \.{'} \.{=} {\FALSE}}%
+\@x{\@s{67.21} \.{\land} SenderState \.{'} \.{=} Done}%
+ \@x{\@s{67.21} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, ReceiverLive
+ ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\, ReceiverIT ,\,
+ NotifyRead ,\, SenderIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}\midbar\@xx{}%
 \@pvspace{8.0pt}%
@@ -1354,7 +1403,15 @@
  is empty.
 }%
 \@xx{}%
-\@x{ ReceiverIdle3 \.{\defeq} {\UNCHANGED} vars}%
+\@x{ ReceiverIdle3 \.{\defeq} \.{\land} ReceiverLive}%
+\@x{\@s{77.31} \.{\land} ReceiverState \.{=} Idle}%
+\@x{\@s{77.31} \.{\land} {\lnot} SenderLive}%
+\@x{\@s{77.31} \.{\land} Len ( Buffer ) \.{=} 0}%
+\@x{\@s{77.31} \.{\land} ReceiverLive \.{'} \.{=} {\FALSE}}%
+\@x{\@s{77.31} \.{\land} ReceiverState \.{'} \.{=} Done}%
+ \@x{\@s{77.31} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
+ ,\, SenderState ,\, Buffer ,\, msg ,\, NotifyWrite ,\, ReceiverIT ,\,
+ NotifyRead ,\, SenderIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1368,12 +1425,12 @@
  Buffer ) ,\, MaxReadLen ) \.{:}}%
 \@x{\@s{92.27} \.{\land} Got \.{'} \.{=} Got \.{\circ} Take ( Buffer ,\, k )}%
 \@y{\@s{0}%
- copier le début du buffer
+ copy the buffer\mbox{'}s beginning
 }%
 \@xx{}%
 \@x{\@s{92.27} \.{\land} Buffer \.{'} \.{=} Drop ( Buffer ,\, k )}%
 \@y{\@s{0}%
- vider le buffer des \ensuremath{k} premiers
+ empty the \ensuremath{k} firsts of buffer
 }%
 \@xx{}%
 \@x{\@s{77.06} \.{\land} ReceiverState \.{'} \.{=} AfterReading}%
@@ -1390,9 +1447,18 @@
 \@x{ ReceiverReadNext \.{\defeq} \.{\land} ReceiverLive}%
 \@x{\@s{96.96} \.{\land} ReceiverState \.{=} AfterReading}%
 \@x{\@s{96.96} \.{\land} ReceiverState \.{'} \.{=} Idle}%
+\@x{\@s{96.96} \.{\land} {\IF} NotifyRead \.{\THEN}}%
+\@y{\@s{0}%
+ sender wants to know when space is available
+}%
+\@xx{}%
+ \@x{\@s{112.18} NotifyRead \.{'} \.{=} {\FALSE} \.{\land} SenderIT \.{'}
+ \.{=} {\TRUE}}%
+\@x{\@s{112.18} \.{\ELSE}}%
+\@x{\@s{112.18} {\UNCHANGED} {\langle} SenderIT ,\, NotifyRead {\rangle}}%
  \@x{\@s{96.96} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
  ,\, ReceiverLive ,\, SenderState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
- ReceiverIT ,\, NotifyRead ,\, SenderIT {\rangle}}%
+ ReceiverIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1411,10 +1477,12 @@
 \@xx{}%
 \@x{ ReceiverUnblock \.{\defeq} \.{\land} ReceiverLive}%
 \@x{\@s{90.01} \.{\land} ReceiverState \.{=} Blocked}%
+\@x{\@s{90.01} \.{\land} ReceiverIT}%
+\@x{\@s{90.01} \.{\land} ReceiverIT \.{'} \.{=} {\FALSE}}%
 \@x{\@s{90.01} \.{\land} ReceiverState \.{'} \.{=} Idle}%
  \@x{\@s{90.01} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
  ,\, ReceiverLive ,\, SenderState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
- ReceiverIT ,\, NotifyRead ,\, SenderIT {\rangle}}%
+ NotifyRead ,\, SenderIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1422,7 +1490,11 @@
  longer live.
 }%
 \@xx{}%
-\@x{ ReceiverEnd \.{\defeq} {\UNCHANGED} vars}%
+\@x{ ReceiverEnd \.{\defeq} \.{\land} ReceiverLive \.{'} \.{=} {\FALSE}}%
+\@x{\@s{73.48} \.{\land} ReceiverState \.{'} \.{=} Done}%
+ \@x{\@s{73.48} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
+ ,\, SenderState ,\, Buffer ,\, msg ,\, NotifyWrite ,\, ReceiverIT ,\,
+ NotifyRead ,\, SenderIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}\midbar\@xx{}%
 \@pvspace{8.0pt}%
@@ -1437,14 +1509,22 @@
  Sender abruptly becomes dead. It sends an IT to receiver on dying.
 }%
 \@xx{}%
-\@x{ SenderClose \.{\defeq} {\UNCHANGED} vars}%
+\@x{ SenderClose \.{\defeq} \.{\land} SenderLive \.{'} \.{=} {\FALSE}}%
+\@x{\@s{72.92} \.{\land} ReceiverIT \.{'}\@s{0.67} \.{=} {\TRUE}}%
+ \@x{\@s{72.92} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, ReceiverLive
+ ,\, SenderState ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
+ NotifyRead ,\, SenderIT {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
  Receiver abruptly becomes dead. It sends an IT to sender on dying.
 }%
 \@xx{}%
-\@x{ ReceiverClose \.{\defeq} {\UNCHANGED} vars}%
+\@x{ ReceiverClose \.{\defeq} \.{\land} ReceiverLive \.{'} \.{=} {\FALSE}}%
+\@x{\@s{79.19} \.{\land} SenderIT \.{'} \.{=} {\TRUE}}%
+ \@x{\@s{79.19} \.{\land} {\UNCHANGED} {\langle} Sent ,\, Got ,\, SenderLive
+ ,\, SenderState ,\, ReceiverState ,\, Buffer ,\, msg ,\, NotifyWrite ,\,
+ ReceiverIT ,\, NotifyRead {\rangle}}%
 \@pvspace{8.0pt}%
 \@x{}\midbar\@xx{}%
 \@pvspace{8.0pt}%
@@ -1535,10 +1615,10 @@
  after sending some data.
 \end{cpar}%
 \end{lcom}%
-\@x{ Availability \.{\defeq}}%
- \@x{\@s{8.2} \A\, x \.{\in} 0 \.{\dotdot} Cardinality ( Byte ) \.{:} x \.{=}
- Len ( Sent ) \.{\land} SenderState \.{=} Idle \.{\leadsto} ( Len ( Got )
- \.{\geq} x )}%
+ \@x{ Availability \.{\defeq} \A\, x \.{\in} 0 \.{\dotdot} Cardinality ( Byte
+ ) \.{:}}%
+ \@x{\@s{16.4} ( x \.{=} Len ( Sent ) \.{\land} SenderState \.{=} Idle )
+ \.{\leadsto} ( Len ( Got ) \.{\geq} x \.{\lor} {\lnot} ReceiverLive )}%
 \@pvspace{8.0pt}%
 \@x{}%
 \@y{\@s{0}%
@@ -1556,7 +1636,8 @@
  then the receiver eventually gets all the sent bytes.
 }%
 \@xx{}%
-\@x{ NoLoss \.{\defeq} {\Diamond} {\Box} ( Got \.{=} Sent )}%
+ \@x{ NoLoss \.{\defeq} {\Box} ( SenderLive \.{\land} ReceiverLive )
+ \.{\implies} {\Diamond} {\Box} ( Got \.{=} Sent )}%
 \@pvspace{8.0pt}%
 \@x{}\bottombar\@xx{}%
 \end{document}

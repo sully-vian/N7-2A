@@ -105,8 +105,9 @@ Init == /\ SenderLive = TRUE
 SenderIdle1 == /\ SenderLive
                /\ SenderState = Idle
                /\ ~ReceiverLive
+               /\ SenderLive' = FALSE
                /\ SenderState' = Done
-               /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
+               /\ UNCHANGED << Sent, Got, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Idle -> Writing. A new message is to be sent.
 SenderIdle2 == /\ SenderLive
@@ -121,8 +122,8 @@ SenderIdle2 == /\ SenderLive
 SenderWrite1 == /\ SenderLive
                 /\ SenderState = Writing
                 /\ \E k \in 1..Min(Len(msg), MaxWriteLen) :
-                \* k = nb d'octets dans msg
-                    /\ k <= BufferSize - Len(Buffer) \* on n'écrit pas plus que la place dispo
+                \* k = nb of bytes in msg
+                    /\ k <= BufferSize - Len(Buffer) \* don't write more than available space
                     /\ msg' = Drop(msg, k)
                     /\ Buffer' = Buffer \o Take(msg, k)
                 /\ SenderState' = AfterWriting
@@ -132,38 +133,58 @@ SenderWrite1 == /\ SenderLive
 SenderWrite2 == /\ SenderLive
                 /\ SenderState = Writing
                 /\ Len(Buffer) = BufferSize
+                /\ NotifyRead' = TRUE \* sender wants to know when space is available
                 /\ SenderState' = Blocked
-                /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
+                /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, SenderIT >>
 
 \* Transition AfterWriting -> Idle. msg is empty, all bytes have been sent. Set ReceiverIT if requested.
 SenderWriteNext1 == /\ SenderLive
                     /\ SenderState = AfterWriting
                     /\ Len(msg) = 0
                     /\ SenderState' = Idle
-                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
+                    /\ IF NotifyWrite THEN \* receiver wants to know when data has been written to buffer
+                        NotifyWrite' = FALSE /\ ReceiverIT' = TRUE
+                        ELSE UNCHANGED << NotifyWrite, ReceiverIT>>
+                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyRead, SenderIT >>
 
 \* Transition AfterWriting -> Blocked. msg is not empty, waiting to send more. Set ReceiverIT if requested.
 SenderWriteNext2 == /\ SenderLive
                     /\ SenderState = AfterWriting
                     /\ Len(msg) /= 0
                     /\ SenderState' = Blocked
-                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
+                    /\ NotifyRead' = TRUE \* sender wants to know when space is available
+                    /\ IF NotifyWrite THEN \* receiver wants to know when data has been written to buffer
+                        NotifyWrite' = FALSE /\ ReceiverIT' = TRUE
+                        ELSE UNCHANGED << NotifyWrite, ReceiverIT>>
+                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, SenderIT >>
 
 \* Transition Blocked -> Writing.
 \* initial version: no condition (non-deterministic)
 \* final version: IT received while receiver is live.
 SenderUnblock1 == /\ SenderLive
                   /\ SenderState = Blocked
+                  /\ ReceiverLive
+                  /\ SenderIT
+                  /\ SenderIT' = FALSE \* clear the flag (I'm writing)
                   /\ SenderState' = Writing
-                  /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
+                  /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead >>
 
 \* Transition Blocked -> Done.
 \* initial version: no condition (non-deterministic)
 \* final version: IT received while receiver is dead.
-SenderUnblock2 == UNCHANGED vars
+SenderUnblock2 == /\ SenderLive
+                  /\ SenderState = Blocked
+                  /\ ~ReceiverLive
+                  /\ SenderIT
+                  /\ SenderIT' = FALSE
+                  /\ SenderLive' = FALSE
+                  /\ SenderState' = Done
+                  /\ UNCHANGED << Sent, Got, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead >>
 
 \* Transition any state -> Done. Sender is no longer live.
-SenderEnd == UNCHANGED vars
+SenderEnd == /\ SenderLive' = FALSE
+             /\ SenderState' = Done
+             /\ UNCHANGED << Sent, Got, ReceiverLive, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 ----------------
 
@@ -184,14 +205,20 @@ ReceiverIdle2 == /\ ReceiverLive
                  /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Idle -> Done. Sender is dead and buffer is empty.
-ReceiverIdle3 == UNCHANGED vars
+ReceiverIdle3 == /\ ReceiverLive
+                 /\ ReceiverState = Idle
+                 /\ ~SenderLive
+                 /\ Len(Buffer) = 0
+                 /\ ReceiverLive' = FALSE
+                 /\ ReceiverState' = Done
+                 /\ UNCHANGED << Sent, Got, SenderLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 \* Transition Reading -> AfterReading. Extract some bytes from buffer.
 ReceiverRead == /\ ReceiverLive
                 /\ ReceiverState = Reading
                 /\ \E k  \in 1..Min(Len(Buffer), MaxReadLen) :
-                    /\ Got' = Got \o Take(Buffer, k) \* copier le début du buffer
-                    /\ Buffer' = Drop(Buffer, k) \* vider le buffer des k premiers
+                    /\ Got' = Got \o Take(Buffer, k) \* copy the buffer's beginning
+                    /\ Buffer' = Drop(Buffer, k) \* empty the k firsts of buffer
                 /\ ReceiverState' = AfterReading
                 /\ UNCHANGED << Sent, SenderLive, ReceiverLive, SenderState, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
@@ -199,28 +226,40 @@ ReceiverRead == /\ ReceiverLive
 ReceiverReadNext == /\ ReceiverLive
                     /\ ReceiverState = AfterReading
                     /\ ReceiverState' = Idle
-                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
+                    /\ IF NotifyRead THEN \* sender wants to know when space is available
+                        NotifyRead' = FALSE /\ SenderIT' = TRUE
+                        ELSE
+                        UNCHANGED << SenderIT, NotifyRead >>
+                    /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT >>
 
 \* Transition Blocked -> Idle.
 \* initial version: no condition (non-deterministic)
 \* final version: IT received.
 ReceiverUnblock == /\ ReceiverLive
                    /\ ReceiverState = Blocked
+                   /\ ReceiverIT
+                   /\ ReceiverIT' = FALSE
                    /\ ReceiverState' = Idle
-                   /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
+                   /\ UNCHANGED << Sent, Got, SenderLive, ReceiverLive, SenderState, Buffer, msg, NotifyWrite, NotifyRead, SenderIT >>
 
 \* Transition any state -> Done. Receiver is no longer live.
-ReceiverEnd == UNCHANGED vars
+ReceiverEnd == /\ ReceiverLive' = FALSE
+               /\ ReceiverState' = Done
+               /\ UNCHANGED << Sent, Got, SenderLive, SenderState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead, SenderIT >>
 
 ----------------
 
 (* Asynchronous abort of any endpoint. *)
 
 \* Sender abruptly becomes dead. It sends an IT to receiver on dying.
-SenderClose == UNCHANGED vars
+SenderClose == /\ SenderLive' = FALSE
+               /\ ReceiverIT' = TRUE
+               /\ UNCHANGED << Sent, Got, ReceiverLive, SenderState, ReceiverState, Buffer, msg, NotifyWrite, NotifyRead, SenderIT >>
 
 \* Receiver abruptly becomes dead. It sends an IT to sender on dying.
-ReceiverClose == UNCHANGED vars
+ReceiverClose == /\ ReceiverLive' = FALSE
+                 /\ SenderIT' = TRUE
+                 /\ UNCHANGED << Sent, Got, SenderLive, SenderState, ReceiverState, Buffer, msg, NotifyWrite, ReceiverIT, NotifyRead >>
 
 ----------------
 
@@ -267,13 +306,13 @@ Integrity == (Take(Sent, Len(Got)) = Got)
    data in Sent when it is back at "ready") will eventually be received (if
    the receiver doesn't close the connection). In particular, this says that
    it's OK for the sender to close its end immediately after sending some data. *)
-Availability ==
-  \A x \in 0..Cardinality(Byte) : x = Len(Sent) /\ SenderState = Idle ~> (Len(Got) >= x)
+Availability == \A x \in 0..Cardinality(Byte) :
+    (x = Len(Sent) /\ SenderState = Idle) ~> (Len(Got) >= x \/ ~ReceiverLive)
 
 (* If either side closes the connection, both end up in their Done state *)
 ShutdownOK == (~SenderLive \/ ~ReceiverLive) ~> (SenderState = Done /\ ReceiverState = Done)
 
 (* If both ends never close the connection (and Sent is finite), then the receiver eventually gets all the sent bytes. *)
-NoLoss == <>[](Got = Sent)
+NoLoss == [](SenderLive /\ ReceiverLive) => <>[](Got = Sent)
 
 ================================================================
