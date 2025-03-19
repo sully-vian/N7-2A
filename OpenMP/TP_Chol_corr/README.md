@@ -48,3 +48,25 @@ The image clearly shows that the blue operations are still parallelized and even
 
 <!-- TODO -->
 ![trace_par_tasks.svg](./trace_par_tasks.svg)
+
+## Experimenting on a supercomputer
+
+We can benchmark these different methods on a supercomputer to evalue their scalability.
+
+we get the following results:
+
+![scalability_plot.png](./scalability_plot.png)
+
+For each method, the trace isn't so different from the previous ones. UNLESS we look at the number of threads used: **79** !!!
+
+### Simple loop parallelization
+
+![trace_par_loop_simple.svg](./calc/trace_par_loop_simple.svg)
+
+### Improved loop parallelization
+
+![trace_par_loop_improved.svg](./calc/trace_par_loop_improved.svg)
+
+### DAG based parallelization
+
+![trace_par_tasks.svg](./calc/trace_par_tasks.svg)
