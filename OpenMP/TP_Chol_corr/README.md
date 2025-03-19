@@ -1,10 +1,18 @@
 # OpenMP exercise: Cholesky factorization
 
+By default, OpenMP will use the number of threads equal to the number of cores on the machine. To change the number of threads:
+
+```bash
+export OMP_NUM_THREADS=16
+```
+
 To compile, run and benchmark the code:
 
 ```bash
 make && clear && ./main 100 40
 ```
+
+The images are automatically generated and shown here.
 
 ## Issue
 
@@ -28,7 +36,8 @@ The image clearly shows that the blue operations are parallelized. However, the 
 
 [`chol_par_loop_improved.c`](chol_par_loop_improved.c) is optimized by taking out the "j" loop and parallelizing it. This allows us to parallelize the "i" loop as well.
 
-The `private` clause is necessary to ensure that j isn't shared between threads.
+The `private` clause is necessary to ensure that k isn't shared between threads.
+
 The `collapse` clause is not necessary, but it is used to extand the parallelization to both for loops.
 
 ![trace_par_loop_improved.svg](./trace_par_loop_improved.svg)
@@ -36,3 +45,6 @@ The `collapse` clause is not necessary, but it is used to extand the paralleliza
 The image clearly shows that the blue operations are still parallelized and even batched together (in their own for loop). The red operations are also parallelized, saving much time.
 
 ## Part 3: A complex, efficient DAG based parallelization
+
+<!-- TODO -->
+![trace_par_tasks.svg](./trace_par_tasks.svg)
