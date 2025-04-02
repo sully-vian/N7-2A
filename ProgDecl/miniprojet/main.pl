@@ -4,6 +4,7 @@
 % Modèle basique %
 %%%%%%%%%%%%%%%%%%
 
+
 % squareInside/4
 % vrai si le petit carré est dans le grand
 squareInside(T, Ti, Xi, Yi) :-
@@ -28,15 +29,23 @@ notColliding(Ti, Xi, Yi, Tj, Xj, Yj) :-
 % vrai si tous les suivants ne recouvrent pas le carré courant
 nextsNotColliding(_, _, _, [], [], []). % vrai si plus de carrés
 nextsNotColliding(Ti, Xi, Yi, [Tj|Tq], [Xj|Xq], [Yj|Yq]) :-
-    notColliding(Ti, Xi, Yi, Tj, Xj, Yj),
-    nextsNotColliding(Ti, Xi, Yi, Tq, Xq, Yq).
+    notColliding(Ti, Xi, Yi, Tj, Xj, Yj), % i et j ne se recouvrent pas
+    nextsNotColliding(Ti, Xi, Yi, Tq, Xq, Yq), % appel récursif avec i
+    nextsNotColliding(Tj, Xj, Yj, Tq, Xq, Yq). % appel récursif avec j
 
+% solve/3
+% vrai si la solution est trouvée
+% Num (in): numéro de l'instance
+% Xs (out): liste des abscisses des petits carrés
+% Ys (out): liste des ordonnées des petits carrés
 solve(Num, Xs, Ys) :-
     % déclaration des variables
     data(Num, T, Ts), % extraire les données de l'instance
     length(Ts, N), % N <- len(Ts)
     length(Xs, N), % Xs est liste de taille N
     length(Ys, N), % Ys est liste de taille N
+    fd_domain(Xs, 0, T),
+    fd_domain(Ys, 0, T),
     % premiers elt de chaque liste
     [T1|Tq] = Ts,
     [X1|Xq] = Xs,
