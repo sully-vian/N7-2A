@@ -1,0 +1,13 @@
+I am working on an english class presentation that should last 30min. The instructions are the following:
+"""
+In groups of 3, you will prepare and deliver a scientific/technical presentation on a subject of your choice.
+An email invitation including 10 items of useful vocabulary and expressions must be sent to all members of the class (including the teacher) four days before the presentation.
+"""
+We have decided to rpesent three objects from star wars and then to discuss the feasibility of those in real life, with the curent available technologies.
+The chosen subjects are: Light Sabers, Translator Droids and transhumanism (human augmentations).
+Each part (object) will have the same plan:
+- Present the technology as it is in Star Wars in order to specify the goal.
+- Present the current state of technologies that could corresond to what is needed.
+- Present what has already been done in this way (i.e. HackSmith Youtube Channel created a Light Saber).
+In my group of three, I will do the light saber part.
+I need you to help me prepare a more precise plan and find things to say
