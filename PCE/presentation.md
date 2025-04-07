@@ -1,22 +1,28 @@
-# Presentation
+---
+geometry: margin=1in
+---
+
+# Technical Presentation
 
 ## Intro
 
 ...
 
-## Light Sabers
+## Lightsabers
 
-| characteristics\ technologies | solid | laser | plasma | plasma flame |
-|-------------------------------|:-----:|:-----:|:------:|:------------:|
-| ~1m blade                     |   ✓   |   ✗   |   ✗    |      ✓       |
-| various colors                |   ✗   |   ✓   |   ✓    |      ✓       |
-| hot                           |   ✓   |   ✓   |   ✓    |      ✓       |
-| cuts all                      |   ✗   |   ✓   |   ✓    |      ✓       |
-| block other sabers            |   ✓   |   ✗   |   ✗    |      ✗       |
-| emits light                   |   ✓   |   ✓   |   ✓    |      ✓       |
-| retractable                   |   ✗   |   ✓   |   ✓    |      ✓       |
+### In Star Wars
 
-### Solid
+- mighty weapon that all jedi and siths possess
+- one of the most recongnisable weapon of pop culture
+- saber that emits light
+- can cut through most materials
+- retractable
+- can block other sabers
+- can be of any color
+- very hot
+- works with kyber crystals
+
+### Solid Saber
 
 Let's start simple. Let's make a solid light saber.
 
@@ -29,7 +35,7 @@ When heated up, these materials naturally glow and emit light. Sadly, the color 
 
 Still, the main problem is that the blade can't be retracted. It would just be a really hot knife.
 
-### Laser
+### Laser Saber
 
 Why not use lasers as the name implies?
 
@@ -48,7 +54,7 @@ Plasma is a state of matter in which the atoms are so hot that they lose their e
 So that's it. We just need to create a plasma beam and use magnetic fields to keep it in the shape of a blade.
 The problem is that the magnets would need to be close to the blade to keep it in shape. That would defeat the purpose of a light saber.
 
-### Plasma flame
+### Plasma Flame Saber
 
 But plasma can be created in another way: by burning gas. Basically, we're building a powerfull flame thrower.
 
@@ -61,6 +67,26 @@ However the blade would not be solid and a real life light saber battle would be
 This is as far as our technology can go. We can create a light saber that looks like the one in the movies, but it would not be able to block other sabers.
 
 The youtube channel Hacksmith Industries has created multiple prototypes of light sabers. Their last one is based of the plasma flame model.
+
+### Conclusion
+
+| characteristics\ technologies | solid | laser | plasma | plasma flame |
+|-------------------------------|:-----:|:-----:|:------:|:------------:|
+| ~1m blade                     |  OK   |  KO   |   KO   |      OK      |
+| various colors                |  KO   |  OK   |   OK   |      OK      |
+| hot                           |  OK   |  OK   |   OK   |      OK      |
+| cuts all                      |  KO   |  OK   |   OK   |      OK      |
+| block other sabers            |  OK   |  KO   |   KO   |      KO      |
+| emits light                   |  OK   |  OK   |   OK   |      OK      |
+| retractable                   |  KO   |  OK   |   OK   |      OK      |
+
+### Showcase 1
+
+...
+
+### Showcase 2
+
+...
 
 ## Translator Droids
 
