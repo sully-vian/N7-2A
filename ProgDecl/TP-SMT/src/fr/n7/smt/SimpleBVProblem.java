@@ -10,7 +10,7 @@ class SimpleBVProblem {
         cfg.put("proof", "true");
 
         Context context = new Context(cfg);
-        Solver  solver  = context.mkSolver();
+        Solver solver = context.mkSolver();
 
         // create 3 bitvector variables of size 4
         System.out.print("* Creating 3 BV variables of size 4...");
@@ -33,15 +33,15 @@ class SimpleBVProblem {
         // create and add constraint a = 2 * c + 10
         System.out.print("  creating a = 2 * c + 10: ");
         BoolExpr c2 = context.mkEq(a,
-                                   context.mkBVAdd(context.mkBVMul(c, context.mkBV(2, 4)),
-                                                   context.mkBV(10, 4)));
+                context.mkBVAdd(context.mkBVMul(c, context.mkBV(2, 4)),
+                        context.mkBV(10, 4)));
         solver.add(c2);
         System.out.println(c2);
 
         // create and add constraint b + c <= 10
         System.out.print("  creating b + c <= 10: ");
         BoolExpr c3 = context.mkBVSLE(context.mkBVAdd(b, c),
-                                      context.mkBV(10, 4));
+                context.mkBV(10, 4));
         solver.add(c3);
         System.out.println(c3);
 

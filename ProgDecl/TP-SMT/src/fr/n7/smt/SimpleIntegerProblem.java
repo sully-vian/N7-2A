@@ -5,11 +5,11 @@ import com.microsoft.z3.*;
 
 class SimpleIntegerProblem {
     static void solveAndPrint(Solver solver,
-                              IntExpr a,
-                              IntExpr b,
-                              IntExpr c,
-                              IntExpr d,
-                              IntExpr e) {
+            IntExpr a,
+            IntExpr b,
+            IntExpr c,
+            IntExpr d,
+            IntExpr e) {
 
         long startTime = System.currentTimeMillis();
 
@@ -27,7 +27,7 @@ class SimpleIntegerProblem {
             System.out.println("  UNSAT or UNKNOWN problem!");
         }
 
-        long stopTime    = System.currentTimeMillis();
+        long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
 
         System.out.println("  time to solve: " + elapsedTime + "ms");
@@ -39,7 +39,7 @@ class SimpleIntegerProblem {
         cfg.put("proof", "true");
 
         Context context = new Context(cfg);
-        Solver  solver  = context.mkSolver();
+        Solver solver = context.mkSolver();
 
         // create 5 integer variables
         System.out.print("* Creating 5 integer variables...");
@@ -64,8 +64,8 @@ class SimpleIntegerProblem {
         // create and add constraint a = 2 * c + 10
         System.out.print("  creating a = 2 * c + 10: ");
         BoolExpr c2 = context.mkEq(a,
-                                   context.mkAdd(context.mkMul(c, context.mkInt(2)),
-                                                 context.mkInt(10)));
+                context.mkAdd(context.mkMul(c, context.mkInt(2)),
+                        context.mkInt(10)));
         solver.add(c2);
         System.out.println(c2);
 

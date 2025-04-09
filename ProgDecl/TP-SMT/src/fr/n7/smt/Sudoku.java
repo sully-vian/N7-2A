@@ -12,23 +12,31 @@ class OutOfBoundsException extends Exception {
 
 class Sudoku {
     // Sudoku dimension
-    private int                 nInit;
-    private Context             context;
-    private Solver              solver;
+    private int nInit;
+    private Context context;
+    private Solver solver;
 
     // a cube representing the grid
-    private Object /* TODO find the right type! */ grid[][];
+    private IntExpr grid[][];
 
     // the initial values on the grid represented as
     // boolean values
-    private ArrayList<Object> /* TODO find the right type! */ initValues;
+    private ArrayList<IntExpr> initValues;
 
     /**
      * This method should add existence constraints: each cell has
      * at least one value.
      */
     private void addExistenceConstraints() {
-      // TODO : to be implemented!
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                BoolExpr borneInf = context.mkLe(grid[i][j], context.mkInt(grid.length));
+                BoolExpr borneSup = context.mkGt(grid[i][j], context.mkInt(0));
+                solver.add(borneInf);
+                solver.add(borneSup);
+            }
+        }
+
     }
 
     /**
@@ -36,7 +44,16 @@ class Sudoku {
      * appears exactly one time in each column.
      */
     private void addColumnConstraints() {
-      // TODO : to be implemented!
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                for (int i2 = 0; i2 < grid.length; i2++) {
+                    if (i2 != i) {
+                        BoolExpr equalFormula = context.mkEq(grid[i][j], grid[i2][j]);
+                        solver.add(context.mkNot(equalFormula));
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -44,7 +61,16 @@ class Sudoku {
      * appears exactly one time in each row.
      */
     private void addRowConstraints() {
-      // TODO : to be implemented!
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                for (int j2 = 0; j2 < grid.length; j2++) {
+                    if (j2 != j) {
+                        BoolExpr equalFormula = context.mkEq(grid[i][j], grid[i][j2]);
+                        solver.add(context.mkNot(equalFormula));
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -52,7 +78,27 @@ class Sudoku {
      * appears exactly one time in each subgrid.
      */
     private void addSubGridsConstraints() {
-      // TODO : to be implemented!
+        // itérer sur les sous-grilles
+        for (int bigI = 0; bigI < nInit; bigI++) {
+            for (int bigJ = 0; bigJ < nInit; bigJ++) {
+
+                // itérer sur les cases au sein d'une sous-grille
+                for (int i = bigI * nInit; i < (bigI + 1) * nInit; i++) {
+                    for (int j = bigJ * nInit; j < (bigJ + 1) * nInit; j++) {
+
+                        // itérer sur les autres cases de la sous-grille
+                        for (int i2 = bigI * nInit; i2 < (bigI + 1) * nInit; i2++) {
+                            for (int j2 = bigJ * nInit; j2 < (bigJ + 1) * nInit; j2++) {
+                                if ((i2 != i) || (j2 != j)) { // si sur autre case que courante
+                                    BoolExpr equalFormula = context.mkEq(grid[i][j], grid[i2][j2]);
+                                    solver.add(context.mkNot(equalFormula));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -68,21 +114,17 @@ class Sudoku {
         cfg.put("model", "true");
 
         this.context = new Context(cfg);
-        this.solver  = context.mkSolver();
-        this.nInit   = n;
+        this.solver = context.mkSolver();
+        this.nInit = n;
 
         int w = n * n;
 
-        // TODO: find the right type!
-        this.grid = new Object[w][w];
+        this.grid = new IntExpr[w][w];
 
         // build Z3 decision variables for each cell/value
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < w; j++) {
-                for (int k = 0; k < w; k++) {
-                    // TODO: properly initialize grid!
-                    this.grid[i][j] = null;
-                }
+                this.grid[i][j] = context.mkIntConst("" + i + "_" + j);
             }
         }
 
@@ -93,7 +135,7 @@ class Sudoku {
         this.addRowConstraints();
         this.addSubGridsConstraints();
 
-        long stopTime    = System.currentTimeMillis();
+        long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
 
         System.out.println("time to build constraints: " + elapsedTime + "ms");
@@ -111,10 +153,11 @@ class Sudoku {
 
         for (int i = 0; i < this.grid.length; i++) {
             for (int j = 0; j < this.grid.length; j++) {
-                // TODO: print value
-
+                if (m.getConstInterp(grid[i][j]) != null) {
+                    String value = m.getConstInterp(grid[i][j]).toString();
+                    System.out.print(value + " ");
+                }
             }
-
             System.out.println();
         }
     }
@@ -127,7 +170,7 @@ class Sudoku {
 
         Status s = this.solver.check();
 
-        long stopTime    = System.currentTimeMillis();
+        long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
 
         System.out.println("time to solve problem: " + elapsedTime + "ms");
@@ -144,12 +187,13 @@ class Sudoku {
      */
     void addValue(int i, int j, int v) throws OutOfBoundsException {
         if (i < 0 || j < 0 || v < 1 ||
-            i >= this.grid.length || j >= this.grid.length || v > this.grid.length) {
-            throw new OutOfBoundsException(String.format("problem when adding (%d, %d, %d)", i , j, v));
+                i >= this.grid.length || j >= this.grid.length || v > this.grid.length) {
+            throw new OutOfBoundsException(String.format("problem when adding (%d, %d, %d)", i, j, v));
         }
 
         this.initValues.add(this.grid[i][j]);
-        // TODO: find constraint to add!
+        IntNum vInt = context.mkInt(v);
+        this.solver.add(context.mkEq(grid[i][j], vInt));
     }
 
     /**
@@ -163,8 +207,8 @@ class Sudoku {
         BufferedReader br = new BufferedReader(new FileReader(filename));
 
         // first line contains dimension
-        String line   = br.readLine();
-        int    n      = Integer.parseInt(line);
+        String line = br.readLine();
+        int n = Integer.parseInt(line);
         Sudoku sudoku = new Sudoku(n);
 
         // parse each line
@@ -174,7 +218,7 @@ class Sudoku {
             String values[] = line.split(",");
 
             for (int j = 0; j < values.length; j++) {
-                if (! values[j].equals("")) {
+                if (!values[j].equals("")) {
                     sudoku.addValue(i, j, Integer.parseInt(values[j]));
                 }
             }
@@ -196,9 +240,9 @@ class Sudoku {
      * make run-sudoku SUDOKU_FILE=file_to_use
      */
     public static void main(String[] args) throws OutOfBoundsException, IOException {
-        Sudoku            sudoku = Sudoku.loadSudoku(args[0]);
-        InputStreamReader aux    = new InputStreamReader(System.in);
-        BufferedReader    in     = new BufferedReader(aux);
+        Sudoku sudoku = Sudoku.loadSudoku(args[0]);
+        InputStreamReader aux = new InputStreamReader(System.in);
+        BufferedReader in = new BufferedReader(aux);
 
         if (sudoku.solve() == Status.SATISFIABLE) {
             System.out.println("Solution found!\n");

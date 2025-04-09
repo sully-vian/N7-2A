@@ -29,14 +29,13 @@ class CheckingOverflowBV {
         }
     }
 
-
     public static void main(String[] args) {
         HashMap<String, String> cfg = new HashMap<String, String>();
         cfg.put("model", "true");
         cfg.put("proof", "true");
 
         Context context = new Context(cfg);
-        Solver  solver  = context.mkSolver();
+        Solver solver = context.mkSolver();
 
         // create 3 bitvector variables of size 4
         System.out.print("* Creating 3 BV variables of size 4...");
