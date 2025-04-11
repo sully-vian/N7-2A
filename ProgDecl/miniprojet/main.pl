@@ -1,3 +1,6 @@
+% Vianney Hervy - vhy9665
+% 2SN - L2
+
 :- initialization(['libtp2.pl']).
 
 %%%%%%%%%%%%%%%%%%
@@ -67,21 +70,24 @@ solve1(Num, Xs, Ys, B) :-
 % Contraintes redondantes %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% verticalSum/4
-% vrai si S est la somme des tailles des petits carrés coupés par la verticale V
-verticalSum(_, [], [], 0).
-verticalSum(V, [Ti | Tq], [Xi | Xq], S) :-
-    (Xi #=< V #/\ V #< Xi + Ti) #<=> B, % B rpz si le carré est coupé ou non
-    verticalSum(V, Tq, Xq, S1), % somme des autres
+% sliceSum/4
+% vrai si S est la somme des tailles des petits carrés coupés par la
+% verticale / horizontale I
+sliceSum(_, [], [], 0).
+sliceSum(I, [Ti | Tq], [Zi | Zq], S) :-
+    (Zi #=< I #/\ I #< Zi + Ti) #<=> B, % B rpz si le carré est coupé ou non
+    sliceSum(I, Tq, Zq, S1), % somme des autres
     S #= S1 + B * Ti. % somme courante
 
-% horizontalSum/4
-% vrai si S est la somme des tailles des petits carrés coupés par l'horizontale H
-horizontalSum(_, [], [], 0).
-horizontalSum(H, [Ti | Tq], [Yi | Yq], S) :-
-    (Yi #=< H #/\ H #< Yi + Ti) #<=> B, % B rpz si le carré est coupé ou non
-    horizontalSum(H, Tq, Yq, S1), % somme des autres
-    S #= S1 + B * Ti. % somme courante
+% redondance/5
+redondance(T, _, _, _, T).
+redondance(I, Ts, Xs, Ys, T) :-
+    % I est l'indice de la verticale / de l'horizontale
+    sliceSum(I, Ts, Xs, T), % vérif sur la verticale
+    sliceSum(I, Ts, Ys, T), % vérif sur l'horizontale
+    % appel récursif sur la verticale / horizontale suivante
+    I1 #= I + 1,
+    redondance(I1, Ts, Xs, Ys, T).
 
 % solve2/4
 % Idem que solve1 mais avec des contraintes redondantes
@@ -103,11 +109,7 @@ solve2(Num, Xs, Ys, B) :-
     nextsNotColliding(T1, X1, Y1, Tq, Xq, Yq),
 
     % contraintes redondantes
-    Tm1 #= T - 1,
-    between(0, Tm1, V),
-    verticalSum(V, Ts, Xs, T),
-    between(0, Tm1, H),
-    verticalSum(H, Ts, Xs, T),
+    redondance(0, Ts, Xs, Ys, T),
 
     % recherche de solution
     append(Xs, Ys, Vars),
@@ -117,8 +119,10 @@ solve2(Num, Xs, Ys, B) :-
 % 2 %
 %%%%%
 
-% Avec le modèle basique, on a 106 backtracks.
-% En ajoutant les contraintes redondantes, on a 14 backtracks.
+% Avec le modèle basique, j'ai 106 backtracks avant la prmière solution et 1485
+% avant la dernière solution.
+% En ajoutant les contraintes redondantes, je n'ai plus que 0 backtrack avant la
+% première solution et 479 avant la dernière
 % Il semblerait que les contraintes redondantes permettent d'orienter la
 % recherche pour une convergence plus rapide.
 
@@ -151,11 +155,8 @@ solve3(Num, Xs, Ys, B, NbSol) :-
     nextsNotColliding(T1, X1, Y1, Tq, Xq, Yq),
 
     % contraintes redondantes
-    Tm1 #= T - 1,
-    between(0, Tm1, V),
-    verticalSum(V, Ts, Xs, T),
-    between(0, Tm1, H),
-    verticalSum(H, Ts, Xs, T),
+    redondance(0, Ts, Xs, Ys, T),
+
     % recherche de solution
     labeling(Xs, Ys, assign, minmin, B, NbSol).
 
