@@ -1,7 +1,13 @@
 package fr.n7.smt;
 
-import java.util.*;
-import com.microsoft.z3.*;
+import java.util.HashMap;
+
+import com.microsoft.z3.BitVecExpr;
+import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.Context;
+import com.microsoft.z3.Model;
+import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
 
 class SimpleBVProblem {
     public static void main(String[] args) {

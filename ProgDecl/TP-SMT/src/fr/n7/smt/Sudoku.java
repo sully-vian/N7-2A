@@ -1,8 +1,21 @@
 package fr.n7.smt;
 
-import java.io.*;
-import java.util.*;
-import com.microsoft.z3.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.Context;
+import com.microsoft.z3.IntExpr;
+import com.microsoft.z3.IntNum;
+import com.microsoft.z3.Model;
+import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
+
+// import com.microsoft.z3.*;
 
 class OutOfBoundsException extends Exception {
     public OutOfBoundsException(String message) {
@@ -99,6 +112,25 @@ class Sudoku {
                 }
             }
         }
+    }
+
+    private void forbidLastSol() {
+        System.out.println("forbidding last sol");
+        Model m = solver.getModel();
+
+        BoolExpr formula = context.mkFalse();
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
+                if (m.getConstInterp(grid[i][j]) != null) {
+                    String value = m.getConstInterp(grid[i][j]).toString();
+                    IntNum vInt = context.mkInt(Integer.parseInt(value));
+                    BoolExpr equalFormula = context.mkEq(grid[i][j], vInt);
+                    BoolExpr neqFormula = context.mkNot(equalFormula);
+                    formula = context.mkOr(formula, neqFormula);
+                }
+            }
+        }
+        solver.add(formula);
     }
 
     /**
@@ -244,12 +276,14 @@ class Sudoku {
         InputStreamReader aux = new InputStreamReader(System.in);
         BufferedReader in = new BufferedReader(aux);
 
-        if (sudoku.solve() == Status.SATISFIABLE) {
-            System.out.println("Solution found!\n");
-
+        int numSol = 0;
+        while (sudoku.solve() == Status.SATISFIABLE) {
+            numSol++;
+            System.out.println("Solution " + numSol + " found!\n");
             sudoku.print();
-        } else {
-            System.out.println("No solution found!\n");
+            sudoku.forbidLastSol();
         }
+
+        System.out.println("Number of solutions: " + numSol);
     }
 }
