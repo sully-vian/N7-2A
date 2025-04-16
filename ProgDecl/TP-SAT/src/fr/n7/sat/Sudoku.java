@@ -324,12 +324,6 @@ class Sudoku {
             // Thread.sleep(500);
         }
 
-        if (sudoku.solve() == Status.SATISFIABLE) {
-            System.out.println("Solution found!\n");
-
-            sudoku.print();
-        } else {
-            System.out.println("No solution found!\n");
-        }
+        System.out.println("Number of solutions: " + numSol);
     }
 }
