@@ -1,6 +1,9 @@
 package fr.n7.smt;
 
-import com.microsoft.z3.*;
+import com.microsoft.z3.IntExpr;
+import com.microsoft.z3.Model;
+import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.Context;
 
 /**
  * A dummy transition system. The state of the transition system is
@@ -11,30 +14,30 @@ import com.microsoft.z3.*;
 public class DummyTransitionSystem extends TransitionSystem {
 
     private IntExpr states[];
-    private int     start;
+    private int start;
     private Context context;
-    private int     target;
+    private int target;
 
     /**
      * Creates a dummy transition system.
      *
      * @param startingNumber the int representing the initial
-     *        state of the system
-     * @param maxNOfSteps the maximum number of states to consider
-     * @param target the int value to attain (cf. {@link transitionFormula})
+     *                       state of the system
+     * @param maxNOfSteps    the maximum number of states to consider
+     * @param target         the int value to attain (cf. {@link transitionFormula})
      */
     public DummyTransitionSystem(int startingNumber,
-                                 int maxNOfSteps,
-                                 int target) {
+            int maxNOfSteps,
+            int target) {
         this.context = Z3Utils.getZ3Context();
-        this.start   = startingNumber;
-        this.states  = new IntExpr[maxNOfSteps + 1];
+        this.start = startingNumber;
+        this.states = new IntExpr[maxNOfSteps + 1];
 
         for (int i = 0; i < maxNOfSteps + 1; i++) {
             this.states[i] = this.context.mkIntConst("i_" + i);
         }
 
-        this.target  = target;
+        this.target = target;
     }
 
     /**
@@ -44,15 +47,15 @@ public class DummyTransitionSystem extends TransitionSystem {
     @Override
     public BoolExpr transitionFormula(int step) {
         BoolExpr trans = this.context.mkEq(this.states[step + 1],
-                                           this.context.mkAdd(this.states[step],
-                                                              this.context.mkInt(2)));
+                this.context.mkAdd(this.states[step],
+                        this.context.mkInt(2)));
         return trans;
     }
 
     @Override
     public BoolExpr initialStateFormula() {
         BoolExpr init = this.context.mkEq(this.states[0],
-                                          this.context.mkInt(this.start));
+                this.context.mkInt(this.start));
 
         return init;
     }
@@ -63,7 +66,7 @@ public class DummyTransitionSystem extends TransitionSystem {
     @Override
     public BoolExpr finalStateFormula(int step) {
         BoolExpr finalState = this.context.mkEq(this.states[step],
-                                                this.context.mkInt(this.target));
+                this.context.mkInt(this.target));
 
         return finalState;
     }

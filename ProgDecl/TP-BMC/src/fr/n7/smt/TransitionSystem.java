@@ -1,6 +1,8 @@
 package fr.n7.smt;
 
-import com.microsoft.z3.*;
+import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.Expr;
+import com.microsoft.z3.Model;
 
 /**
  * A simple abstract class representing a transition system.

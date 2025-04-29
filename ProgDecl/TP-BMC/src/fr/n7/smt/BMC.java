@@ -1,6 +1,8 @@
 package fr.n7.smt;
 
-import com.microsoft.z3.*;
+import com.microsoft.z3.Context;
+import com.microsoft.z3.Solver;
+import com.microsoft.z3.Status;
 
 /**
  * A Bounded Model-Checking (BMC) motor on a transition system.
@@ -13,10 +15,10 @@ import com.microsoft.z3.*;
 public class BMC {
 
     private TransitionSystem system;
-    private Context          context;
-    private int              maxNOfSteps;
-    private boolean          useApprox;
-    private boolean          simulation;
+    private Context context;
+    private int maxNOfSteps;
+    private boolean useApprox;
+    private boolean simulation;
 
     private void printParams() {
         System.out.println("\nBMC parameters:");
@@ -27,23 +29,23 @@ public class BMC {
     /**
      * Create a BMC instance for a particular transition system.
      *
-     * @param system the transition system
+     * @param system      the transition system
      * @param maxNOfSteps the maximum number of unrolling steps
-     * @param useApprox to use approximate resolution when needed
-     * @param simulation if true, then BMC is used to simulate the system
-     *                   In this case, no approximate solver is used.
+     * @param useApprox   to use approximate resolution when needed
+     * @param simulation  if true, then BMC is used to simulate the system
+     *                    In this case, no approximate solver is used.
      */
     public BMC(TransitionSystem system,
-               int maxNOfSteps,
-               boolean useApprox,
-               boolean simulation) {
+            int maxNOfSteps,
+            boolean useApprox,
+            boolean simulation) {
         this.context = Z3Utils.getZ3Context();
 
         // initialize system
-        this.system      = system;
+        this.system = system;
         this.maxNOfSteps = maxNOfSteps;
-        this.useApprox   = simulation ? false : useApprox;
-        this.simulation  = simulation;
+        this.useApprox = simulation ? false : useApprox;
+        this.simulation = simulation;
     }
 
     /**
@@ -55,12 +57,12 @@ public class BMC {
      * 1. a transition formula for the next step is added to the solver
      * 2. the final state formula for the next step is pushed into the solver
      * 3. if the problem is SAT then solution is printed
-     *    else if the problem is UNSAT, the final state formula is popped
-     *    and the next iteration is done
+     * else if the problem is UNSAT, the final state formula is popped
+     * and the next iteration is done
      *
-     *    If the problem is UNKNOWN, the UNKNOWN status is returned.
+     * If the problem is UNKNOWN, the UNKNOWN status is returned.
      * 4. if the problem is UNSAT for all iterations, the UNSAT status
-     *    is returned
+     * is returned
      *
      * If the BMC solver is configured for simulation (cf. {@link BMC}),
      * then the final state formula is always True and the BMC is executed
@@ -71,22 +73,54 @@ public class BMC {
     private Status solveExact(int timeout) {
         // TODO: to complete!
 
+        Solver solver = this.context.mkSolver();
+
         // add initial state formula
+        solver.add(this.system.initialStateFormula());
 
         // config timeout if necessary
 
         // main loop:
         // - if not in simulation mode, add final state formula
-        //   if it is not null
+        // if it is not null
         // - check satisfiability
-        //   - if UNKNOWN, return UNKNOWN
-        //   - if UNSAT, add a new transition step
-        //   - if SAT, return SATISFIABLE if not in simulation mode
-        //   - print simple info (SAT/UNSAT/UNKWON at step XXX etc)
+        // - if UNKNOWN, return UNKNOWN
+        // - if UNSAT, add a new transition step
+        // - if SAT, return SATISFIABLE if not in simulation mode
+        // - print simple info (SAT/UNSAT/UNKWON at step XXX etc)
+
+        int step = 0;
+        while (step < this.maxNOfSteps) {
+            if (!this.simulation) {
+                if (this.system.finalStateFormula(this.maxNOfSteps) != null) {
+                    solver.add(this.system.finalStateFormula(this.maxNOfSteps));
+                }
+            }
+            Status satisfiability = solver.check();
+            System.out.println("Step " + step + ": " + satisfiability);
+            switch (satisfiability) {
+                case UNKNOWN:
+                    return Status.UNKNOWN;
+                case UNSATISFIABLE:
+                    solver.add(this.system.transitionFormula(step));
+                    break;
+                case SATISFIABLE:
+                    if (!this.simulation) {
+                        return Status.SATISFIABLE;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            step++;
+        }
 
         // return UNSATISFIABLE or SATISFIABLE if in simulation mode
-
-        return null;
+        if (this.simulation) {
+            return Status.SATISFIABLE;
+        } else {
+            return Status.UNSATISFIABLE;
+        }
     }
 
     /**
@@ -95,12 +129,12 @@ public class BMC {
      * are the following:
      *
      * 1. push and pop cannot be used, therefore the complete set of
-     *    formulas has to be built at each iteration
+     * formulas has to be built at each iteration
      * 2. the negation of the expected property has to be added for
-     *    the next step
+     * the next step
      * 3. the problem should therefore be SAT at each iteration. If not,
-     *    return the corresponding status (UNSAT or UNKNOWN). If the
-     *    problem is SAT at each step, return SAT.
+     * return the corresponding status (UNSAT or UNKNOWN). If the
+     * problem is SAT at each step, return SAT.
      *
      * @param timeout the timeout to use. If negative, no timeout is used
      */

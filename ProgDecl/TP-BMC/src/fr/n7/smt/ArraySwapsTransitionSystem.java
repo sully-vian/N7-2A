@@ -1,6 +1,10 @@
 package fr.n7.smt;
 
-import com.microsoft.z3.*;
+import com.microsoft.z3.ArrayExpr;
+import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.Context;
+import com.microsoft.z3.IntSort;
+import com.microsoft.z3.Model;
 
 /**
  * A transition system representing swaps of an array. The state of the
@@ -11,21 +15,21 @@ import com.microsoft.z3.*;
  */
 public class ArraySwapsTransitionSystem extends TransitionSystem {
 
-    private Context                       context;
-    private int                           length;
-    private int[]                         values;
+    private Context context;
+    private int length;
+    private int[] values;
     private ArrayExpr<IntSort, IntSort>[] arrays;
-    private BoolExpr[][][]                actions;
+    private BoolExpr[][][] actions;
 
     // as Java does not support arrays of generic types, we suppress
     // corresponding warnings
     @SuppressWarnings("unchecked")
     public ArraySwapsTransitionSystem(int length,
-                                      int values[]) {
+            int values[]) {
         // init attributes
         this.context = Z3Utils.getZ3Context();
-        this.length  = length;
-        this.values  = values;
+        this.length = length;
+        this.values = values;
 
         // init Z3 arrays
         this.arrays = new ArrayExpr[4];
@@ -86,9 +90,9 @@ public class ArraySwapsTransitionSystem extends TransitionSystem {
 
         for (int i = 0; i < length; i++) {
             sb.append(m.eval(this.context.mkSelect(array,
-                                                   this.context.mkInt(i)),
-                             true) +
-                      (i != length - 1 ? ", " : ""));
+                    this.context.mkInt(i)),
+                    true) +
+                    (i != length - 1 ? ", " : ""));
         }
 
         sb.append(" ]");
@@ -107,7 +111,7 @@ public class ArraySwapsTransitionSystem extends TransitionSystem {
                     } else {
                         System.err.println("*** Problem: at least two decisions for the same step! ***");
                         System.err.println("   " + decision.toString() + " and " +
-                                           actions[step][i][j].toString());
+                                actions[step][i][j].toString());
                         System.exit(1);
                     }
                 }
@@ -121,7 +125,7 @@ public class ArraySwapsTransitionSystem extends TransitionSystem {
     public void printModel(Model m, int steps) {
         for (int s = 0; s < 4; s++) {
             System.out.println("  " + s + ". array: " +
-                               this.arrayToString(this.arrays[s], m, this.length));
+                    this.arrayToString(this.arrays[s], m, this.length));
             if (s != 3) {
                 System.out.println("     decision: " + this.decisionToString(m, s));
             }

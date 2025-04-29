@@ -9,7 +9,8 @@ package fr.n7.smt;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.microsoft.z3.*;
+import com.microsoft.z3.BoolExpr;
+import com.microsoft.z3.Context;
 
 public class Z3Utils {
     private static Context context = null;

@@ -2,7 +2,11 @@
 # Vous pouvez modifier cette variable d'environnement si vous
 # avez installé Z3 sur votre compte ou sur votre machine
 # personnelle.
-PATH_TO_Z3 = /mnt/n7fs/ens/tp_dupont/z3/bin
+ifeq ($(shell whoami), sully_vian)
+	PATH_TO_Z3 = /home/sully_vian/z3-4.11.2-x64-glibc-2.31/bin/
+else
+	PATH_TO_Z3 = /mnt/n7fs/ens/tp_dupont/z3/bin
+endif
 
 JAVAC = javac
 JAVA = LD_LIBRARY_PATH=$(PATH_TO_Z3) java
