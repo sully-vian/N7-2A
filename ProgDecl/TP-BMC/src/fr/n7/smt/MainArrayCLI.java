@@ -5,7 +5,7 @@ public class MainArrayCLI {
         System.out.println("Trying to solve array problem");
 
         ArraySwapsTransitionSystem arrayTS;
-
+System.out.println("args.length = " + args.length);
         if (args.length == 0) {
             // create dummy array
             int array[] = { 1, 4, 2, 3, 5 };

@@ -1,6 +1,8 @@
 package fr.n7.smt;
 
 import com.microsoft.z3.Context;
+import com.microsoft.z3.Model;
+import com.microsoft.z3.Params;
 import com.microsoft.z3.Solver;
 import com.microsoft.z3.Status;
 
@@ -71,7 +73,6 @@ public class BMC {
      * @param timeout the timeout to use. If negative, no timeout is used
      */
     private Status solveExact(int timeout) {
-        // TODO: to complete!
 
         Solver solver = this.context.mkSolver();
 
@@ -79,6 +80,11 @@ public class BMC {
         solver.add(this.system.initialStateFormula());
 
         // config timeout if necessary
+        if (timeout > 0) {
+            Params params = this.context.mkParams();
+            params.add("timeout", timeout);
+            solver.setParameters(params);
+        }
 
         // main loop:
         // - if not in simulation mode, add final state formula
@@ -90,33 +96,39 @@ public class BMC {
         // - print simple info (SAT/UNSAT/UNKWON at step XXX etc)
 
         int step = 0;
-        while (step < this.maxNOfSteps) {
-            if (!this.simulation) {
-                if (this.system.finalStateFormula(this.maxNOfSteps) != null) {
-                    solver.add(this.system.finalStateFormula(this.maxNOfSteps));
-                }
-            }
-            Status satisfiability = solver.check();
-            System.out.println("Step " + step + ": " + satisfiability);
-            switch (satisfiability) {
-                case UNKNOWN:
-                    return Status.UNKNOWN;
-                case UNSATISFIABLE:
-                    solver.add(this.system.transitionFormula(step));
-                    break;
-                case SATISFIABLE:
-                    if (!this.simulation) {
+        while (step < maxNOfSteps) {
+
+            if (system.finalStateFormula(step) != null) {
+                solver.push();
+                solver.add(system.finalStateFormula(step));
+
+                Status satisfiability = solver.check();
+                System.out.println("Step " + step + ": " + satisfiability);
+                switch (satisfiability) {
+                    case UNKNOWN:
+                        return Status.UNKNOWN;
+
+                    case UNSATISFIABLE:
+                        solver.pop();
+                        solver.add(system.transitionFormula(step));
+                        break;
+
+                    case SATISFIABLE:
+                        Model model = solver.getModel();
+                        system.printModel(model, step);
                         return Status.SATISFIABLE;
-                    }
-                    break;
-                default:
-                    break;
+                    default:
+                        throw new IllegalStateException("Unexpected solver status: " + satisfiability);
+                }
+            } else {
+                System.out.println("Step " + step + ": final state formula is null");
+                solver.add(system.transitionFormula(step));
             }
             step++;
         }
 
         // return UNSATISFIABLE or SATISFIABLE if in simulation mode
-        if (this.simulation) {
+        if (simulation) {
             return Status.SATISFIABLE;
         } else {
             return Status.UNSATISFIABLE;

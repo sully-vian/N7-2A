@@ -21,8 +21,6 @@ _SRC_FILES = Z3Utils.java TransitionSystem.java DummyTransitionSystem.java \
 
 SRC_FILES = $(patsubst %,$(SRC_DIR)/%,$(_SRC_FILES))
 
-ARRAYS =
-
 .PHONY: compile run-simulation run-exact
 
 compile: $(SRC_FILES) | classes
@@ -35,7 +33,7 @@ run-exact: compile
 	$(JAVA) $(JAVA_OPTS) fr.n7.smt.MainDummyExact
 
 run-array-swaps: compile
-	$(JAVA) $(JAVA_OPTS) fr.n7.smt.MainArrayCLI $(ARRAYS)
+	$(JAVA) $(JAVA_OPTS) fr.n7.smt.MainArrayCLI $(ARRAY)
 
 classes:
 	mkdir -p $@
