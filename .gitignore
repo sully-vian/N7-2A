@@ -6,6 +6,7 @@ _build/
 *.zip
 *.ipynb_checkpoints
 *.DS_Store
+._*
 
 # C / C++
 *.o

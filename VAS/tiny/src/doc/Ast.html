@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Analyze.html">
+<link rel="next" href="Compile.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Analyze" rel="Chapter" href="Analyze.html">
+<link title="Ast" rel="Chapter" href="Ast.html">
+<link title="Compile" rel="Chapter" href="Compile.html">
+<link title="Location" rel="Chapter" href="Location.html">
+<link title="Name" rel="Chapter" href="Name.html">
+<link title="NonRelational" rel="Chapter" href="NonRelational.html">
+<link title="Parse" rel="Chapter" href="Parse.html">
+<link title="Relational" rel="Chapter" href="Relational.html">
+<link title="PrintResults" rel="Chapter" href="PrintResults.html">
+<link title="Report" rel="Chapter" href="Report.html">
+<link title="Utils" rel="Chapter" href="Utils.html">
+<link title="Dummy" rel="Chapter" href="Dummy.html">
+<link title="InfInt" rel="Chapter" href="InfInt.html"><link title="Type of Abstract Syntax Trees" rel="Section" href="#2_TypeofAbstractSyntaxTrees">
+<link title="Various Utility Functions" rel="Section" href="#2_VariousUtilityFunctions">
+<link title="Printing Functions" rel="Section" href="#2_PrintingFunctions">
+<title>Ast</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Analyze.html" title="Analyze">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Compile.html" title="Compile">Next</a>
+</div>
+<h1>Module <a href="type_Ast.html">Ast</a></h1>
+
+<pre><span id="MODULEAst"><span class="keyword">module</span> Ast</span>: <code class="code">sig</code> <a href="Ast.html">..</a> <code class="code">end</code></pre><div class="info module top">
+<div class="info-desc">
+<p>Type of abstract syntax trees, printing and various functions on them.</p>
+</div>
+</div>
+<hr width="100%">
+<h3 id="2_TypeofAbstractSyntaxTrees">Type of Abstract Syntax Trees</h3>
+<pre><code><span id="TYPEbop"><span class="keyword">type</span> <code class="type"></code>bop</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbop.Plus"><span class="constructor">Plus</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbop.Minus"><span class="constructor">Minus</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbop.Times"><span class="constructor">Times</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTbop.Div"><span class="constructor">Div</span></span></code></td>
+
+</tr></table>
+
+
+
+<pre><code><span id="TYPEexpr"><span class="keyword">type</span> <code class="type"></code>expr</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr.Int"><span class="constructor">Int</span></span> <span class="keyword">of</span> <code class="type"><a href="Location.html#TYPEt">Location.t</a> * int</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>n</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr.Var"><span class="constructor">Var</span></span> <span class="keyword">of</span> <code class="type"><a href="Location.html#TYPEt">Location.t</a> * <a href="Name.html#TYPEt">Name.t</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>v</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr.Binop"><span class="constructor">Binop</span></span> <span class="keyword">of</span> <code class="type"><a href="Location.html#TYPEt">Location.t</a> * <a href="Ast.html#TYPEbop">bop</a> * <a href="Ast.html#TYPEexpr">expr</a> * <a href="Ast.html#TYPEexpr">expr</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>expr + expr,...</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTexpr.Rand"><span class="constructor">Rand</span></span> <span class="keyword">of</span> <code class="type"><a href="Location.html#TYPEt">Location.t</a> * int * int</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>rand(n, n)</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+
+<pre><code><span id="TYPEstm"><span class="keyword">type</span> <code class="type"></code>stm</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstm.Asn"><span class="constructor">Asn</span></span> <span class="keyword">of</span> <code class="type"><a href="Location.html#TYPEt">Location.t</a> * <a href="Name.html#TYPEt">Name.t</a> * <a href="Ast.html#TYPEexpr">expr</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>v = expr;</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstm.Seq"><span class="constructor">Seq</span></span> <span class="keyword">of</span> <code class="type"><a href="Location.html#TYPEt">Location.t</a> * <a href="Ast.html#TYPEstm">stm</a> * <a href="Ast.html#TYPEstm">stm</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>stm stm</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstm.Ite"><span class="constructor">Ite</span></span> <span class="keyword">of</span> <code class="type"><a href="Location.html#TYPEt">Location.t</a> * <a href="Ast.html#TYPEexpr">expr</a> * <a href="Ast.html#TYPEstm">stm</a> * <a href="Ast.html#TYPEstm">stm</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>if (expr &gt; 0) { stm } else { stm }</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTstm.While"><span class="constructor">While</span></span> <span class="keyword">of</span> <code class="type"><a href="Location.html#TYPEt">Location.t</a> * <a href="Ast.html#TYPEexpr">expr</a> * <a href="Ast.html#TYPEstm">stm</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>while (expr &gt; 0) { stm }</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+<h3 id="2_VariousUtilityFunctions">Various Utility Functions</h3>
+<pre><span id="VALloc_of_expr"><span class="keyword">val</span> loc_of_expr</span> : <code class="type"><a href="Ast.html#TYPEexpr">expr</a> -> <a href="Location.html#TYPEt">Location.t</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">loc_of_expr e</code> returns location contained in expression <code class="code">e</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALloc_of_stm"><span class="keyword">val</span> loc_of_stm</span> : <code class="type"><a href="Ast.html#TYPEstm">stm</a> -> <a href="Location.html#TYPEt">Location.t</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">loc_of_stm s</code> returns location contained in statement <code class="code">s</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALneg_guard"><span class="keyword">val</span> neg_guard</span> : <code class="type"><a href="Ast.html#TYPEexpr">expr</a> -> <a href="Ast.html#TYPEexpr">expr</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">neg_guard e</code> returns an expression <code class="code">e'</code> such that guard e' &gt; 0
+    is equivalent to e &lt;= 0.</p>
+</div>
+</div>
+
+<pre><span id="VALvars_of_stm"><span class="keyword">val</span> vars_of_stm</span> : <code class="type"><a href="Ast.html#TYPEstm">stm</a> -> Name.Set.t</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">vars_of_stm stm</code> returns the set of variables appearing
+    in statement <code class="code">stm</code>.</p>
+</div>
+</div>
+<h3 id="2_PrintingFunctions">Printing Functions</h3>
+<pre><span id="VALchar_of_bop"><span class="keyword">val</span> char_of_bop</span> : <code class="type"><a href="Ast.html#TYPEbop">bop</a> -> char</code></pre>
+<pre><span id="VALfprint_expr"><span class="keyword">val</span> fprint_expr</span> : <code class="type">Stdlib.Format.formatter -> <a href="Ast.html#TYPEexpr">expr</a> -> unit</code></pre>
+<pre><span id="VALfprint_stm"><span class="keyword">val</span> fprint_stm</span> : <code class="type">Stdlib.Format.formatter -> <a href="Ast.html#TYPEstm">stm</a> -> unit</code></pre></body></html>
