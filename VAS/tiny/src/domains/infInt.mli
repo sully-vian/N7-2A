@@ -1,5 +1,5 @@
 (*
- * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
+   * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
  * a simple abstract interpreter for teaching purpose.
  * Copyright (C) 2012  P. Roux
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *)
+*)
 
 (** Module to soundly manipulate potentially infinite integers. *)
 
@@ -31,7 +31,6 @@ val order : t -> t -> bool
 
 val min : t -> t -> t
 val max : t -> t -> t
-
 val zero : t
 val one : t
 
@@ -42,9 +41,7 @@ val minfty : t
 val pinfty : t
 
 val fin : int -> t
-
 val to_int : t -> int option
-
 val to_string : t -> string
 
 (** [add_lb x y] is a lower bound of [x+y]. *)

@@ -1,5 +1,5 @@
 (*
- * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
+   * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
  * a simple abstract interpreter for teaching purpose.
  * Copyright (C) 2012  P. Roux
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *)
+*)
 
 (** Module providing functions to print errors in a way the compilation mode
     of Emacs understands while handling verbosity level and locations. *)

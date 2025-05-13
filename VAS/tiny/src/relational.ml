@@ -1,5 +1,5 @@
 (*
- * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
+   * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
  * a simple abstract interpreter for teaching purpose.
  * Copyright (C) 2012  P. Roux
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *)
+*)
 
 (** A module type for relational domains. *)
 
@@ -34,13 +34,15 @@ module type Domain = sig
   val order : t -> t -> bool
 
   val top : Name.Set.t -> t
-  val bottom : Name.Set.t -> t
+
   (** Infimums of the lattice (when the relational domain focuses on given set
       of variables). *)
+  val bottom : Name.Set.t -> t
 
   val join : t -> t -> t
-  val meet : t -> t -> t
+
   (** Least upper bound and greatest lower bound of the lattice. *)
+  val meet : t -> t -> t
 
   (** Widening to ensure termination of the analyses. *)
   val widening : t -> t -> t

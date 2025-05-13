@@ -1,5 +1,5 @@
 (*
- * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
+   * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
  * a simple abstract interpreter for teaching purpose.
  * Copyright (C) 2012  P. Roux
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *)
+*)
 
 exception Error
 
@@ -25,27 +25,33 @@ let verbosity = ref 1
 let nlogf n =
   if n <= !verbosity then
     Format.kfprintf
-      (fun ff ->
-        Format.kfprintf
-          (fun ff -> Format.fprintf ff "@]\n%!")
-          ff)
+      (fun ff -> Format.kfprintf (fun ff -> Format.fprintf ff "@]\n%!") ff)
       Format.err_formatter
-      "%s@[" (if n >= 4 then String.make (2 * (n - 3)) ' ' else "")
+      "%s@["
+      (if n >= 4 then
+         String.make (2 * (n - 3)) ' '
+       else
+         "")
   else
-    Format.ifprintf
-      Format.err_formatter
+    Format.ifprintf Format.err_formatter
+;;
 
 let kstr_loc k str loc =
   Format.kfprintf
     (fun ff ->
-      Format.kfprintf
-        (fun ff -> Format.fprintf ff "\n%!"; k ff)
-        ff)
+       Format.kfprintf
+         (fun ff ->
+            Format.fprintf ff "\n%!";
+            k ff)
+         ff)
     Format.err_formatter
-    "%a%s" Location.fprint loc str
+    "%a%s"
+    Location.fprint
+    loc
+    str
+;;
 
 let warning_loc loc = kstr_loc (fun _ -> ()) "Warning: " loc
-
 let error_loc loc = kstr_loc (fun _ -> raise Error) "Error: " loc
 
 let silent f =
@@ -54,3 +60,4 @@ let silent f =
   let res = f () in
   verbosity := old_verbosity;
   res
+;;

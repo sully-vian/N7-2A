@@ -1,5 +1,5 @@
 (*
- * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
+   * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
  * a simple abstract interpreter for teaching purpose.
  * Copyright (C) 2012  P. Roux
  *
@@ -16,25 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *)
+*)
 
 (** Type of abstract syntax trees, printing and various functions on them. *)
 
 (** {2 Type of Abstract Syntax Trees} *)
 
-type bop = Plus | Minus | Times | Div
+type bop =
+  | Plus
+  | Minus
+  | Times
+  | Div
 
 type expr =
-  | Int of Location.t * int  (** n *)
-  | Var of Location.t * Name.t  (** v *)
-  | Binop of Location.t * bop * expr * expr  (** expr + expr,... *)
-  | Rand of Location.t * int * int  (** rand(n, n) *)
+  | Int of Location.t * int (** n *)
+  | Var of Location.t * Name.t (** v *)
+  | Binop of Location.t * bop * expr * expr (** expr + expr,... *)
+  | Rand of Location.t * int * int (** rand(n, n) *)
 
-type stm = 
-  | Asn of Location.t * Name.t * expr  (** v = expr; *)
-  | Seq of Location.t * stm * stm  (** stm stm *)
-  | Ite of Location.t * expr * stm * stm  (** if (expr > 0) \{ stm \} else \{ stm \} *)
-  | While of Location.t * expr * stm  (** while (expr > 0) \{ stm \} *)
+type stm =
+  | Asn of Location.t * Name.t * expr (** v = expr; *)
+  | Seq of Location.t * stm * stm (** stm stm *)
+  | Ite of Location.t * expr * stm * stm (** if (expr > 0) \{ stm \} else \{ stm \} *)
+  | While of Location.t * expr * stm (** while (expr > 0) \{ stm \} *)
 
 (** {2 Various Utility Functions} *)
 
@@ -55,7 +59,5 @@ val vars_of_stm : stm -> Name.Set.t
 (** {2 Printing Functions} *)
 
 val char_of_bop : bop -> char
-
 val fprint_expr : Format.formatter -> expr -> unit
-
 val fprint_stm : Format.formatter -> stm -> unit

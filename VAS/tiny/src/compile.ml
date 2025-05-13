@@ -1,5 +1,5 @@
 (*
- * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
+   * TINY (Tiny Is Not Yasa (Yet Another Static Analyzer)):
  * a simple abstract interpreter for teaching purpose.
  * Copyright (C) 2012  P. Roux
  *
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *)
+*)
 
 (* Print preamble to [out_ch] plus declaration of variables [vars],
    returns number of lines outputed.*)
@@ -25,36 +25,32 @@ let print_preamble out_ch vars =
   let preamble1 =
     "#include <stdlib.h>\n\
      #include <stdio.h>\n\
-     #include <time.h>\n\
-     \n\
+     #include <time.h>\n\n\
      int rand_itv(int n1, int n2)\n\
-     {\n  \
-       int res;\n\
-     \n  \
-       if (n2 < n1) exit(2);\n\
-     \n  \
-       res = n1 + rand() % (n2 - n1 + 1);\n  \
-       printf(\"rand: %d\\n\", res);\n\
-     \n  \
-       return res;\n\
-     }\n\
-     \n\
+     {\n\
+    \  int res;\n\n\
+    \  if (n2 < n1) exit(2);\n\n\
+    \  res = n1 + rand() % (n2 - n1 + 1);\n\
+    \  printf(\"rand: %d\\n\", res);\n\n\
+    \  return res;\n\
+     }\n\n\
      int main(int argc, char *argv[])\n\
-     {\n" in
+     {\n"
+  in
   Printf.fprintf out_ch "%s" preamble1;
   ln := !ln + Utils.lines_of_string preamble1;
   Name.Set.iter
-    (fun n -> Printf.fprintf out_ch "  int %s;\n" n; incr ln)
+    (fun n ->
+       Printf.fprintf out_ch "  int %s;\n" n;
+       incr ln)
     vars;
-  let preamble2 =
-    "\n  \
-       srand(time(NULL));\n\
-     \n" in
+  let preamble2 = "\n  srand(time(NULL));\n\n" in
   Printf.fprintf out_ch "%s" preamble2;
   ln := !ln + Utils.lines_of_string preamble2;
   Printf.fprintf out_ch "#define rand(x, y) rand_itv(x, y)\n";
   incr ln;
   !ln
+;;
 
 (* Print end to [out_ch] with C code to print final values of [var]. *)
 let print_end out_ch vars =
@@ -62,14 +58,15 @@ let print_end out_ch vars =
   Name.Set.iter
     (fun n -> Printf.fprintf out_ch "  printf(\"%s = %%d\\n\", %s);\n" n n)
     vars;
-  Printf.fprintf out_ch "%s%!"
-    "\n  \
-       return 0;\n\
-     }\n"
+  Printf.fprintf out_ch "%s%!" "\n  return 0;\n}\n"
+;;
 
 let compile input_filename output_filename =
   let output_filename_string =
-    match output_filename with None -> "stdout" | Some f -> f in
+    match output_filename with
+    | None -> "stdout"
+    | Some f -> f
+  in
   Report.nlogf 1 "Compile file %s to %s." input_filename output_filename_string;
   let vars, _ = Parse.file input_filename in
   Utils.with_out_ch output_filename (fun out_ch ->
@@ -82,8 +79,9 @@ let compile input_filename output_filename =
           Printf.fprintf out_ch "%s\n" l;
           incr ln
         done
-      with End_of_file -> ());
-    Printf.fprintf out_ch "\n#line %d \"%s\"\n" (!ln + 4)
-      output_filename_string;
+      with
+      | End_of_file -> ());
+    Printf.fprintf out_ch "\n#line %d \"%s\"\n" (!ln + 4) output_filename_string;
     print_end out_ch vars);
   Report.nlogf 1 "Compiled to %s." output_filename_string
+;;
