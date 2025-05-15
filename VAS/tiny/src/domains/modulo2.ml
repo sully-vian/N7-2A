@@ -5,13 +5,15 @@
 type t =
   | Top
   | Bottom
-  | Const of int
+  | Even
+  | Odd
 
 (* a printing function (useful for debuging), *)
 let fprint ff = function
   | Top -> Format.fprintf ff "⊤"
   | Bottom -> Format.fprintf ff "⊥"
-  | Const n -> Format.fprintf ff "%d" n
+  | Even -> Format.fprintf ff "Even"
+  | Odd -> Format.fprintf ff "Odd"
 ;;
 
 (* the order of the lattice. *)
@@ -19,13 +21,19 @@ let order x y =
   match x, y with
   | _, Top -> true
   | Bottom, _ -> true
-  | Const x, Const y -> x = y
-  | _, _ -> false
+  | x, y -> x = y
 ;;
 
 (* and infimums of the lattice. *)
 let top = Top
 let bottom = Bottom
+
+let parity n =
+  if n mod 2 = 0 then
+    Even
+  else
+    Odd
+;;
 
 (* All the functions below are safe overapproximations.
  * You can keep them as this in a first implementation,
@@ -38,9 +46,9 @@ let join x y =
   | _, Top -> Top
   | ens, Bottom -> ens
   | Bottom, ens -> ens
-  | Const x, Const y ->
+  | _, _ ->
     if x = y then
-      Const x
+      x
     else
       Top
 ;;
@@ -52,24 +60,22 @@ let meet x y =
   | _, Bottom -> Bottom
   | Top, ens -> ens
   | ens, Top -> ens
-  | Const x, Const y ->
+  | _, _ ->
     if x = y then
-      Const x
+      x
     else
       Bottom
 ;;
 
 let widening = join
-
-(* Ok, maybe you'll need to implement this one if your lattice has infinite
-  ascending chains and you want your analyses to terminate. *)
+(* Ok, maybe you'll need to implement this one if your
+                      * lattice has infinite ascending chains and you want
+                      * your analyses to terminate. *)
 
 (* sémantique intervalle *)
 let sem_itv n1 n2 =
-  if n1 > n2 then
-    Bottom
-  else if n1 = n2 then
-    Const n1
+  if parity n1 = parity n2 then
+    parity n1
   else
     Top
 ;;
@@ -80,7 +86,11 @@ let sem_plus x y =
   | _, Bottom -> Bottom
   | Top, _ -> Top
   | _, Top -> Top
-  | Const x, Const y -> Const (x + y)
+  | _, _ ->
+    if x = y then
+      Even
+    else
+      Odd
 ;;
 
 let sem_minus x y =
@@ -89,30 +99,28 @@ let sem_minus x y =
   | _, Bottom -> Bottom
   | Top, _ -> Top
   | _, Top -> Top
-  | Const x, Const y -> Const (x - y)
+  | _, _ ->
+    if x = y then
+      Even
+    else
+      Odd
 ;;
 
 let sem_times x y =
   match x, y with
   | Bottom, _ -> Bottom
   | _, Bottom -> Bottom
-  | Const 0, _ -> Const 0
-  | _, Const 0 -> Const 0
   | Top, _ -> Top
   | _, Top -> Top
-  | Const x, Const y -> Const (x * y)
+  | Odd, Odd -> Odd
+  | _, _ -> Even
 ;;
 
-(* si division par 0, on fait bottom *)
 let sem_div x y =
   match x, y with
   | Bottom, _ -> Bottom
   | _, Bottom -> Bottom
-  | _, Const 0 -> Bottom
-  | Const 0, _ -> Const 0
-  | Top, _ -> Top
-  | _, Top -> Top
-  | Const x, Const y -> Const (x / y)
+  | _, _ -> Top
 ;;
 
 let sem_guard = function

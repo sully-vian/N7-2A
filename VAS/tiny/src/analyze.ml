@@ -19,7 +19,7 @@
 *)
 
 (* Abstract domain used for the analyses. *)
-module Dom : Relational.Domain = NonRelational.MakeRelational (Dummy)
+module Dom : Relational.Domain = NonRelational.MakeRelational (Modulo2)
 
 (* module Dom : Relational.Domain = NonRelational.MakeRelational (Parity) *)
 (* module Dom : Relational.Domain = NonRelational.MakeRelational (Kildall) *)
