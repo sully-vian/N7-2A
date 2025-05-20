@@ -50,7 +50,7 @@ dispatch (function
       (* Link flag for APRON *)
       flag [ "link"; "ocaml"; "use_apron" ] (S [ A "-cclib"; A apron_lib ]);
       (* Link flag for APRON *)
-      flag [ "doc"; "use_apron" ] (S [ A "-I"; A apron_include ])
-    ) else
+      flag [ "doc"; "use_apron" ] (S [ A "-I"; A apron_include ]))
+    else
       ()
   | _ -> ())

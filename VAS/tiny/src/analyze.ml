@@ -119,8 +119,8 @@ let rec post_stm descending (m, t) s =
           t'
           Dom.fprint
           t;
-        m, t, t'
-      ) else (
+        m, t, t')
+      else (
         let t'' = Dom.widening t t' in
         Report.nlogf
           3
@@ -134,8 +134,7 @@ let rec post_stm descending (m, t) s =
           t'
           Dom.fprint
           t'';
-        lfp (n + 1) m t''
-      )
+        lfp (n + 1) m t'')
     in
     let rec desc_iter n m t' =
       let t'' = Dom.join t t' in
@@ -159,8 +158,7 @@ let rec post_stm descending (m, t) s =
         let t' = guard (Ast.loc_of_expr e) e t'' in
         let m = Location.Map.add (Location.beg_p (Ast.loc_of_stm s)) t' m in
         let m, t' = post_stm (m, t') s in
-        desc_iter (n + 1) m t'
-      )
+        desc_iter (n + 1) m t')
     in
     (* Compute loop invariant. *)
     let m, t =

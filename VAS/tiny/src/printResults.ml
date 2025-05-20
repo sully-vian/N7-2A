@@ -43,9 +43,7 @@ module Make (Dom : Relational.Domain) = struct
               false
             else (
               Report.warning_loc l "Possible division by zero.";
-              true
-            )
-          )
+              true))
         in
         let alarms_e1 = alarms_expr env e1 in
         let alarms_e2 = alarms_expr env e2 in
@@ -53,8 +51,8 @@ module Make (Dom : Relational.Domain) = struct
       | Ast.Rand (l, n1, n2) ->
         if n1 > n2 then (
           Report.warning_loc l "Empty random interval.";
-          true
-        ) else
+          true)
+        else
           false
     in
     (* Returns a pair (b, env) with b = true iff a warning about a runtime error
@@ -66,8 +64,8 @@ module Make (Dom : Relational.Domain) = struct
       in
       if Dom.order env bottom then (
         Report.warning_loc (Ast.loc_of_stm s) "This is dead code.";
-        false, env
-      ) else (
+        false, env)
+      else (
         match s with
         | Ast.Asn (l, _, e) -> alarms_expr env e, find_or_top (Location.end_p l)
         | Ast.Seq (_, s1, s2) ->
@@ -85,8 +83,7 @@ module Make (Dom : Relational.Domain) = struct
             alarms_expr loop_inv e
           in
           let alarms_s = alarms_env_beg_stm s in
-          alarms_e || alarms_s, find_or_top (Location.end_p l)
-      )
+          alarms_e || alarms_s, find_or_top (Location.end_p l))
     in
     fst (alarms_stm top t)
   ;;

@@ -57,12 +57,11 @@ module MakeRelational (D : Domain) : Relational.Domain = struct
           (fun n v ->
              if !first then (
                Format.fprintf ff "@[<2>{ %s : %a" n D.fprint v;
-               first := false
-             ) else
+               first := false)
+             else
                Format.fprintf ff ",@ %s : %a" n D.fprint v)
           m;
-        Format.fprintf ff " }@]"
-      )
+        Format.fprintf ff " }@]")
   ;;
 
   let find_or_top n m =

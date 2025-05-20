@@ -29,8 +29,8 @@ let set_input_file =
   fun filename ->
     if !fst_call then (
       input_file := Some filename;
-      fst_call := false
-    ) else
+      fst_call := false)
+    else
       raise
         (Arg.Bad ("Only accepts one input file: superfluous file \"" ^ filename ^ "\""))
 ;;
