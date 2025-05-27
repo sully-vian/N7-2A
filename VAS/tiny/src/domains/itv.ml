@@ -112,20 +112,130 @@ let sem_minus x y =
   | Itv (ax, bx), Itv (ay, by) -> mk_itv (ax - by) (bx - ay)
 ;;
 
+(* cas sans bottom *)
+let sem_times_aux ax bx ay by =
+  match (ax, bx), (ay, by) with
+  (* un des intervalles vaut {0} *)
+  | (Some 0, Some 0), (_, _) | (_, _), (Some 0, Some 0) -> Itv (Some 0, Some 0)
+  (* un des intervalles vaut [-∞; +∞] *)
+  | (None, None), (_, _) | (_, _), (None, None) -> Itv (None, None)
+  (* bornes inf explicites *)
+  | (Some ax, None), (Some ay, None) ->
+    let borne_inf =
+      if ax < 0 || ay < 0 then
+        None (* +∞ * truc positif = -∞ *)
+      else
+        Some (ax * ay)
+    in
+    mk_itv borne_inf None
+  (* bornes sup explicites *)
+  | (None, Some bx), (None, Some by) ->
+    let borne_inf =
+      if bx > 0 || by > 0 then
+        None (* -∞ * truc positif = -∞ *)
+      else
+        Some (bx * by)
+    in
+    mk_itv borne_inf None
+  (* bornes croisées 1 *)
+  | (None, Some bx), (Some ay, None) ->
+    let borne_sup =
+      if bx > 0 || ay < 0 then
+        None (* ±∞ * truc de l'autre signe = +∞ *)
+      else
+        Some (bx * ay)
+    in
+    mk_itv None borne_sup
+  (* bornes croisées 2 *)
+  | (Some ax, None), (None, Some by) ->
+    let borne_sup =
+      if ax < 0 || by > 0 then
+        None
+      else
+        Some (ax * by)
+    in
+    mk_itv None borne_sup
+  (* 3 explicites 1 *)
+  | (None, Some bx), (Some ay, Some by) ->
+    let borne_inf =
+      if ay > 0 || by > 0 then
+        None
+      else
+        Some (min (bx * ay) (bx * by))
+    and borne_sup =
+      if ay < 0 || by < 0 then
+        None
+      else
+        Some (max (bx * ay) (bx * by))
+    in
+    mk_itv borne_inf borne_sup
+  (* 3 explicites 2 *)
+  | (Some ax, None), (Some ay, Some by) ->
+    let borne_inf =
+      if ay < 0 || by < 0 then
+        None
+      else
+        Some (min (ax * ay) (ax * by))
+    and borne_sup =
+      if ay > 0 || by > 0 then
+        None
+      else
+        Some (max (ax * ay) (ax * by))
+    in
+    mk_itv borne_inf borne_sup
+  (* 3 explicites 3 *)
+  | (Some ax, Some bx), (None, Some by) ->
+    let borne_inf =
+      if ax > 0 || bx > 0 then
+        None
+      else
+        Some (min (ax * by) (bx * by))
+    and borne_sup =
+      if ax < 0 || by < 0 then
+        None
+      else
+        Some (max (ax * by) (bx * by))
+    in
+    mk_itv borne_inf borne_sup
+  (* 3 explicites 4 *)
+  | (Some ax, Some bx), (Some ay, None) ->
+    let borne_inf =
+      if ax < 0 || bx < 0 then
+        None
+      else
+        Some (min (ax * ay) (bx * ay))
+    and borne_sup =
+      if ax > 0 || ay > 0 then
+        None
+      else
+        Some (max (ax * ay) (bx * ay))
+    in
+    mk_itv borne_inf borne_sup
+  (* Les deux intervalles sont explicites *)
+  | (Some ax, Some bx), (Some ay, Some by) ->
+    let all_products = [ ax * ay; ax * by; bx * ay; bx * by ] in
+    let borne_inf = List.fold_right min all_products ax * ay in
+    let borne_sup = List.fold_right max all_products ax * ay in
+    mk_itv (Some borne_inf) (Some borne_sup)
+;;
+
 let sem_times x y =
   match x, y with
   | Bottom, _ -> Bottom
   | _, Bottom -> Bottom
-  | Itv (ax, bx), Itv (ay, by) ->
-    (match ax, bx, ay, by with
-     | Some 0, Some 0, _, _ -> Itv (Some 0, Some 0)
-     | _, _, Some 0, Some 0 -> Itv (Some 0, Some 0)
-     | None, None, _, _ -> Itv (None, None)
-     | _, _, None, None -> Itv (None, None)
-     | _ -> failwith "pas implémenté gros malin")
+  | Itv (ax, bx), Itv (ay, by) -> sem_times_aux ax bx ay by
 ;;
 
-let sem_div x y = top
+let sem_inv x =
+  match x with
+  | Bottom -> Bottom
+  (* TODO *)
+  (* let contains0 = a <=- Some 0 && Some 0 <=+ b in
+      if not contains0 then None else None *)
+  | Itv (a, b) -> Bottom
+;;
+
+let sem_div x y = sem_times x (sem_inv y)
 
 let sem_guard = function
   | t -> t
