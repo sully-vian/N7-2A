@@ -102,7 +102,7 @@ public class ArraySwapsTransitionSystem extends TransitionSystem {
      * C'est à dire que action[s][i][j] <==> swap(s, i, j)
      * et que l'on doit choisir exactement une action à chaque étape.
      */
-     @Override
+    @Override
     public BoolExpr transitionFormula(int step) {
         BoolExpr oneSwap = this.oneSwap(step);
 
@@ -155,43 +155,17 @@ public class ArraySwapsTransitionSystem extends TransitionSystem {
      * doive choisir exactement une action à l'étape s.
      */
     private BoolExpr oneSwap(int s) {
-        return context.mkAnd(atLeastOne(s), atMostOne(s));
-    }
-
-    /**
-     * Renvoie une formule Z3 représenntant la crontrainte exprimant le fait qu'on
-     * doive choisir au moins une action à l'étape s.
-     */
-    private BoolExpr atLeastOne(int s) {
-        BoolExpr atLeastOne = context.mkFalse();
+        // applatir la matrice d'actions
+        int[] coeffs = new int[this.length * this.length];
+        BoolExpr[] flattened = new BoolExpr[this.length * this.length];
         for (int i = 0; i < this.length; i++) {
             for (int j = 0; j < this.length; j++) {
-                atLeastOne = context.mkOr(atLeastOne, actions[s][i][j]);
+                coeffs[i * this.length + j] = i * this.length + j;
+                flattened[i * this.length + j] = actions[s][i][j];
             }
         }
-        return atLeastOne;
-    }
-
-    /**
-     * Renvoie une formule Z3 représenntant la crontrainte exprimant le fait qu'on
-     * doive choisir au plus une action à l'étape s.
-     */
-    private BoolExpr atMostOne(int s) {
-        BoolExpr atMostOne = context.mkTrue();
-        for (int i = 0; i < this.length; i++) {
-            for (int j = 0; j < this.length; j++) {
-                for (int k = 0; k < this.length; k++) {
-                    for (int l = 0; l < this.length; l++) {
-                        if (i != k || j != l) {
-                            atMostOne = context.mkAnd(atMostOne,
-                                    context.mkImplies(actions[s][i][j],
-                                            context.mkNot(actions[s][k][l])));
-                        }
-                    }
-                }
-            }
-        }
-        return atMostOne;
+        // vérifier qu'il y a exactement une action
+        return context.mkPBEq(coeffs, flattened, 1);
     }
 
     @Override
