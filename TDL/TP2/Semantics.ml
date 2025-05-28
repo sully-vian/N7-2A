@@ -23,7 +23,6 @@ type valueType =
 and environment = (string * valueType) list
 and memory = (string * valueType) list
 
-(* ===============================================*)
 (* string_of_names : string list -> string *)
 (* Converti une liste de chaînes de caractères en une seule chaîne de
    caractères *)
@@ -81,7 +80,6 @@ and string_of_error error =
   | TypeMismatchError -> "Type mismatch"
   | UndefinedExpressionError -> "Undefined Expression"
 
-(* ===============================================*)
 type 'a searchResult = NotFound | Found of 'a
 
 (* lookfor : string -> environment -> valueType searchResult *)
@@ -108,10 +106,7 @@ let rec lookforMem name env =
       else
         lookforMem name others
 
-(* ........................................................................*)
-(*   newReference : string                                                 *)
-(*     alloue une adresse dans la memoire de la forme "ref@i"              *)
-(* ........................................................................*)
+(** [referenceCounter] alloue une adresse dans la mémoire de la forme "ref@i" *)
 let referenceCounter = ref 0
 
 let newReference () =
@@ -223,13 +218,7 @@ and ruleIf env cond bthen belse mem =
 
 and ruleFunction env expr mem = (FrozenValue (expr, env), mem)
 
-(* Appel par nom and (*
-   .............................................................................*)
-   (* ruleCallByName : Ast.ast -> Ast.ast -> memory -> environment *) (* ->
-   (ValueType * memory) *) (*
-   .............................................................................*)
-
-   ruleCallByName env fexpr pexpr mem = match (value_of_expr fexpr env) with |
+(* ruleCallByName env fexpr pexpr mem = match (value_of_expr fexpr env) with |
    (FrozenValue (fexpr,fenv)) -> (match fexpr with | (FunctionNode (fpar,fbody))
    -> (value_of_expr fbody ((fpar,(FrozenValue (pexpr,env)))::fenv)) | _ ->
    (ErrorValue TypeMismatchError)) | (ErrorValue _) as result -> (ErrorValue

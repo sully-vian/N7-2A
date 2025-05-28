@@ -11,10 +11,10 @@ let report_error filename lexbuf msg =
 
 (* main : unit -> unit *)
 
-(** Analyse le contenu d'un fichier passé en paramètre ou l'entrée standard si aucun fichier n'est donné
-  * Affiche OK si l'analyse syntaxique c'est bien passée et KO sinon
-  * Dans le cas où l'analyse syntaxique c'est bien passé, lance l'analyse sémantique avec un environement d'évaluation initial vide
-  *)
+(** Analyse le contenu d'un fichier passé en paramètre ou l'entrée standard si
+    aucun fichier n'est donné * Affiche OK si l'analyse syntaxique c'est bien
+    passée et KO sinon * Dans le cas où l'analyse syntaxique c'est bien passé,
+    lance l'analyse sémantique avec un environement d'évaluation initial vide *)
 let miniML fichier =
   let input = open_in fichier in
   let filebuf = Lexing.from_channel input in
