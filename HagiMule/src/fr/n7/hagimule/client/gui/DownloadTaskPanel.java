@@ -1,0 +1,70 @@
+package fr.n7.hagimule.client.gui;
+
+import java.awt.BorderLayout;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.Timer;
+
+import fr.n7.hagimule.client.downloader.DownloadTask;
+import fr.n7.hagimule.client.downloader.Downloader;
+
+/**
+ * Panneau d'affichage pour les {@link DownloadTask} en cours.
+ */
+public class DownloadTaskPanel extends JPanel {
+
+    private Downloader downloader;
+    private DefaultListModel<String> taskListModel;
+    private JList<String> taskList;
+    private Set<String> previousTasks;
+
+    public DownloadTaskPanel(Downloader downloader) {
+        super(new BorderLayout());
+        this.downloader = downloader;
+        this.taskListModel = new DefaultListModel<>();
+        this.taskList = new JList<>(this.taskListModel);
+        this.previousTasks = new HashSet<>();
+
+        this.setBorder(BorderFactory.createTitledBorder("Current Downloads"));
+
+        this.add(new JScrollPane(this.taskList), BorderLayout.CENTER);
+
+        Timer refreshTimer = new Timer(MainWindow.REFRESH_DELAY, e -> this.updateTaskList());
+        refreshTimer.start();
+    }
+
+    /**
+     * Met à jour l'affichage de la liste des tâches.
+     */
+    private void updateTaskList() {
+        Set<String> currentTasks = downloader.getCurrentTasks().stream()
+                .map(DownloadTask::toString)
+                .collect(Collectors.toSet());
+
+        // ajouter les nouvelles tâches
+        for (String taskName : currentTasks) {
+            // ajouter la tâche si elle n'était pas déjà présente
+            if (!this.previousTasks.contains(taskName)) {
+                this.taskListModel.addElement(taskName);
+            }
+        }
+
+        // retirer les anciennes tâches
+        for (String taskName : this.previousTasks) {
+            // retirer la tâche si elle n'est plus dans la liste actuelles
+            if (!currentTasks.contains(taskName)) {
+                taskListModel.removeElement(taskName);
+            }
+        }
+
+        // remplacer les tâches précédentes par les actuelles
+        this.previousTasks = new HashSet<>(currentTasks);
+    }
+}

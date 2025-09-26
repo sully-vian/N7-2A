@@ -1,0 +1,67 @@
+@startuml archi
+
+skinparam ClassBackgroundColor BUSINESS
+skinparam ClassBorderColor DarkRed
+skinparam ClassBorderThickness 2
+skinparam ArrowColor DarkRed
+skinparam RoundCorner 0
+skinparam Shadowing true
+skinparam ArrowFontStyle italic
+
+left to right direction
+
+package hagimule {
+
+    class Host
+    class Utils
+
+    package client {
+        class Client
+        interface ClientDiary extends hagimule.diary.Diary
+
+        Client *-- ClientDiary
+        Client *-- daemon.Daemon
+        Client *-- downloader.Downloader
+    }
+
+    package client.daemon {
+        class Daemon <<Thread>>
+        class DaemonSlave <<Thread>>
+
+        Daemon *-- DaemonSlave
+    }
+
+    package client.downloader {
+        class DownloadTask <<Thread>>
+        class Downloader
+        class DownloaderSlave
+        class FragmentData
+
+        Downloader *-- DownloadTask
+        DownloadTask *-- DownloaderSlave
+    }
+
+    package client.gui {
+        class DiaryPanel <<JPanel>>
+        class DownloadTaskPanel <<JPanel>>
+        class DownloaderPanel <<JPanel>>
+        class MainWindow <<JFrame>>
+
+        MainWindow *-- DiaryPanel
+        MainWindow *-- DownloaderPanel
+        MainWindow *-- DownloadTaskPanel
+    }
+
+    package diary {
+        interface Diary
+        class DiaryImpl implements ServerDiary, hagimule.client.ClientDiary
+        class DiaryServer
+        class FileInfo
+        class MainWindow <<JFrame>>
+        interface ServerDiary extends Diary
+
+        MainWindow *-- ServerDiary
+    }
+}
+
+@enduml
