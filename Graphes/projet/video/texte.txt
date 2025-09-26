@@ -1,0 +1,23 @@
+Bonjour, dans le cadre de notre projet de théorie des graphes, nous avons étudié un essaim de nanosatellites en orbite autour de la Lune. Notre objectif était d'analyser les caractéristiques de cet essaim dans trois configurations de densité différentes.
+
+Les satellites communiquent entre eux de manière opportuniste, et nous devions modéliser ce réseau pour comprendre comment les données circulent.
+
+Pour modéliser le réseau, nous avons utilisé la bibliothèque Python NetworkX. Nous l'avons choisie car elle est spécialisée dans la manipulation de graphes et offre des fonctions prêtes à l'emploi pour calculer des métriques comme le degré des sommets, le clustering, ou les plus courts chemins.
+
+NetworkX nous a permis de gagner du temps en évitant d'implémenter nous-mêmes des algorithmes complexes, comme Dijkstra pour les plus courts chemins. De plus, elle est bien documentée et facile à utiliser.
+
+Cependant, NetworkX n'est pas optimisé pour les très grands graphes, mais dans notre cas, avec 100 satellites, cela n'a pas posé de problème.
+
+Nous avons d'abord importé les données de position des satellites depuis les fichiers CSV. Ensuite, nous avons créé des graphes pour chaque configuration de densité et chaque portée de communication. Enfin, nous avons calculé les métriques demandées, comme le degré moyen, le clustering, et les plus courts chemins.
+
+Nos résultats montrent que, dans une configuration de forte densité, le degré moyen est élevé et le clustering est important, ce qui indique un réseau très connecté. En revanche, dans une configuration de faible densité, le réseau est plus fragmenté, avec des satellites isolés.
+
+Voici un exemple de graphe pour une configuration de densité moyenne. On voit clairement que les satellites sont regroupés en plusieurs composantes connexes.
+
+Un degré de clustering élevé signifie que les satellites forment des groupes fortement interconnectés, ce qui est bénéfique pour la redondance et la robustesse du réseau. En revanche, un degré moyen faible dans une configuration de faible densité peut poser des problèmes de communication, car certains satellites sont isolés.
+
+Ces analyses pourraient aider à optimiser le déploiement des satellites, en ajustant leur position pour maximiser la connectivité tout en minimisant la consommation d'énergie.
+
+En conclusion, grâce à NetworkX, nous avons pu modéliser et analyser efficacement le réseau de nanosatellites. Nos résultats montrent que la densité de l'essaim a un impact significatif sur la connectivité et la robustesse du réseau.
+
+Ces travaux pourraient être étendus à des essaims plus grands ou à des configurations de déploiement différentes.

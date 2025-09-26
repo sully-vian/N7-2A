@@ -1,0 +1,11 @@
+.venv/
+
+# LaTeX
+*.aux
+*.lof
+*.log
+*.nlo
+*.out
+*.synctex.gz
+*.toc
+svg-inkscape/
