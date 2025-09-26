@@ -1,3 +1,4 @@
-# TPs Eclipse
+# N7-2A
 
-Ce dossier contient tous les TPs effectués sur Eclipse Modeling Framework.
+My year year at N7 engineering school
+
