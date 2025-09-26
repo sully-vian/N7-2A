@@ -24,6 +24,8 @@ Chaque DownloaderSlave est un thread qui demande le fragment par bouts de 1024 o
 
 ## Utilisation
 
+**Les scripts peuvent ne plus être à jour pour cause de déplacement du repo git.**
+
 [`build.sh`](scripts/build.sh) : compile le projet dans le dossier [`bin`](bin).
 
 [`clean.sh`](scripts/clean.sh) : supprime le contenu du dossier [`bin`](bin).
