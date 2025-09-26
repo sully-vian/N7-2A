@@ -1,5 +1,7 @@
 # HagiMule
 
+## Implantation d'une infrastructure de téléchargement parallèle de grands fichiers
+
 ## Idée
 
 DownloadTask demande les hôtes et coupe le fichier en blocs de 1024 octets (ou plus) et répartit les requêtes de blocs entre les hôtes. On peut donc avoir plusieurs blocs demandés à un même hôte.
