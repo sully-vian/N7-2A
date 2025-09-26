@@ -1,0 +1,28 @@
+[comment encoding = UTF-8 /]
+[module todot('http://petrinet')]
+
+
+[template public petriNetToDot(aPetriNet : PetriNet)]
+[comment @main/]
+[file (aPetriNet.nom + '.dot', false, 'UTF-8')]
+digraph [aPetriNet.nom /] {
+[let pls : OrderedSet(Place) = aPtrinet.getPlaces()]
+	[if (pls->size > 0)]
+		[for (pl : Place | pls)]
+			[pl.todot/]
+		[/for]
+	[/if]
+[/let]
+}
+[/file]
+[/template]
+
+[query public getPlaces(pn : PetriNet) : OrderedSet(Place) =
+	pn.noeuds->select( n | n.oclIsTypeOf(Place) )
+		->collect( n | n.oclAsType(Place) )
+		->asOrderedSet()
+/]
+
+[template public todot(pl : Place) post (trim())]
+[pl.nom/] ['[label="'/]
+[/template]

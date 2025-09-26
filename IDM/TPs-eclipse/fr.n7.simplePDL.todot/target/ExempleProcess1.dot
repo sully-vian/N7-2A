@@ -1,0 +1,4 @@
+digraph ExempleProcess1 {
+	"A 2" -> "A 2" [arrowhead=vee label=s2s]
+	"A 2" -> "A 2" [arrowhead=vee label=s2s]
+}

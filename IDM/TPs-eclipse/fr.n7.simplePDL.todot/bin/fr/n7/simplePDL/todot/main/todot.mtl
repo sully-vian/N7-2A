@@ -1,0 +1,47 @@
+[comment encoding = UTF-8 /]
+[module todot('http://simplepdl')]
+
+[template public processTodot(aProcess : Process) ]
+[comment @main/]
+[file (aProcess.name + '.dot', false, 'UTF-8')]
+digraph [aProcess.name /] {
+[let wds : OrderedSet(WorkDefinition) = aProcess.getWDs()
+	][if (wds->size() > 0)
+		][for (wd : WorkDefinition | wds)
+			][wd.todot()
+		/][/for]
+	[/if]
+[/let]
+['\n'/]}
+[/file]
+[/template]
+
+[query public getWDs(p: Process) : OrderedSet(WorkDefinition) = 
+	p.processElements->select( e | e.oclIsTypeOf(WorkDefinition) )
+		->collect( e | e.oclAsType(WorkDefinition) )
+		->asOrderedSet()
+/]
+
+[query public toState(link: WorkSequenceType) : String =
+	if link = WorkSequenceType::startToStart then
+		'[arrowhead=vee label=s2s]'
+	else
+		if link = WorkSequenceType::startToFinish then
+			'[arrowhead=vee label=s2f]'
+		else
+			if link = WorkSequenceType::finishToStart then
+				'[arrowhead=vee label=f2s]'
+			else
+				'[arrowhead=vee label=f2f]'
+			endif
+		endif
+	endif
+/]
+
+
+[template public todot(wd : WorkDefinition)]
+[for (ws : WorkSequence | wd.linksToPredecessors)
+	before ('\t') separator ('\n\t')
+]"[wd.name /]" -> "[ws.successor.name /]" [ws.linkType.toState()
+/][/for]
+[/template]
