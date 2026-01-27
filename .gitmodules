@@ -4,3 +4,6 @@
 [submodule "AppWeb/hagymont"]
 	path = AppWeb/hagymont
 	url = https://github.com/sully-vian/hagymont.git
+[submodule "AppProf/immorthon"]
+	path = AppProf/immorthon
+	url = https://github.com/sully-vian/immorthon.git
