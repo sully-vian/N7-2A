@@ -1,3 +1,6 @@
 [submodule "PF/Newtonoid"]
 	path = PF/Newtonoid
 	url = https://github.com/sully-vian/Newtonoid.git
+[submodule "AppWeb/hagymont"]
+	path = AppWeb/hagymont
+	url = https://github.com/sully-vian/hagymont.git
