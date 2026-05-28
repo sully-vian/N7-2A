@@ -7,3 +7,6 @@
 [submodule "AppProf/immorthon"]
 	path = AppProf/immorthon
 	url = https://github.com/sully-vian/immorthon.git
+[submodule "TDL/MiniJava"]
+	path = TDL/MiniJava
+	url = https://github.com/Nap362/MiniJava.git
